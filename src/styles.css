@@ -826,15 +826,15 @@ input {
 }
 .phone-css__body {
   padding: 4px;
-  background: linear-gradient(145deg, #dfe3ea, #8c95a4 45%, #d4d9e1);
-  border-radius: 58px;
+  background: linear-gradient(145deg, #4b5b80, #26324c 45%, #43537a);
+  border-radius: 62px;
   transform: rotateY(-14deg) rotateX(6deg) scale(var(--phone-scale, 0.46));
   box-shadow: var(--shadow-lg);
 }
 .phone-css__glass {
-  padding: 8px;
-  background: #0b0d12;
-  border-radius: 54px;
+  padding: 7px;
+  background: #040508;
+  border-radius: 58px;
 }
 @media (min-width: 900px) {
   .phone-css__body {
