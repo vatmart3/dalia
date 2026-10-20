@@ -12,6 +12,9 @@ const FIELDS: { name: Fields; label: string; type: string; autoComplete: string;
   { name: 'telephone', label: 'Téléphone', type: 'tel', autoComplete: 'tel', placeholder: '06 12 34 56 78', inputMode: 'tel' },
 ]
 
+// Build « démo » (aperçu en ligne sans serveur) : l'envoi est simulé, rien n'est transmis.
+const DEMO = import.meta.env.MODE === 'demo'
+
 const PHONE_RE = /^(?:\+33|0033|0)[1-9]\d{8}$/
 
 function validate(data: Record<Fields, string>): Errors {
@@ -103,6 +106,12 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
     }
     setStatus('sending')
     setServerError('')
+    if (DEMO) {
+      await new Promise((r) => setTimeout(r, 600))
+      setFirstName(data.nom.trim().split(/\s+/)[0])
+      setStatus('done')
+      return
+    }
     try {
       const res = await fetch('/api/leads', {
         method: 'POST',
@@ -178,7 +187,9 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
                 {serverError}
               </p>
             )}
-            <p className="form-card__legal">Vos coordonnées servent uniquement à vous recontacter au sujet de Dalia.</p>
+            <p className="form-card__legal">
+              {DEMO ? 'Version de démonstration : aucune donnée n’est envoyée.' : 'Vos coordonnées servent uniquement à vous recontacter au sujet de Dalia.'}
+            </p>
           </motion.form>
         )}
       </AnimatePresence>

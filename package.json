@@ -9,7 +9,8 @@
     "build": "tsc --noEmit -p . && vite build",
     "preview": "npm run build && node server/server.mjs",
     "start": "node server/server.mjs",
-    "typecheck": "tsc --noEmit -p ."
+    "typecheck": "tsc --noEmit -p .",
+    "build:demo": "node scripts/build-demo.mjs"
   },
   "engines": {
     "node": ">=20"
