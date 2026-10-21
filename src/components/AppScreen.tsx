@@ -1,10 +1,11 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import type { CSSProperties } from 'react'
 import { IconBell, IconChart, IconCheck, IconHome, IconList, IconTag, IconCamera } from './Icons'
+import { CameraView } from './CameraView'
 
 /**
  * Écran de l'appli Dalia (DOM réel : net et lisible).
- * stage 0 : tableau de bord · 1 : alerte reçue · 2 : promo appliquée
+ * stage 0 : photo d'un produit · 1 : alerte reçue · 2 : promo appliquée
  */
 export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
   const applied = stage === 2
@@ -104,6 +105,18 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
       </div>
 
       <AnimatePresence>
+        {stage === 0 && (
+          <motion.div
+            key="camera"
+            className="app__camera"
+            initial={{ opacity: 0, scale: 1.04 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 1.04 }}
+            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          >
+            <CameraView />
+          </motion.div>
+        )}
         {stage === 1 && (
           <motion.div
             key="notif"

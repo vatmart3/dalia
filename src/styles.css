@@ -1786,3 +1786,280 @@ input {
 .hero__stage .phone-css__body {
   --phone-scale: 0.72;
 }
+
+/* ==========================================================================
+   Appareil photo de l'appli (étape « Photo »)
+   ========================================================================== */
+
+.app__camera {
+  position: absolute;
+  inset: 0;
+  z-index: 4;
+}
+.cam {
+  position: absolute;
+  inset: 0;
+  background: #07080b;
+  color: #fff;
+  overflow: hidden;
+  font-family: var(--font);
+}
+.cam__status {
+  position: relative;
+  z-index: 2;
+  color: #fff;
+}
+.cam__top {
+  position: absolute;
+  top: 54px;
+  left: 0;
+  right: 0;
+  height: 42px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 22px;
+  font-size: 14px;
+  font-weight: 600;
+  z-index: 2;
+}
+.cam__close,
+.cam__flash-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.14);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+}
+.cam__viewfinder {
+  position: absolute;
+  top: 96px;
+  left: 0;
+  width: 340px;
+  height: 470px;
+  overflow: hidden;
+}
+.cam__feed-wrap,
+.cam__feed {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.cam__frame {
+  position: absolute;
+  --c: rgba(255, 255, 255, 0.92);
+}
+.cam__frame.is-locked {
+  --c: #4c9bff;
+}
+.cam__frame i {
+  position: absolute;
+  width: 26px;
+  height: 26px;
+  border: 0 solid var(--c);
+  transition: border-color 0.25s;
+}
+.cam__frame i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-top-left-radius: 10px;
+}
+.cam__frame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-top-right-radius: 10px;
+}
+.cam__frame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+  border-bottom-left-radius: 10px;
+}
+.cam__frame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-bottom-right-radius: 10px;
+}
+.cam__frame.is-locked::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 10px;
+  background: rgba(76, 155, 255, 0.12);
+}
+.cam__scan {
+  position: absolute;
+  left: 8%;
+  right: 8%;
+  height: 2px;
+  border-radius: 2px;
+  background: linear-gradient(90deg, transparent, #4c9bff, transparent);
+  box-shadow: 0 0 12px 2px rgba(76, 155, 255, 0.6);
+}
+.cam__chip-wrap {
+  position: absolute;
+  top: 14px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: center;
+}
+.cam__chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 13px;
+  border-radius: 99px;
+  background: rgba(10, 12, 18, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.cam__chip.is-ok {
+  background: #0b63ce;
+}
+.cam__chip svg {
+  width: 14px;
+  height: 14px;
+}
+.cam__controls {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 170px;
+  padding: 14px 28px 0;
+}
+.cam__modes {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.55);
+}
+.cam__modes .is-active {
+  color: #6aa8ff;
+}
+.cam__row {
+  margin-top: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.cam__thumb {
+  width: 46px;
+  height: 46px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 22px;
+  overflow: hidden;
+}
+.cam__shutter {
+  width: 74px;
+  height: 74px;
+  border-radius: 50%;
+  border: 4px solid #fff;
+  display: grid;
+  place-items: center;
+}
+.cam__shutter i {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: #fff;
+}
+.cam__qty {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.12);
+  display: grid;
+  place-items: center;
+  font-size: 13px;
+  font-weight: 700;
+}
+.cam__flash {
+  position: absolute;
+  inset: 0;
+  background: #fff;
+  pointer-events: none;
+  z-index: 5;
+}
+.cam__sheet {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 6;
+  background: #fff;
+  color: var(--ink);
+  border-radius: 28px 28px 0 0;
+  padding: 10px 18px 30px;
+  box-shadow: 0 -20px 40px rgba(0, 0, 0, 0.35);
+}
+.cam__handle {
+  display: block;
+  width: 38px;
+  height: 5px;
+  border-radius: 3px;
+  background: #d7dce5;
+  margin: 0 auto 14px;
+}
+.cam__sheet-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+}
+.cam__ok {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  display: grid;
+  place-items: center;
+}
+.cam__ok svg {
+  width: 15px;
+  height: 15px;
+}
+.cam__item {
+  margin-top: 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 16px;
+  background: var(--bg-soft);
+}
+.cam__next {
+  margin-top: 14px;
+  height: 46px;
+  border-radius: 14px;
+  background: var(--blue);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-weight: 600;
+  font-size: 15px;
+}

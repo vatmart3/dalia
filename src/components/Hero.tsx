@@ -123,7 +123,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             <CssPhone stage={stage} />
           )}
           <p className="sr-only" aria-live="polite">
-            {stage === 0 && 'L’appli Dalia affiche les produits à surveiller.'}
+            {stage === 0 && 'L’appli Dalia photographie un pot de yaourt et lit sa date limite : 16 mai.'}
             {stage === 1 && 'Alerte Dalia : 12 yaourts expirent dans 2 jours, promo conseillée moins 20 %.'}
             {stage === 2 && 'Promo moins 20 % activée, étiquette envoyée à l’imprimante.'}
           </p>
