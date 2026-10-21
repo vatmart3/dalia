@@ -6,6 +6,9 @@
  * 3. Déployer → Nouveau déploiement → Application Web
  *    (Exécuter en tant que : vous ; Accès : tout le monde).
  * 4. Copiez l'URL obtenue dans la variable LEADS_WEBHOOK_URL du serveur Dalia.
+ *
+ * Pour vérifier l'envoi de l'e-mail : choisissez la fonction « testEmail » en haut
+ * de l'éditeur et cliquez sur « Exécuter » (Google demande l'autorisation la 1re fois).
  */
 
 const NOTIFY_EMAIL = 'jeremyvatuonepro@gmail.com' // ← adresse qui reçoit les demandes d'essai
@@ -25,4 +28,9 @@ function doPost(e) {
     `${lead.nom}\n${lead.commerce}, ${lead.ville}\nTéléphone : ${lead.telephone}${pertes}\n\nÀ rappeler rapidement !`,
   )
   return ContentService.createTextOutput(JSON.stringify({ ok: true })).setMimeType(ContentService.MimeType.JSON)
+}
+
+/** À lancer depuis l'éditeur (bouton « Exécuter ») : simule une demande d'essai. */
+function testEmail() {
+  doPost({ postData: { contents: JSON.stringify({ date: new Date().toISOString(), nom: 'Test Dalia', commerce: 'Épicerie test', ville: 'Sète', telephone: '0600000000', pertesSemaine: 150, source: 'test' }) } })
 }

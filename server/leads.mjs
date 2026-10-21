@@ -87,16 +87,32 @@ export function validateLead(input) {
 
 async function forwardToWebhook(entry) {
   const url = process.env.LEADS_WEBHOOK_URL
-  if (!url) return
+  if (!url) {
+    console.warn('[leads] LEADS_WEBHOOK_URL absente : la demande n’est transmise nulle part (ni feuille, ni e-mail).')
+    return
+  }
   try {
-    await fetch(url, {
+    // Google Apps Script répond par une redirection ; un démarrage à froid peut prendre plusieurs secondes.
+    const r = await fetch(url, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(entry),
-      signal: AbortSignal.timeout(5000),
+      redirect: 'follow',
+      signal: AbortSignal.timeout(15000),
     })
+    const text = await r.text()
+    const host = new URL(r.url).hostname
+    if (host === 'accounts.google.com' || /ServiceLogin|signin/i.test(r.url)) {
+      console.error('[leads] webhook : Google demande une connexion. Redéployez le script avec « Qui a accès : Tout le monde ».')
+    } else if (!r.ok) {
+      console.error(`[leads] webhook en échec : HTTP ${r.status} — ${text.slice(0, 200)}`)
+    } else if (!text.includes('"ok":true')) {
+      console.error(`[leads] webhook : réponse inattendue du script (erreur dans le script ?) — ${text.replace(/\s+/g, ' ').slice(0, 300)}`)
+    } else {
+      console.log('[leads] webhook OK : demande transmise au script Google')
+    }
   } catch (err) {
-    console.error('[leads] webhook en échec :', err.message)
+    console.error('[leads] webhook injoignable :', err.message)
   }
 }
 
