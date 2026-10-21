@@ -136,7 +136,7 @@ input {
 
 .section {
   position: relative;
-  padding-block: clamp(4.5rem, 10vw, 8rem);
+  padding-block: clamp(5rem, 11vw, 9rem);
 }
 .section--soft {
   background: var(--bg-soft);
@@ -155,8 +155,8 @@ input {
 
 .h1,
 .h2 {
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   color: var(--ink);
   text-wrap: balance;
 }
@@ -219,7 +219,7 @@ input {
   user-select: none;
   -webkit-user-select: none;
   transition: background-color 0.2s var(--ease), box-shadow 0.2s var(--ease), color 0.2s;
-  box-shadow: 0 1px 2px rgba(11, 18, 33, 0.12), 0 6px 16px -6px rgba(11, 99, 206, 0.55);
+  box-shadow: 0 1px 2px rgba(11, 18, 33, 0.1);
 }
 .btn:hover {
   background: var(--blue-hover);
@@ -288,8 +288,9 @@ input {
   gap: 0.5em;
   padding: 0.35em 0.85em 0.35em 0.7em;
   border-radius: var(--r-pill);
-  background: var(--blue-50);
-  color: var(--blue-deep);
+  background: #fff;
+  border: 1px solid var(--line);
+  color: var(--text);
   font-size: 0.85rem;
   font-weight: 600;
 }
@@ -298,8 +299,6 @@ input {
   height: 8px;
   border-radius: 50%;
   background: var(--green);
-  box-shadow: 0 0 0 4px rgba(19, 128, 76, 0.15);
-  animation: pulse 2s ease-in-out infinite;
 }
 @keyframes pulse {
   50% {
@@ -311,7 +310,36 @@ input {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
-  box-shadow: var(--shadow-sm);
+}
+
+/* Lien d'appel à l'action en fin de section */
+.cta-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.4rem 1.2rem;
+  margin-top: 2.6rem;
+}
+.cta-link-row--center {
+  justify-content: center;
+  text-align: center;
+}
+.text-link {
+  color: var(--blue);
+  font-weight: 600;
+  text-decoration: none;
+  font-size: 1.02rem;
+}
+.text-link span {
+  display: inline-block;
+  transition: transform 0.25s var(--ease);
+}
+.text-link:hover {
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.text-link:hover span {
+  transform: translateX(3px);
 }
 
 /* ==========================================================================
@@ -382,10 +410,7 @@ input {
   padding-top: calc(var(--header-h) + 1.75rem);
   padding-bottom: 1rem;
   display: flex;
-  background:
-    radial-gradient(1100px 600px at 85% 15%, var(--blue-50), transparent 62%),
-    radial-gradient(800px 500px at 0% 100%, #f4f8ff, transparent 60%),
-    #fff;
+  background: radial-gradient(1000px 560px at 80% 20%, #f2f7ff, transparent 65%), #fff;
   overflow: hidden;
 }
 .hero__inner {
@@ -858,13 +883,6 @@ input {
   position: relative;
   overflow: hidden;
 }
-.counter::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(700px 300px at 80% 0%, rgba(11, 99, 206, 0.45), transparent 70%);
-  pointer-events: none;
-}
 .counter .wrap {
   position: relative;
   display: grid;
@@ -878,15 +896,12 @@ input {
 .counter__value {
   display: block;
   font-size: clamp(3rem, 12vw, 7.5rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.045em;
   line-height: 1.02;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
-  background: linear-gradient(180deg, #fff 35%, #a9c8f5);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
+  color: #fff;
 }
 .counter__source {
   margin-top: 0.6rem;
@@ -904,43 +919,48 @@ input {
   margin: 0;
   padding: 0;
   display: grid;
-  gap: 1rem;
+  border-top: 1px solid var(--line);
 }
 .stat {
-  padding: 1.8rem 1.6rem;
-  height: 100%;
-}
-.stat__icon {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: grid;
-  place-items: center;
-  margin-bottom: 1.4rem;
-}
-.stat__icon svg {
-  width: 22px;
-  height: 22px;
+  padding: 2rem 0;
+  border-bottom: 1px solid var(--line);
 }
 .stat__value {
   display: block;
-  font-size: clamp(2.8rem, 8vw, 3.6rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-size: clamp(3rem, 9vw, 4.2rem);
+  font-weight: 600;
+  letter-spacing: -0.045em;
   line-height: 1;
   color: var(--ink);
+  font-variant-numeric: tabular-nums;
 }
 .stat__value small {
   font-size: 0.5em;
   letter-spacing: -0.02em;
   margin-left: 0.12em;
+  color: var(--muted);
 }
 .stat__label {
   display: block;
-  margin-top: 0.7rem;
+  margin-top: 0.9rem;
   color: var(--muted);
   font-size: 1rem;
-  line-height: 1.45;
+  line-height: 1.5;
+  max-width: 30ch;
+}
+@media (min-width: 800px) {
+  .stats {
+    grid-template-columns: repeat(3, 1fr);
+    border-bottom: 1px solid var(--line);
+  }
+  .stat {
+    padding: 2.6rem 2.4rem 2.6rem 0;
+    border-bottom: 0;
+  }
+  .stat + .stat {
+    padding-left: 2.4rem;
+    border-left: 1px solid var(--line);
+  }
 }
 .stats__note {
   margin-top: 1.4rem;
@@ -979,7 +999,7 @@ input {
 .calc__weekly {
   margin-top: 1.6rem;
   font-size: clamp(2.6rem, 8vw, 3.6rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1;
   color: var(--ink);
@@ -1072,7 +1092,7 @@ input {
 }
 .calc__row-value {
   font-size: clamp(1.9rem, 6vw, 2.6rem);
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.035em;
   font-variant-numeric: tabular-nums;
   white-space: nowrap;
@@ -1144,7 +1164,7 @@ input {
 .step__visual {
   height: 176px;
   border-radius: var(--r);
-  background: linear-gradient(180deg, var(--blue-50), #f8fbff);
+  background: var(--bg-soft);
   margin-bottom: 1.5rem;
   overflow: hidden;
 }
@@ -1160,7 +1180,7 @@ input {
 .step h3 {
   margin-top: 0.35rem;
   font-size: 1.3rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.025em;
   color: var(--ink);
   line-height: 1.25;
@@ -1191,9 +1211,7 @@ input {
   position: relative;
   height: 500px;
   border-radius: var(--r-lg);
-  background:
-    radial-gradient(500px 300px at 30% 0%, rgba(11, 99, 206, 0.6), transparent 70%),
-    linear-gradient(160deg, var(--blue-deep), var(--navy));
+  background: var(--navy);
   overflow: hidden;
 }
 .features__screen .phone-css__body {
@@ -1266,16 +1284,6 @@ input {
   display: flex;
   flex-direction: column;
 }
-.quote__stars {
-  display: flex;
-  gap: 2px;
-  color: #f2a900;
-  margin-bottom: 1rem;
-}
-.quote__stars svg {
-  width: 18px;
-  height: 18px;
-}
 .quote blockquote {
   margin: 0;
   font-size: 1.06rem;
@@ -1333,7 +1341,7 @@ input {
 .offer__card {
   position: relative;
   border-radius: var(--r-lg);
-  background: linear-gradient(135deg, var(--blue) 0%, var(--blue-deep) 100%);
+  background: var(--blue-deep);
   color: #fff;
   padding: clamp(2.2rem, 6vw, 4rem);
   overflow: hidden;
@@ -1341,24 +1349,13 @@ input {
   grid-template-columns: minmax(0, 1fr);
   gap: 2.4rem;
 }
-.offer__card::after {
-  content: '';
-  position: absolute;
-  right: -20%;
-  top: -40%;
-  width: 70%;
-  aspect-ratio: 1;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.14), transparent 65%);
-  pointer-events: none;
-}
 .offer__card .eyebrow {
   color: #bcd6fb;
 }
 .offer__title {
   font-size: clamp(2rem, 5.6vw, 3.4rem);
-  font-weight: 700;
-  letter-spacing: -0.035em;
+  font-weight: 600;
+  letter-spacing: -0.04em;
   line-height: 1.06;
   text-wrap: balance;
 }
@@ -1387,7 +1384,7 @@ input {
 }
 .offer__price b {
   font-size: 3rem;
-  font-weight: 700;
+  font-weight: 600;
   letter-spacing: -0.04em;
   line-height: 1;
 }
@@ -1516,10 +1513,7 @@ input {
   min-height: min(100svh, 960px);
   display: flex;
   align-items: center;
-  background:
-    radial-gradient(900px 500px at 10% 0%, rgba(11, 99, 206, 0.55), transparent 65%),
-    radial-gradient(700px 500px at 100% 100%, rgba(11, 99, 206, 0.35), transparent 60%),
-    var(--navy);
+  background: var(--navy);
   color: #fff;
   padding-block: clamp(5rem, 10vw, 7rem);
   overflow: hidden;
@@ -1532,14 +1526,14 @@ input {
 }
 .final__title {
   font-size: clamp(2.6rem, 8vw, 5rem);
-  font-weight: 700;
-  letter-spacing: -0.04em;
+  font-weight: 600;
+  letter-spacing: -0.045em;
   line-height: 1.02;
   text-wrap: balance;
 }
 .final__title span {
   display: block;
-  color: #8fbaf3;
+  color: #9db9e0;
 }
 .final__sub {
   margin-top: 1.3rem;
@@ -2065,4 +2059,14 @@ input {
   place-items: center;
   font-weight: 600;
   font-size: 15px;
+}
+
+.app__thumb svg {
+  width: 22px;
+  height: 22px;
+}
+.cam__close svg,
+.cam__flash-icon svg {
+  width: 15px;
+  height: 15px;
 }

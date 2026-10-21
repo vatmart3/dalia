@@ -2,6 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import type { CSSProperties } from 'react'
 import { IconBell, IconChart, IconCheck, IconHome, IconList, IconTag, IconCamera } from './Icons'
 import { CameraView } from './CameraView'
+import { ProductThumb } from './ProductGlyph'
 
 /**
  * Écran de l'appli Dalia (DOM réel : net et lisible).
@@ -48,7 +49,7 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
       <div className="app__section">Expire bientôt</div>
       <div className="app__list">
         <div className="app__item">
-          <span className="app__thumb">🥛</span>
+          <ProductThumb kind="yaourt" />
           <div>
             <div className="app__name">Yaourts nature × 12</div>
             <div className="app__meta">Rayon frais · 16/05</div>
@@ -56,7 +57,7 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
           {applied ? <span className="app__pill app__pill--blue">−20 % actif</span> : <span className="app__pill app__pill--red">J-2</span>}
         </div>
         <div className="app__item">
-          <span className="app__thumb">🥐</span>
+          <ProductThumb kind="brioche" />
           <div>
             <div className="app__name">Brioches tranchées</div>
             <div className="app__meta">Rayon 2 · 17/05</div>
@@ -64,7 +65,7 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
           <span className="app__pill app__pill--amber">J-3</span>
         </div>
         <div className="app__item">
-          <span className="app__thumb">🧀</span>
+          <ProductThumb kind="fromage" />
           <div>
             <div className="app__name">Tomme de brebis</div>
             <div className="app__meta">Vitrine · 19/05</div>
@@ -72,7 +73,7 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
           <span className="app__pill app__pill--amber">J-5</span>
         </div>
         <div className="app__item">
-          <span className="app__thumb">🍑</span>
+          <ProductThumb kind="fruit" />
           <div>
             <div className="app__name">Abricots, 1 cagette</div>
             <div className="app__meta">Étal · promo d'hier</div>

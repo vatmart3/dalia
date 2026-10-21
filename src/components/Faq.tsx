@@ -79,7 +79,7 @@ export function Faq() {
             <Item key={item.q} {...item} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
           ))}
         </div>
-        <CtaRow center note={<>Une autre question ? On vous rappelle.</>} />
+        <CtaRow center label="Une autre question ? Demandez à être rappelé" />
       </div>
     </section>
   )

@@ -44,7 +44,7 @@ export function HowItWorks() {
             </Reveal>
           ))}
         </ol>
-        <CtaRow note={<>On installe tout <strong>dans votre boutique</strong>, c’est offert.</>} />
+        <CtaRow note={<>Installation dans votre boutique, offerte.</>} />
       </div>
     </section>
   )

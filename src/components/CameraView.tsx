@@ -1,6 +1,7 @@
 import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import { useEffect, useState } from 'react'
 import { IconCheck } from './Icons'
+import { ProductThumb } from './ProductGlyph'
 
 /*
  * Étape « Photo » : l'appareil photo de Dalia scanne un pot de yaourt.
@@ -121,11 +122,15 @@ export function CameraView() {
       </div>
       <div className="cam__top">
         <span className="cam__close" aria-hidden="true">
-          ✕
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round">
+            <path d="M7 7l10 10M17 7 7 17" />
+          </svg>
         </span>
         <span className="cam__title">Scanner un produit</span>
         <span className="cam__flash-icon" aria-hidden="true">
-          ⚡︎
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinejoin="round">
+            <path d="M13 3 5.5 13.5H11L10 21l7.5-10.5H12z" />
+          </svg>
         </span>
       </div>
 
@@ -181,7 +186,7 @@ export function CameraView() {
             <AnimatePresence>
               {shots > 0 && (
                 <motion.span key={shots} initial={{ scale: 0.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring}>
-                  🥛
+                  <ProductThumb kind="yaourt" />
                 </motion.span>
               )}
             </AnimatePresence>
@@ -224,7 +229,7 @@ export function CameraView() {
               Produit ajouté
             </div>
             <div className="cam__item">
-              <span className="app__thumb">🥛</span>
+              <ProductThumb kind="yaourt" />
               <div>
                 <div className="app__name">Yaourts nature × 12</div>
                 <div className="app__meta">DLC 16/05 · Rayon frais</div>

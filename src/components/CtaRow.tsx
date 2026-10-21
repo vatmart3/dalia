@@ -1,24 +1,14 @@
 import type { ReactNode } from 'react'
-import { CTA_LABEL, CTA_TARGET } from '../lib/config'
-import { ButtonLink } from './Button'
+import { CTA_TARGET } from '../lib/config'
 
-/** CTA répété à chaque section. */
-export function CtaRow({
-  note,
-  variant = 'primary',
-  label = CTA_LABEL,
-  center,
-}: {
-  note?: ReactNode
-  variant?: 'primary' | 'ghost' | 'white'
-  label?: string
-  center?: boolean
-}) {
+/** Rappel d'appel à l'action en fin de section : un lien sobre, pas un gros bouton. */
+export function CtaRow({ note, label = 'Essayer Dalia gratuitement', center }: { note?: ReactNode; label?: string; center?: boolean }) {
   return (
-    <div className={`cta-row ${center ? 'cta-row--center' : ''}`}>
-      <ButtonLink href={CTA_TARGET} variant={variant}>
+    <div className={`cta-link-row ${center ? 'cta-link-row--center' : ''}`}>
+      <a className="text-link" href={CTA_TARGET}>
         {label}
-      </ButtonLink>
+        <span aria-hidden="true"> →</span>
+      </a>
       {note && <p className="cta-note">{note}</p>}
     </div>
   )

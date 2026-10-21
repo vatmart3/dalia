@@ -1,6 +1,5 @@
 import { Reveal } from './Reveal'
 import { CtaRow } from './CtaRow'
-import { IconStar } from './Icons'
 
 // ⚠️ Témoignages d'exemple : à remplacer par ceux des commerçants pilotes (avec leur accord et leur photo).
 const QUOTES = [
@@ -41,11 +40,6 @@ export function Testimonials() {
           {QUOTES.map((q, i) => (
             <Reveal as="li" key={q.name} delay={i * 0.08}>
               <figure className="card quote">
-                <div className="quote__stars" aria-label="5 sur 5">
-                  {Array.from({ length: 5 }, (_, k) => (
-                    <IconStar key={k} />
-                  ))}
-                </div>
                 <blockquote>« {q.text} »</blockquote>
                 <figcaption>
                   {/* Remplacer par <img className="quote__photo" src="…" alt="" /> */}
@@ -62,7 +56,7 @@ export function Testimonials() {
           ))}
         </ul>
         <p className="quotes__note">Témoignages d’illustration, programme pilote en cours dans le bassin de Thau.</p>
-        <CtaRow note={<>Rejoignez les premiers commerces pilotes <strong>du bassin de Thau</strong>.</>} />
+        <CtaRow note={<>Rejoignez les premiers commerces pilotes du bassin de Thau.</>} />
       </div>
     </section>
   )

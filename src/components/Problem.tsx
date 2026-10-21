@@ -1,11 +1,10 @@
 import { Reveal } from './Reveal'
 import { CtaRow } from './CtaRow'
-import { IconAlert, IconClock, IconEuro } from './Icons'
 
 const STATS = [
-  { value: '150', unit: '€', label: 'de produits jetés chaque semaine, en moyenne, dans un petit commerce alimentaire.', Icon: IconEuro, color: 'var(--red)', bg: 'var(--red-50)' },
-  { value: '3', unit: 'h', label: 'par semaine passées à vérifier les dates dans les rayons, à la main.', Icon: IconClock, color: 'var(--amber)', bg: 'var(--amber-50)' },
-  { value: '1 sur 5', unit: '', label: 'des produits périmés découverts trop tard pour être encore vendus.', Icon: IconAlert, color: 'var(--blue)', bg: 'var(--blue-50)' },
+  { value: '150', unit: '€', label: 'de produits jetés chaque semaine, en moyenne, dans un petit commerce alimentaire.' },
+  { value: '3', unit: 'h', label: 'par semaine passées à vérifier les dates dans les rayons, à la main.' },
+  { value: '1 sur 5', unit: '', label: 'des produits périmés découverts trop tard pour être encore vendus.' },
 ]
 
 export function Problem() {
@@ -21,24 +20,19 @@ export function Problem() {
         </div>
 
         <ul className="stats">
-          {STATS.map(({ value, unit, label, Icon, color, bg }, i) => (
-            <Reveal as="li" key={value} delay={i * 0.08}>
-              <div className="card stat">
-                <span className="stat__icon" style={{ color, background: bg }}>
-                  <Icon />
-                </span>
-                <span className="stat__value">
-                  {value}
-                  {unit && <small>{unit}</small>}
-                </span>
-                <span className="stat__label">{label}</span>
-              </div>
+          {STATS.map(({ value, unit, label }, i) => (
+            <Reveal as="li" key={value} className="stat" delay={i * 0.08}>
+              <span className="stat__value">
+                {value}
+                {unit && <small>{unit}</small>}
+              </span>
+              <span className="stat__label">{label}</span>
             </Reveal>
           ))}
         </ul>
         <p className="stats__note">Ordres de grandeur pour un commerce alimentaire de proximité.</p>
 
-        <CtaRow note={<>Dalia fait le tour des dates <strong>à votre place</strong>.</>} />
+        <CtaRow note={<>Dalia fait le tour des dates à votre place.</>} />
       </div>
     </section>
   )
