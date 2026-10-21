@@ -4,7 +4,7 @@ import { gsap } from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ButtonLink } from './Button'
 import { CssPhone } from './AppScreen'
-import { IconSkip } from './Icons'
+import { IconCheck, IconSkip } from './Icons'
 import { useInViewport } from '../hooks/useInViewport'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
@@ -140,6 +140,24 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
           {/* De face pour la photo, puis légèrement de biais pour l'alerte et la promo. */}
           <div className={`hero__phone hero__phone--s${stage}`} aria-hidden="true">
             <CssPhone stage={stage} />
+          </div>
+          {/* Petites étiquettes autour du téléphone (grands écrans) : elles s'allument au fil de la démo. */}
+          <div className="hero__floats" aria-hidden="true">
+            <span className={`float-card float-card--date ${stage === 0 ? 'is-on' : ''}`}>
+              <span className="float-card__check">
+                <IconCheck />
+              </span>
+              <span>
+                <b>Date lue : 16/05</b>
+                Yaourts nature × 12
+              </span>
+            </span>
+            <span className={`float-tag ${stage >= 1 ? 'is-on' : ''}`}>−20 %</span>
+            <span className={`float-card float-card--sold ${stage === 2 ? 'is-on' : ''}`}>
+              <b>Vendu avant la date</b>
+              Abricots, 1 cagette
+            </span>
+            <span className="hand-note hero__hand">la date est lue toute seule</span>
           </div>
           <p className="sr-only" aria-live="polite">
             {stage === 0 && 'L’appli Dalia photographie un pot de yaourt et lit sa date limite : 16 mai.'}

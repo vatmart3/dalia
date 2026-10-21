@@ -61,6 +61,9 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
           </div>
 
           <div className="calc__result">
+            <p className="hand-note calc__hand" aria-hidden="true">
+              sur un an, ça chiffre vite ↓
+            </p>
             <div className="calc__row">
               <div className="calc__row-head">
                 <span className="calc__row-label">Perte sur un an</span>

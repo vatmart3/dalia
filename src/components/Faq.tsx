@@ -1,7 +1,8 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useId, useState } from 'react'
 import { CtaRow } from './CtaRow'
-import { PRICE } from '../lib/config'
+import { IconPhone } from './Icons'
+import { FOUNDER, PRICE } from '../lib/config'
 
 const FAQ = [
   {
@@ -79,6 +80,16 @@ export function Faq() {
             Vos questions, nos <em>réponses</em>.
           </h2>
           <CtaRow label="Une autre question ? Demandez à être rappelé" />
+          <div className="faq__contact">
+            <p className="faq__contact-title">Plutôt en parler de vive voix&nbsp;?</p>
+            <p className="faq__contact-text">
+              {FOUNDER.firstName} décroche lui-même, pas de standard.
+            </p>
+            <a className="btn btn--ghost btn--sm" href={`tel:${FOUNDER.tel}`}>
+              <IconPhone />
+              <span>{FOUNDER.phone}</span>
+            </a>
+          </div>
         </div>
         <div className="faq__list">
           {FAQ.map((item, i) => (

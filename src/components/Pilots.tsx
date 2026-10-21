@@ -13,11 +13,14 @@ export function Pilots() {
   return (
     <section className="section" id="pilotes" aria-labelledby="pilots-title">
       <div className="wrap">
-        <div className="section-head">
-          <span className="eyebrow">Programme pilote · {PILOT_AREA}</span>
-          <h2 id="pilots-title" className="h2">
-            Devenez l’un des {PILOT_SEATS} commerces pilotes du <em>bassin de Thau</em>.
-          </h2>
+        <div className="section-head section-head--split">
+          <div>
+            <span className="eyebrow">Programme pilote · {PILOT_AREA}</span>
+            <h2 id="pilots-title" className="h2">
+              Devenez l’un des {PILOT_SEATS} commerces pilotes du <em>bassin de Thau</em>.
+            </h2>
+          </div>
+          <p className="lead">Pas de faux avis ici : Dalia démarre avec des commerces du coin, qui l’essaient et la façonnent avec nous.</p>
         </div>
         <ol className="pilots__list">
           {ADVANTAGES.map(({ title, text }, i) => (

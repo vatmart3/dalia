@@ -160,7 +160,7 @@ input {
 
 .section {
   position: relative;
-  padding-block: clamp(5rem, 11vw, 9rem);
+  padding-block: clamp(4.2rem, 8.5vw, 6.8rem);
   background: #fff;
 }
 .section--soft {
@@ -214,7 +214,7 @@ input {
 }
 .section-head {
   max-width: 760px;
-  margin-bottom: clamp(2.6rem, 6vw, 4rem);
+  margin-bottom: clamp(2.2rem, 5vw, 3.4rem);
 }
 .section-head--center {
   margin-inline: auto;
@@ -361,6 +361,15 @@ input {
   background: #fff;
   border: 1px solid var(--line);
   border-radius: var(--r-lg);
+}
+
+/* Note manuscrite (Caveat) */
+.hand-note {
+  font-family: var(--font-hand);
+  font-size: 1.55rem;
+  font-weight: 600;
+  line-height: 1.1;
+  color: var(--blue);
 }
 
 /* Emplacement photo (à remplacer par une vraie photo, pas d'image générée) */
@@ -515,6 +524,14 @@ input {
     var(--paper);
   overflow: hidden;
 }
+/* Trait dessiné à la main sous le mot clé du hero */
+.hero .h1 em {
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 14' preserveAspectRatio='none'%3E%3Cpath d='M3 9c38-5 80-7 120-5 26 1 48 3 74 1' fill='none' stroke='%231D3FBF' stroke-opacity='.35' stroke-width='5' stroke-linecap='round'/%3E%3C/svg%3E")
+    no-repeat left 0 bottom 0.04em / 96% 0.14em;
+  display: inline-block;
+  line-height: 1;
+  padding-bottom: 0.1em;
+}
 .hero__inner {
   position: relative;
   display: flex;
@@ -544,6 +561,98 @@ input {
   .hero .btn--ghost {
     display: none;
   }
+}
+/* Étiquettes autour du téléphone (grands écrans seulement) */
+.hero__floats {
+  display: none;
+}
+@media (min-width: 1200px) {
+  .hero__floats {
+    display: block;
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 3;
+  }
+}
+.float-card {
+  position: absolute;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.55rem;
+  width: 150px;
+  padding: 0.65rem 0.75rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: var(--muted);
+  box-shadow: 0 14px 30px -22px rgba(14, 26, 58, 0.45);
+  opacity: 0.55;
+  transition: opacity 0.5s var(--ease), transform 0.5s var(--ease);
+}
+.float-card b {
+  display: block;
+  color: var(--ink);
+  font-weight: 600;
+}
+.float-card.is-on {
+  opacity: 1;
+  transform: translateY(-4px);
+}
+.float-card__check {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: var(--blue);
+  color: #fff;
+}
+.float-card__check svg {
+  width: 12px;
+  height: 12px;
+}
+.float-card--date {
+  right: calc(50% + 152px);
+  top: 20%;
+}
+.float-card--sold {
+  flex-direction: column;
+  gap: 0;
+  left: calc(50% + 152px);
+  top: 58%;
+  border-left: 3px solid var(--blue);
+}
+.float-tag {
+  position: absolute;
+  left: calc(50% + 162px);
+  top: 26%;
+  padding: 0.4rem 0.9rem 0.4rem 0.75rem;
+  background: var(--apricot);
+  color: var(--ink);
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  clip-path: polygon(0 0, 84% 0, 100% 50%, 84% 100%, 0 100%);
+  transform: rotate(-6deg) scale(0.85);
+  opacity: 0;
+  transition: opacity 0.4s var(--ease), transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+.float-tag.is-on {
+  opacity: 1;
+  transform: rotate(-6deg) scale(1);
+}
+.hero__hand {
+  position: absolute;
+  right: calc(50% + 150px);
+  top: calc(20% + 92px);
+  width: 150px;
+  text-align: right;
+  transform: rotate(-4deg);
 }
 .hero__steps {
   position: absolute;
@@ -1044,6 +1153,68 @@ input {
 }
 
 /* ==========================================================================
+   Bandeau d'étiquettes produits
+   ========================================================================== */
+
+.ticker {
+  position: relative;
+  overflow: hidden;
+  background: #fff;
+  border-block: 1px solid var(--line);
+  padding-block: 0.85rem;
+  -webkit-mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+  mask-image: linear-gradient(90deg, transparent, #000 6%, #000 94%, transparent);
+}
+.ticker__track {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  gap: 2.4rem;
+  width: max-content;
+  animation: ticker 60s linear infinite;
+}
+.ticker__item {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  white-space: nowrap;
+  font-size: 0.92rem;
+  font-weight: 500;
+  color: var(--text);
+}
+.ticker__item::before {
+  content: '';
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--line);
+  margin-right: 0.4rem;
+}
+.ticker__tag {
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.18rem 0.55rem;
+  border-radius: 6px;
+  border: 1px solid var(--ink);
+  color: var(--ink);
+}
+.ticker__tag--promo {
+  background: var(--apricot);
+  border-color: var(--apricot);
+}
+.ticker__tag--sold {
+  background: var(--blue);
+  border-color: var(--blue);
+  color: #fff;
+}
+@keyframes ticker {
+  to {
+    transform: translateX(-50%);
+  }
+}
+
+/* ==========================================================================
    Compteur
    ========================================================================== */
 
@@ -1057,7 +1228,55 @@ input {
 .counter .wrap {
   position: relative;
   display: grid;
+  gap: 2.4rem;
+}
+.counter__main {
+  display: grid;
   gap: 0.9rem;
+  min-width: 0;
+}
+.counter__rates {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  border-top: 1px solid rgba(255, 255, 255, 0.16);
+}
+.counter__rates li {
+  padding: 1.1rem 0.8rem 0 0;
+}
+.counter__rates b {
+  display: block;
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-size: clamp(1.5rem, 5vw, 2.2rem);
+  line-height: 1.1;
+  letter-spacing: 0.01em;
+  color: #fff;
+  white-space: nowrap;
+}
+.counter__rates span {
+  font-size: 0.85rem;
+  color: #b8c0d6;
+}
+@media (min-width: 1000px) {
+  .counter .wrap {
+    grid-template-columns: minmax(0, 1fr) 260px;
+    align-items: center;
+    gap: 4rem;
+  }
+  .counter__rates {
+    grid-template-columns: 1fr;
+    border-top: 0;
+    border-left: 1px solid rgba(255, 255, 255, 0.16);
+  }
+  .counter__rates li {
+    padding: 1.1rem 0 1.1rem 2rem;
+  }
+  .counter__rates li + li {
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+  }
 }
 .counter__label {
   font-size: clamp(1.05rem, 2.4vw, 1.3rem);
@@ -1127,6 +1346,30 @@ input {
 }
 .stat--big {
   background: var(--paper);
+}
+.stat__tags {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 1.4rem;
+}
+.date-chip {
+  font-size: 0.78rem;
+  font-weight: 600;
+  padding: 0.3rem 0.6rem;
+  border: 1px dashed #b9b3a4;
+  border-radius: 6px;
+  color: var(--muted);
+  background: #fff;
+}
+.date-chip--gone {
+  text-decoration: line-through;
+  text-decoration-color: var(--ink);
+}
+.stat__tags .hand-note {
+  font-size: 1.35rem;
+  transform: rotate(-3deg);
 }
 .stat--big .stat__value {
   font-size: clamp(4.8rem, 22vw, 9rem);
@@ -1265,6 +1508,11 @@ input {
   background: #f6f4ee;
   border-top: 1px solid var(--line);
   overflow: hidden;
+}
+.calc__hand {
+  margin: -0.4rem 0 0.9rem;
+  transform: rotate(-2deg);
+  transform-origin: left center;
 }
 .calc__row + .calc__row {
   margin-top: 1.6rem;
@@ -1673,6 +1921,27 @@ input {
 .faq__head .cta-link-row {
   margin-top: 1.6rem;
 }
+.faq__contact {
+  margin-top: 2rem;
+  padding: 1.3rem 1.4rem 1.4rem;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: var(--r-lg);
+  max-width: 380px;
+}
+.faq__contact-title {
+  font-weight: 600;
+  color: var(--ink);
+}
+.faq__contact-text {
+  margin: 0.25rem 0 1rem;
+  font-size: 0.95rem;
+  color: var(--muted);
+}
+.faq__contact .btn svg {
+  width: 16px;
+  height: 16px;
+}
 .faq__list {
   min-width: 0;
   border-top: 1px solid var(--ink);
@@ -2021,6 +2290,9 @@ input {
     animation-duration: 0.001ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
+  }
+  .ticker__track {
+    animation: none;
   }
 }
 

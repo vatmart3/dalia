@@ -11,11 +11,13 @@ export function Problem() {
   return (
     <section className="section" id="probleme" aria-labelledby="problem-title">
       <div className="wrap">
-        <div className="section-head">
-          <span className="eyebrow">Le problème</span>
-          <h2 id="problem-title" className="h2">
-            Chaque date ratée, c’est de la marge à la <em>poubelle</em>.
-          </h2>
+        <div className="section-head section-head--split">
+          <div>
+            <span className="eyebrow">Le problème</span>
+            <h2 id="problem-title" className="h2">
+              Chaque date ratée, c’est de la marge à la <em>poubelle</em>.
+            </h2>
+          </div>
           <p className="lead">Entre la caisse, les livraisons et les clients, personne n’a le temps de surveiller chaque produit.</p>
         </div>
 
@@ -28,6 +30,14 @@ export function Problem() {
                 {unit && <small>{unit}</small>}
               </span>
               <span className="stat__label">{label}</span>
+              {i === 0 && (
+                <span className="stat__tags" aria-hidden="true">
+                  <span className="date-chip date-chip--gone">Yaourts · 14/05</span>
+                  <span className="date-chip date-chip--gone">Brioches · 15/05</span>
+                  <span className="date-chip date-chip--gone">Jambon · 15/05</span>
+                  <span className="hand-note">trop tard…</span>
+                </span>
+              )}
             </Reveal>
           ))}
         </ul>

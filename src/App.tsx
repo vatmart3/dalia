@@ -2,6 +2,7 @@ import { MotionConfig } from 'framer-motion'
 import { Header } from './components/Header'
 import { Hero } from './components/Hero'
 import { WasteCounter } from './components/WasteCounter'
+import { Ticker } from './components/Ticker'
 import { Problem } from './components/Problem'
 import { Calculator } from './components/Calculator'
 import { HowItWorks } from './components/HowItWorks'
@@ -29,6 +30,7 @@ function Home({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <>
       <Hero reducedMotion={reducedMotion} />
+      <Ticker />
       <WasteCounter reducedMotion={reducedMotion} />
       <Problem />
       <Calculator reducedMotion={reducedMotion} />
