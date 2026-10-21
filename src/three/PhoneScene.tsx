@@ -10,7 +10,7 @@ import { LoopControl } from './LoopControl'
  * Téléphone 3D du hero, inspiré de l'iPhone 17 Pro Max : coins très arrondis,
  * tranches arrondies, aluminium bleu profond, plateau photo pleine largeur au dos.
  * progress (0 → 1, piloté par GSAP ScrollTrigger) :
- *   le téléphone, présenté de dos, pivote pour montrer l'écran ;
+ *   le téléphone, légèrement incliné au départ, se redresse face à vous ;
  *   l'écran (DOM) passe du tableau de bord à l'alerte, puis à la promo appliquée.
  * L'écran est un vrai élément DOM (rendu par React dans <Hero>) projeté en 3D
  * avec CSS3DRenderer : texte net et lisible, synchronisé avec le téléphone.
@@ -141,9 +141,9 @@ function CssScreen({ element, anchor }: { element: HTMLElement; anchor: MutableR
 
 type Props = { progress: MutableRefObject<number>; reducedMotion: boolean; screen: HTMLElement | null }
 
-// Rotation : de dos (trois-quarts) → face à l'écran, en tournant dans le même sens.
-const START_Y = Math.PI - 0.5
-const END_Y = Math.PI * 2 - 0.16
+// Rotation : de face, incliné de trois-quarts → bien de face.
+const START_Y = -0.55
+const END_Y = -0.16
 
 // Objectifs en triangle (vus de dos, en haut à gauche) : x positif = gauche vu de dos.
 const LENSES: [number, number][] = [
@@ -222,7 +222,7 @@ function Phone({ progress, reducedMotion, screen }: Props) {
     const dt = Math.min(delta, 1 / 20)
     const p = reducedMotion ? 1 : progress.current
     const t = state.clock.elapsedTime
-    const k = ease(p / 0.42) // pivote sur la première partie de l'intro
+    const k = ease(p / 0.42) // se redresse sur la première partie de l'intro
 
     const idle = reducedMotion ? 0 : 1
     const ry = THREE.MathUtils.lerp(START_Y, END_Y, k) + idle * (pointer.current.x * 0.08 + Math.sin(t * 0.6) * 0.04)
