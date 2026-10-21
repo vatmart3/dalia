@@ -1,2 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"><url><loc>https://dalia.fr/</loc></url></urlset>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+  <url><loc>https://dalia.fr/</loc></url>
+  <url><loc>https://dalia.fr/boulangerie</loc></url>
+  <url><loc>https://dalia.fr/boucherie</loc></url>
+  <url><loc>https://dalia.fr/epicerie</loc></url>
+  <url><loc>https://dalia.fr/superette</loc></url>
+  <url><loc>https://dalia.fr/mentions-legales</loc></url>
+  <url><loc>https://dalia.fr/confidentialite</loc></url>
+</urlset>

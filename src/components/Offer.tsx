@@ -1,11 +1,16 @@
 import { Reveal } from './Reveal'
 import { ButtonLink } from './Button'
 import { IconCheck } from './Icons'
-import { CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
+import { CTA_TARGET, PILOT_AREA, PILOT_SEATS, PRICE } from '../lib/config'
+import { useEstimate } from '../lib/estimate'
 
 const POINTS = ['Installation sur place, faite par nous', '1 mois complet gratuit', 'Sans engagement, sans carte bancaire', 'Accompagnement par téléphone inclus']
 
 export function Offer() {
+  const { weekly } = useEstimate()
+  // Combien de jours de pertes représente l'abonnement ?
+  const days = PRICE.monthly / (weekly / 7)
+  const daysLabel = days <= 1 ? 'une journée' : `${Math.ceil(days)} jours`
   return (
     <section className="section" id="offre" aria-labelledby="offer-title">
       <div className="wrap">
@@ -24,6 +29,9 @@ export function Offer() {
               <b>0 €</b>
               <span>pendant 1 mois</span>
             </div>
+            <p className="offer__after">
+              Ensuite <strong>{PRICE.monthly} {PRICE.unit}</strong>, sans engagement. Moins que ce que vous jetez en {daysLabel}.
+            </p>
             <ul className="offer__list">
               {POINTS.map((p) => (
                 <li key={p}>

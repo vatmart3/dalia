@@ -1,6 +1,7 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useId, useState } from 'react'
 import { CtaRow } from './CtaRow'
+import { PRICE } from '../lib/config'
 
 const FAQ = [
   {
@@ -21,7 +22,11 @@ const FAQ = [
   },
   {
     q: 'Combien ça coûte après le mois gratuit ?',
-    a: 'Un abonnement mensuel simple, présenté clairement avant la fin de l’essai. Si Dalia ne vous fait pas économiser plus qu’elle ne coûte, vous arrêtez, sans frais.',
+    a: `${PRICE.monthly} ${PRICE.unit}, sans engagement, installation comprise. Si Dalia ne vous fait pas économiser plus qu’elle ne coûte, vous arrêtez, sans frais.`,
+  },
+  {
+    q: 'Et si un produit ne se vend toujours pas ?',
+    a: 'Dalia vous le signale assez tôt pour le donner à une association locale plutôt que de le jeter. Les dons alimentaires des entreprises peuvent ouvrir droit à une réduction d’impôt : votre expert-comptable vous dira ce qui s’applique à votre commerce.',
   },
   {
     q: 'Je m’engage sur combien de temps ?',

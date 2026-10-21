@@ -2,8 +2,13 @@ import { useEffect, useState } from 'react'
 import { Logo } from './Logo'
 import { ButtonLink } from './Button'
 import { CTA_TARGET } from '../lib/config'
+import { href } from '../lib/router'
 
-export function Header() {
+/**
+ * En-tête fixe. Sur l'accueil : navigation par ancres.
+ * Sur les autres pages : logo vers l'accueil, et bouton d'essai vers `ctaHref`.
+ */
+export function Header({ home = true, ctaHref = CTA_TARGET }: { home?: boolean; ctaHref?: string }) {
   const [scrolled, setScrolled] = useState(false)
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 8)
@@ -14,17 +19,20 @@ export function Header() {
   return (
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="wrap">
-        <a className="logo" href="#top" aria-label="Dalia, retour en haut de page">
+        <a className="logo" href={home ? '#top' : href('')} aria-label={home ? 'Dalia, retour en haut de page' : 'Dalia, accueil'}>
           <Logo />
         </a>
-        <nav className="nav" aria-label="Navigation principale">
-          <a href="#probleme">Le problème</a>
-          <a href="#calculateur">Calculateur</a>
-          <a href="#comment-ca-marche">Comment ça marche</a>
-          <a href="#offre">Offre</a>
-          <a href="#faq">FAQ</a>
-        </nav>
-        <ButtonLink href={CTA_TARGET} size="sm" arrow={false}>
+        {home && (
+          <nav className="nav" aria-label="Navigation principale">
+            <a href="#probleme">Le problème</a>
+            <a href="#calculateur">Calculateur</a>
+            <a href="#comment-ca-marche">Comment ça marche</a>
+            <a href="#metiers">Métiers</a>
+            <a href="#offre">Offre</a>
+            <a href="#faq">FAQ</a>
+          </nav>
+        )}
+        <ButtonLink href={ctaHref} size="sm" arrow={false}>
           Essai gratuit
         </ButtonLink>
       </div>

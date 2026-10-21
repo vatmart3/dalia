@@ -24,3 +24,39 @@ export const eur = (n: number, digits = 0) =>
   new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR', maximumFractionDigits: digits, minimumFractionDigits: digits }).format(n)
 
 export const num = (n: number) => new Intl.NumberFormat('fr-FR', { maximumFractionDigits: 0 }).format(n)
+
+/* --------------------------------------------------------------------------
+ * ⚠️ VALEURS D'EXEMPLE À REMPLACER AVANT LA MISE EN LIGNE (voir README)
+ * ------------------------------------------------------------------------ */
+
+/** Tarif après le mois gratuit (affiché dans l'offre et la FAQ). */
+export const PRICE = { monthly: 39, unit: '€ HT / mois' }
+
+/** La personne derrière Dalia (section « Qui est derrière Dalia »). */
+export const FOUNDER = {
+  name: 'Prénom Nom',
+  firstName: 'Prénom',
+  role: 'Fondateur de Dalia',
+  /** Chemin d'une photo carrée dans public/ (ex. '/fondateur.jpg'), ou null pour les initiales. */
+  photo: null as string | null,
+  /** Numéro affiché (format lisible) et version internationale pour WhatsApp (sans + ni espaces). */
+  phone: '06 00 00 00 00',
+  whatsapp: '33600000000',
+  email: 'bonjour@dalia.fr',
+}
+
+/** Informations légales (page « Mentions légales »). */
+export const COMPANY = {
+  name: 'Dalia',
+  legalForm: '[Forme juridique et capital, ex. SAS au capital de 1 000 €]',
+  address: '[Adresse du siège], 34200 Sète',
+  siret: '[Numéro SIRET]',
+  rcs: '[RCS de rattachement, ex. RCS Montpellier 000 000 000]',
+  vat: '[Numéro de TVA intracommunautaire]',
+  director: '[Prénom Nom du directeur de la publication]',
+  host: '[Hébergeur : nom, adresse, téléphone]',
+  siteUrl: 'https://dalia.fr',
+}
+
+/** Durée de conservation des demandes d'essai sans suite (prospects). */
+export const LEAD_RETENTION = '3 ans à compter du dernier contact'

@@ -1715,10 +1715,6 @@ input {
   font-size: 0.88rem;
   color: var(--muted);
 }
-.footer .wrap {
-  display: grid;
-  gap: 1.2rem;
-}
 .footer__logo svg {
   height: 26px;
   width: auto;
@@ -1737,11 +1733,6 @@ input {
 @media (min-width: 900px) {
   .footer {
     padding-bottom: 2.5rem;
-  }
-  .footer .wrap {
-    grid-template-columns: auto 1fr auto;
-    align-items: center;
-    gap: 2.4rem;
   }
 }
 
@@ -2069,4 +2060,325 @@ input {
 .cam__flash-icon svg {
   width: 15px;
   height: 15px;
+}
+
+/* ==========================================================================
+   Offre : tarif après l'essai
+   ========================================================================== */
+
+.offer__after {
+  margin-top: 0.8rem;
+  font-size: 0.95rem;
+  color: #c9d8ee;
+  line-height: 1.45;
+}
+.offer__after strong {
+  color: #fff;
+  font-weight: 600;
+}
+
+/* ==========================================================================
+   Qui est derrière Dalia
+   ========================================================================== */
+
+.founder {
+  display: grid;
+  gap: 2rem;
+  align-items: center;
+}
+.founder__photo {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--blue-deep);
+  color: #fff;
+  display: grid;
+  place-items: center;
+  font-size: 2.6rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.founder__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.founder__body {
+  min-width: 0;
+}
+.founder__text {
+  margin-top: 1.1rem;
+  max-width: 46ch;
+}
+.founder__sign {
+  margin-top: 1.2rem;
+  color: var(--muted);
+}
+.founder__sign strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+.founder__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1.6rem;
+}
+.founder__contact .btn svg {
+  width: 18px;
+  height: 18px;
+}
+.founder__mail {
+  margin-top: 0.9rem;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.founder__select {
+  color: var(--ink);
+  user-select: all;
+  -webkit-user-select: all;
+}
+@media (min-width: 800px) {
+  .founder {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 4rem;
+  }
+  .founder__photo {
+    width: 240px;
+    height: 240px;
+    font-size: 3.6rem;
+  }
+}
+
+/* ==========================================================================
+   Métiers (accueil + pages dédiées)
+   ========================================================================== */
+
+.metiers {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.metiers > li {
+  min-width: 0;
+}
+.metier-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  height: 100%;
+  padding: 1.6rem 1.5rem;
+  text-decoration: none;
+  transition: border-color 0.2s, background-color 0.2s;
+}
+.metier-card:hover {
+  border-color: var(--blue-200);
+  background: var(--blue-50);
+}
+.metier-card__name {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--blue);
+}
+.metier-card__title {
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  color: var(--ink);
+}
+.metier-card__more {
+  margin-top: auto;
+  padding-top: 0.6rem;
+  font-weight: 600;
+  font-size: 0.92rem;
+  color: var(--blue);
+}
+@media (min-width: 600px) {
+  .metiers {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media (min-width: 1000px) {
+  .metiers {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.metier-hero {
+  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4rem));
+  background: radial-gradient(1000px 560px at 80% 20%, #f2f7ff, transparent 65%), #fff;
+}
+.metier-hero__grid {
+  display: grid;
+  gap: 3rem;
+  align-items: center;
+}
+.metier-hero__grid > * {
+  min-width: 0;
+}
+.metier-hero .badge {
+  margin-bottom: 1.2rem;
+}
+.back-link {
+  display: block;
+  width: fit-content;
+  margin-bottom: 1.4rem;
+  font-size: 0.92rem;
+  font-weight: 600;
+  color: var(--muted);
+  text-decoration: none;
+}
+.back-link:hover {
+  color: var(--ink);
+}
+.metier-alert__card {
+  max-width: 400px;
+  margin-inline: auto;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  padding: 16px;
+  box-shadow: var(--shadow-lg);
+}
+.metier-alert__row {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+.metier-alert__caption {
+  margin-top: 1rem;
+  text-align: center;
+  font-size: 0.85rem;
+  color: var(--muted);
+}
+@media (min-width: 900px) {
+  .metier-hero__grid {
+    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    gap: 4rem;
+  }
+}
+
+.cases {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.case {
+  padding: 1.8rem 1.6rem;
+}
+.case h3 {
+  font-size: 1.2rem;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+  color: var(--ink);
+}
+.case p {
+  margin-top: 0.5rem;
+  color: var(--muted);
+}
+@media (min-width: 900px) {
+  .cases {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1.25rem;
+  }
+}
+
+.section--tight {
+  padding-block: 2.5rem;
+}
+.other-metiers {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.5rem 1.2rem;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   Pages légales
+   ========================================================================== */
+
+.legal {
+  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4rem));
+}
+.legal__wrap {
+  max-width: 760px;
+}
+.legal__body h1 {
+  margin-bottom: 1.2rem;
+}
+.legal__body h2 {
+  margin-top: 2.2rem;
+  font-size: 1.15rem;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  color: var(--ink);
+}
+.legal__body p,
+.legal__body ul {
+  margin-top: 0.6rem;
+  color: var(--text);
+}
+.legal__body ul {
+  padding-left: 1.2rem;
+}
+.legal__body a {
+  color: var(--blue);
+}
+.legal__intro {
+  font-size: 1.15rem;
+  color: var(--muted);
+}
+
+/* ==========================================================================
+   Pied de page en colonnes
+   ========================================================================== */
+
+.footer__grid {
+  display: grid;
+  gap: 2rem;
+}
+.footer__brand p {
+  margin-top: 0.8rem;
+  max-width: 32ch;
+}
+.footer__col {
+  display: grid;
+  gap: 0.5rem;
+  align-content: start;
+}
+.footer__title {
+  font-weight: 600;
+  color: var(--ink);
+  margin-bottom: 0.2rem;
+}
+.footer__col a {
+  text-decoration: none;
+}
+.footer__col a:hover {
+  color: var(--ink);
+}
+.footer__bottom {
+  margin-top: 2rem;
+  padding-top: 1.4rem;
+  border-top: 1px solid var(--line);
+  font-size: 0.82rem;
+}
+@media (min-width: 900px) {
+  .footer__grid {
+    grid-template-columns: 2fr 1fr 1fr;
+  }
+}
+.form-card__legal a {
+  color: inherit;
+  text-decoration: underline;
+  text-underline-offset: 2px;
 }

@@ -1,6 +1,10 @@
 import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState, type FormEvent } from 'react'
 import { Button } from './Button'
+import { useEstimate } from '../lib/estimate'
+import { DALIA_SAVINGS_RATE, eur } from '../lib/config'
+import { href } from '../lib/router'
+import { track } from '../lib/analytics'
 
 type Fields = 'nom' | 'commerce' | 'ville' | 'telephone'
 type Errors = Partial<Record<Fields, string>>
@@ -86,7 +90,8 @@ function Success({ name }: { name: string }) {
   )
 }
 
-export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
+export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion: boolean; source?: string }) {
+  const estimate = useEstimate()
   const [errors, setErrors] = useState<Errors>({})
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [serverError, setServerError] = useState('')
@@ -112,11 +117,12 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
       setStatus('done')
       return
     }
+    const pertes = estimate.touched ? { pertesSemaine: estimate.weekly } : {}
     try {
       const res = await fetch('/api/leads', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ ...data, site: String(fd.get('site') ?? ''), source: 'landing-cta-final' }),
+        body: JSON.stringify({ ...data, ...pertes, site: String(fd.get('site') ?? ''), source }),
       })
       const body = await res.json().catch(() => ({}))
       if (!res.ok) {
@@ -125,6 +131,7 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
       }
       setFirstName(data.nom.trim().split(/\s+/)[0])
       setStatus('done')
+      track('Demande d’essai envoyée', { source })
     } catch (err) {
       setStatus('error')
       setServerError(
@@ -150,7 +157,14 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
             aria-labelledby="form-title"
           >
             <h3 id="form-title">Demander mon essai gratuit</h3>
-            <p className="form-card__intro">4 champs, 20 secondes. On vous rappelle pour fixer l’installation.</p>
+            {estimate.touched ? (
+              <p className="form-card__intro">
+                Vous estimez perdre <strong>{eur(estimate.weekly * 52)} par an</strong>. On regarde ensemble comment en récupérer environ{' '}
+                {eur(Math.round(estimate.weekly * 52 * DALIA_SAVINGS_RATE))}.
+              </p>
+            ) : (
+              <p className="form-card__intro">4 champs, 20 secondes. On vous rappelle pour fixer l’installation.</p>
+            )}
             {FIELDS.map((f) => (
               <div className="field" key={f.name}>
                 <label htmlFor={`f-${f.name}`}>{f.label}</label>
@@ -188,7 +202,9 @@ export function LeadForm({ reducedMotion }: { reducedMotion: boolean }) {
               </p>
             )}
             <p className="form-card__legal">
-              {DEMO ? 'Version de démonstration : aucune donnée n’est envoyée.' : 'Vos coordonnées servent uniquement à vous recontacter au sujet de Dalia.'}
+              {DEMO && <>Version de démonstration : aucune donnée n’est envoyée. </>}
+              Vos coordonnées servent uniquement à vous recontacter au sujet de Dalia.{' '}
+              <a href={href('confidentialite')}>Politique de confidentialité</a>
             </p>
           </motion.form>
         )}

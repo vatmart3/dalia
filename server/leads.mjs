@@ -111,7 +111,7 @@ async function exportCsv(req, res, url) {
     /* aucun lead pour l'instant */
   }
   const rows = raw.split('\n').filter(Boolean).map((l) => JSON.parse(l))
-  const cols = ['date', 'nom', 'commerce', 'ville', 'telephone', 'source']
+  const cols = ['date', 'nom', 'commerce', 'ville', 'telephone', 'pertesSemaine', 'source']
   const csv = [cols.join(';'), ...rows.map((r) => cols.map((c) => csvCell(r[c])).join(';'))].join('\n')
   send(res, 200, '﻿' + csv, {
     'Content-Type': 'text/csv; charset=utf-8',
@@ -142,7 +142,10 @@ export async function handleLeadsApi(req, res) {
     const { lead, errors } = validateLead(input)
     if (Object.keys(errors).length) return send(res, 422, { error: 'Formulaire incomplet', fields: errors })
 
-    const entry = { id: randomUUID(), date: new Date().toISOString(), ...lead, source: clean(input?.source, 40) || 'landing' }
+    // Estimation saisie dans le calculateur (€ par semaine), si le visiteur l'a utilisé.
+    const pertes = Number(input?.pertesSemaine)
+    const pertesSemaine = Number.isFinite(pertes) && pertes > 0 && pertes < 100000 ? Math.round(pertes) : null
+    const entry = { id: randomUUID(), date: new Date().toISOString(), ...lead, pertesSemaine, source: clean(input?.source, 40) || 'landing' }
     await mkdir(DATA_DIR, { recursive: true })
     await appendFile(LEADS_FILE, JSON.stringify(entry) + '\n', 'utf8')
     await forwardToWebhook(entry)

@@ -5,7 +5,7 @@ import { PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
 const TRUST = ['Installation sur place, par nous', '1 mois gratuit, sans carte bancaire', 'Sans engagement : vous arrêtez quand vous voulez']
 
-export function FinalCta({ reducedMotion }: { reducedMotion: boolean }) {
+export function FinalCta({ reducedMotion, source }: { reducedMotion: boolean; source?: string }) {
   return (
     <section className="final" aria-labelledby="final-title">
       <div className="wrap final__grid">
@@ -30,7 +30,7 @@ export function FinalCta({ reducedMotion }: { reducedMotion: boolean }) {
             ))}
           </ul>
         </motion.div>
-        <LeadForm reducedMotion={reducedMotion} />
+        <LeadForm reducedMotion={reducedMotion} source={source} />
       </div>
     </section>
   )

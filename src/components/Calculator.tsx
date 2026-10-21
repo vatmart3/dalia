@@ -1,13 +1,15 @@
 import { motion } from 'framer-motion'
-import { useCallback, useState, type CSSProperties } from 'react'
+import { useCallback, type CSSProperties } from 'react'
 import { AnimatedNumber } from './AnimatedNumber'
 import { CtaRow } from './CtaRow'
 import { CALCULATOR, DALIA_SAVINGS_RATE, eur } from '../lib/config'
+import { useEstimate } from '../lib/estimate'
+import { track } from '../lib/analytics'
 
 const barSpring = { type: 'spring' as const, stiffness: 120, damping: 22 }
 
 export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
-  const [weekly, setWeekly] = useState(CALCULATOR.initial)
+  const { weekly, touched, setWeekly } = useEstimate()
 
   const yearly = weekly * 52
   const saved = Math.round(yearly * DALIA_SAVINGS_RATE)
@@ -43,7 +45,10 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
               max={CALCULATOR.max}
               step={CALCULATOR.step}
               value={weekly}
-              onChange={(e) => setWeekly(Number(e.target.value))}
+              onChange={(e) => {
+                if (!touched) track('Calculateur utilisé')
+                setWeekly(Number(e.target.value))
+              }}
               aria-valuetext={`${weekly} euros par semaine`}
               style={{ '--p': `${pct}%` } as CSSProperties}
             />

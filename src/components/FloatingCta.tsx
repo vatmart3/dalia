@@ -12,8 +12,7 @@ export function FloatingCta() {
     const update = () => setShow(pastHero && !formVisible)
     const onScroll = () => {
       const hero = document.getElementById('top')
-      const heroEnd = hero ? hero.getBoundingClientRect().bottom : window.innerHeight
-      pastHero = heroEnd < window.innerHeight * 0.3
+      pastHero = hero ? hero.getBoundingClientRect().bottom < window.innerHeight * 0.3 : window.scrollY > window.innerHeight * 0.6
       update()
     }
     const target = document.querySelector('.final')

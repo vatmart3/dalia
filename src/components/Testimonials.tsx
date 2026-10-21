@@ -1,8 +1,11 @@
 import { Reveal } from './Reveal'
 import { CtaRow } from './CtaRow'
 
-// ⚠️ Témoignages d'exemple : à remplacer par ceux des commerçants pilotes (avec leur accord et leur photo).
-const QUOTES = [
+// ⚠️ Témoignages d'exemple : à remplacer par ceux des commerçants pilotes (avec leur accord).
+// Ajoutez `photo: '/temoins/martine.jpg'` (image carrée dans public/) pour remplacer les initiales.
+type Quote = { text: string; name: string; shop: string; initials: string; color: string; photo?: string }
+
+const QUOTES: Quote[] = [
   {
     text: 'Avant, je découvrais les yaourts périmés le samedi soir en faisant le rayon. Maintenant Dalia me prévient le mercredi, je les mets en promo et ils partent.',
     name: 'Martine R.',
@@ -42,10 +45,13 @@ export function Testimonials() {
               <figure className="card quote">
                 <blockquote>« {q.text} »</blockquote>
                 <figcaption>
-                  {/* Remplacer par <img className="quote__photo" src="…" alt="" /> */}
-                  <span className="quote__photo" style={{ background: q.color }} aria-hidden="true">
-                    {q.initials}
-                  </span>
+                  {q.photo ? (
+                    <img className="quote__photo" src={q.photo} alt="" width="52" height="52" />
+                  ) : (
+                    <span className="quote__photo" style={{ background: q.color }} aria-hidden="true">
+                      {q.initials}
+                    </span>
+                  )}
                   <span>
                     <span className="quote__name">{q.name}</span>
                     <span className="quote__shop">{q.shop}</span>
