@@ -14,7 +14,8 @@ import path from 'node:path'
 import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
-const DATA_DIR = process.env.LEADS_DIR || path.join(ROOT, 'data')
+// Sur Vercel, seul /tmp est inscriptible (et il est vidé régulièrement : utilisez LEADS_WEBHOOK_URL).
+const DATA_DIR = process.env.LEADS_DIR || (process.env.VERCEL ? '/tmp/dalia-leads' : path.join(ROOT, 'data'))
 const LEADS_FILE = path.join(DATA_DIR, 'leads.jsonl')
 const MAX_BODY = 8 * 1024
 

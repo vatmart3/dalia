@@ -19,6 +19,7 @@ import { Footer } from './components/Footer'
 import { MetierPage } from './components/MetierPage'
 import { LegalPage } from './components/LegalPage'
 import { useReducedMotion } from './hooks/useReducedMotion'
+import { useScrollToHashOnLoad } from './hooks/useScrollToHashOnLoad'
 import { EstimateProvider } from './lib/estimate'
 import { href, useDocumentMeta, useView } from './lib/router'
 
@@ -51,6 +52,7 @@ function Home({ reducedMotion }: { reducedMotion: boolean }) {
 export default function App() {
   const reducedMotion = useReducedMotion()
   const view = useView()
+  useScrollToHashOnLoad()
   const hasForm = view.kind !== 'legal'
   // Sur les pages légales (sans formulaire), l'essai renvoie vers l'accueil.
   const ctaHref = hasForm ? '#essai' : href('') === '/' ? '/#essai' : href('')
