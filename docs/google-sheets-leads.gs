@@ -1,21 +1,35 @@
 /**
- * Dalia — réception des demandes d'essai dans Google Sheets + e-mail.
+ * Dalia — réception des demandes d'essai par e-mail + dans une feuille Google Sheets.
  *
- * 1. Créez une feuille Google Sheets, puis Extensions → Apps Script.
- * 2. Collez ce fichier, remplacez NOTIFY_EMAIL, enregistrez.
- * 3. Déployer → Nouveau déploiement → Application Web
- *    (Exécuter en tant que : vous ; Accès : tout le monde).
- * 4. Copiez l'URL obtenue dans la variable LEADS_WEBHOOK_URL du serveur Dalia.
- *
- * Pour vérifier l'envoi de l'e-mail : choisissez la fonction « testEmail » en haut
- * de l'éditeur et cliquez sur « Exécuter » (Google demande l'autorisation la 1re fois).
+ * 1. Sur ordinateur, ouvrez script.google.com → « Nouveau projet ».
+ *    (Ou, depuis une feuille Google Sheets : Extensions → Apps Script.)
+ * 2. Collez ce fichier à la place du contenu, enregistrez.
+ * 3. Choisissez la fonction « testEmail » en haut de l'éditeur → « Exécuter »
+ *    (Google demande l'autorisation la 1re fois) : vous recevez un e-mail de test,
+ *    et une feuille « Demandes Dalia » est créée dans votre Google Drive.
+ * 4. Déployer → Nouveau déploiement → Application Web
+ *    (Exécuter en tant que : moi ; Qui a accès : tout le monde).
+ * 5. Copiez l'URL obtenue (…/exec) dans la variable LEADS_WEBHOOK_URL du serveur Dalia (Vercel).
  */
 
 const NOTIFY_EMAIL = 'jeremyvatuonepro@gmail.com' // ← adresse qui reçoit les demandes d'essai
 
+/** La feuille du projet si le script est attaché à une feuille, sinon une feuille créée une fois dans le Drive. */
+function getSheet() {
+  const active = SpreadsheetApp.getActiveSpreadsheet()
+  if (active) return active.getSheets()[0]
+  const props = PropertiesService.getScriptProperties()
+  let id = props.getProperty('SHEET_ID')
+  if (!id) {
+    id = SpreadsheetApp.create('Demandes Dalia').getId()
+    props.setProperty('SHEET_ID', id)
+  }
+  return SpreadsheetApp.openById(id).getSheets()[0]
+}
+
 function doPost(e) {
   const lead = JSON.parse(e.postData.contents)
-  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheets()[0]
+  const sheet = getSheet()
   if (sheet.getLastRow() === 0) {
     sheet.appendRow(['Date', 'Nom', 'Commerce', 'Ville', 'Téléphone', 'Pertes estimées (€/sem.)', 'Source'])
   }
