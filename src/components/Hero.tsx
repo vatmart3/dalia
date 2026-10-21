@@ -1,4 +1,4 @@
-import { lazy, Suspense, useLayoutEffect, useRef, useState } from 'react'
+import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
 import { AnimatePresence, motion } from 'framer-motion'
 import { gsap } from 'gsap'
@@ -18,6 +18,14 @@ const PhoneScene = lazy(() => import('../three/PhoneScene'))
 type Stage = 0 | 1 | 2
 const STEPS = ['Photo', 'Alerte', 'Promo']
 const stageOf = (p: number): Stage => (p < 0.3 ? 0 : p < 0.68 ? 1 : 2)
+// Position de l'intro qui correspond à chaque étape (pour l'autoplay et les clics sur les étapes).
+const STAGE_PROGRESS = [0, 0.5, 1]
+// Autoplay (mobile) : durée de chaque étape. L'étape Photo laisse jouer un scan complet.
+const STAGE_MS = [5200, 3400, 3400]
+// Intro au scroll réservée aux écrans larges avec souris ; ailleurs elle joue toute seule.
+const SCROLL_INTRO_QUERY = '(min-width: 900px) and (hover: hover) and (pointer: fine)'
+
+type Mode = 'scroll' | 'auto' | 'static'
 
 const fadeUp = (delay: number) => ({
   initial: { opacity: 0, y: 24 },
@@ -32,6 +40,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   const progress = useRef(0)
   const [stage, setStage] = useState<Stage>(reducedMotion ? 2 : 0)
   const [introDone, setIntroDone] = useState(reducedMotion)
+  const [mode, setMode] = useState<Mode>(reducedMotion ? 'static' : 'auto')
   const webgl = useWebGL()
   // Élément DOM de l'écran, projeté sur le téléphone 3D par la scène.
   const [screenEl] = useState(() => {
@@ -41,16 +50,31 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   })
   const visible = useInViewport(stageRef, '0px')
 
-  // Intro au scroll : la section est épinglée le temps que le téléphone se redresse et montre l'alerte.
+  // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
+  // Mobile / tactile : pas d'épinglage (saccadé avec la barre d'adresse), l'intro joue toute seule.
   useLayoutEffect(() => {
     if (!sectionRef.current) return
     const mm = gsap.matchMedia()
-    mm.add('(prefers-reduced-motion: no-preference)', () => {
-      ScrollTrigger.config({ ignoreMobileResize: true })
+    mm.add({ desktop: SCROLL_INTRO_QUERY, reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
+      const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean }
+      if (reduce) {
+        progress.current = 1
+        setMode('static')
+        setStage(2)
+        setIntroDone(true)
+        return
+      }
+      if (!desktop) {
+        progress.current = 0
+        setMode('auto')
+        setStage(0)
+        setIntroDone(false)
+        return
+      }
+      setMode('scroll')
       const st = ScrollTrigger.create({
         trigger: sectionRef.current,
-        // Sur mobile, le hero est plus haut que l'écran : on épingle quand le téléphone est entièrement visible.
-        start: 'bottom bottom',
+        start: 'top top',
         end: '+=120%',
         pin: true,
         scrub: 0.5,
@@ -67,17 +91,40 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
         st.kill()
       }
     })
-    mm.add('(prefers-reduced-motion: reduce)', () => {
-      progress.current = 1
-      setStage(2)
-      setIntroDone(true)
-    })
     return () => mm.revert()
   }, [])
 
+  // Autoplay : enchaîne Photo → Alerte → Promo en boucle tant que le téléphone est visible.
+  useEffect(() => {
+    if (mode !== 'auto' || !visible) return
+    const tween = gsap.to(progress, { current: STAGE_PROGRESS[stage], duration: 1.1, ease: 'power2.inOut' })
+    const timer = window.setTimeout(() => setStage(((stage + 1) % 3) as Stage), STAGE_MS[stage])
+    return () => {
+      window.clearTimeout(timer)
+      tween.kill()
+    }
+  }, [mode, stage, visible])
+
+  const goToStage = (i: Stage) => {
+    const st = triggerRef.current
+    if (mode === 'scroll' && st) {
+      const target = i === 0 ? 0.05 : i === 1 ? 0.5 : 0.92
+      window.scrollTo({ top: st.start + (st.end - st.start) * target, behavior: 'smooth' })
+      return
+    }
+    setStage(i)
+  }
+
+  // Passe directement au contenu qui suit le hero.
   const skipIntro = () => {
     const st = triggerRef.current
-    window.scrollTo({ top: st ? st.end + 1 : window.innerHeight, behavior: 'instant' as ScrollBehavior })
+    const next = sectionRef.current?.closest('.pin-spacer') ?? sectionRef.current
+    const top = st ? st.end + 1 : (next?.getBoundingClientRect().bottom ?? window.innerHeight) + window.scrollY - 40
+    if (mode !== 'scroll') {
+      setStage(2)
+      setIntroDone(true)
+    }
+    window.scrollTo({ top, behavior: mode === 'scroll' ? ('instant' as ScrollBehavior) : 'smooth' })
   }
 
   return (
@@ -128,11 +175,13 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             {stage === 2 && 'Promo moins 20 % activée, étiquette envoyée à l’imprimante.'}
           </p>
 
-          <ol className="hero__steps" aria-hidden="true">
+          <ol className="hero__steps" aria-label="Étapes de la démonstration">
             {STEPS.map((label, i) => (
-              <li key={label} className={stage === i ? 'is-active' : ''}>
-                {stage === i && <motion.span layoutId="hero-step" className="hero__steps-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
-                {i + 1}. {label}
+              <li key={label}>
+                <button type="button" className={stage === i ? 'is-active' : ''} aria-current={stage === i ? 'step' : undefined} onClick={() => goToStage(i as Stage)}>
+                  {stage === i && <motion.span layoutId="hero-step" className="hero__steps-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+                  {i + 1}. {label}
+                </button>
               </li>
             ))}
           </ol>
