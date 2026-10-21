@@ -36,6 +36,15 @@ Validation côté client **et** serveur (numéro français), champ pot de miel a
 
 Sur un hébergement sans disque persistant (Vercel, Netlify…), utilisez `LEADS_WEBHOOK_URL`.
 
+## Mise en ligne sur Vercel
+
+Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) :
+
+1. Sur vercel.com : **Add New… → Project**, importez le dépôt GitHub `dalia` (Vercel détecte Vite tout seul).
+2. **Settings → Environment Variables** : ajoutez `LEADS_WEBHOOK_URL` (script Google Sheets de `docs/`), sinon les demandes d'essai ne sont pas conservées (le disque de Vercel est effacé régulièrement).
+3. Les pages métier (`/boulangerie`, etc.) et les pages légales fonctionnent grâce à la réécriture vers `index.html`.
+
+
 ## Pages
 
 | Page                    | Adresse (site)        | Adresse (aperçu démo)  |
