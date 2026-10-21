@@ -26,6 +26,10 @@ const FAQ = [
     a: `${PRICE.monthly} ${PRICE.unit}, sans engagement, installation comprise. Si Dalia ne vous fait pas économiser plus qu’elle ne coûte, vous arrêtez, sans frais.`,
   },
   {
+    q: 'Et si je ne veux pas faire de promos ?',
+    a: 'Pas de problème : Dalia peut simplement vous rappeler de mettre les produits en avant pour qu’ils partent en premier.',
+  },
+  {
     q: 'Et si un produit ne se vend toujours pas ?',
     a: 'Dalia vous le signale assez tôt pour le donner à une association locale plutôt que de le jeter. Les dons alimentaires des entreprises peuvent ouvrir droit à une réduction d’impôt : votre expert-comptable vous dira ce qui s’applique à votre commerce.',
   },

@@ -4,12 +4,16 @@ import { IconBell, IconChart, IconCheck, IconHome, IconList, IconTag, IconCamera
 import { CameraView } from './CameraView'
 import { ProductThumb } from './ProductGlyph'
 
+export type AlertMode = 'promo' | 'rotation'
+
 /**
  * Écran de l'appli Dalia (DOM réel : net et lisible).
- * stage 0 : photo d'un produit · 1 : alerte reçue · 2 : promo appliquée
+ * stage 0 : photo d'un produit · 1 : alerte reçue · 2 : action faite
+ * mode promo : remise conseillée · mode rotation : produit à mettre devant en rayon, sans promo
  */
-export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
+export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mode?: AlertMode }) {
   const applied = stage === 2
+  const rotation = mode === 'rotation'
   return (
     <div className="app">
       <div className="app__island" />
@@ -51,10 +55,20 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
         <div className="app__item">
           <ProductThumb kind="yaourt" />
           <div>
-            <div className="app__name">Yaourts nature × 12</div>
-            <div className="app__meta">Rayon frais · 16/05</div>
+            <div className="app__name">Yaourts nature × {rotation ? 8 : 12}</div>
+            <div className="app__meta">Rayon frais · {rotation ? '17/05' : '16/05'}</div>
           </div>
-          {applied ? <span className="app__pill app__pill--promo">−20 % actif</span> : <span className="app__pill app__pill--red">J-2</span>}
+          {rotation ? (
+            applied ? (
+              <span className="app__pill app__pill--blue">Devant ✓</span>
+            ) : (
+              <span className="app__pill app__pill--red">J-3</span>
+            )
+          ) : applied ? (
+            <span className="app__pill app__pill--promo">−20 % actif</span>
+          ) : (
+            <span className="app__pill app__pill--red">J-2</span>
+          )}
         </div>
         <div className="app__item">
           <ProductThumb kind="brioche" />
@@ -118,7 +132,31 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
             <CameraView />
           </motion.div>
         )}
-        {stage === 1 && (
+        {stage === 1 && rotation && (
+          <motion.div
+            key="notif-rotation"
+            className="app__notif"
+            initial={{ y: -140, opacity: 0, scale: 0.96 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: -40, opacity: 0, scale: 0.96 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+          >
+            <div className="app__notif-top">
+              <span className="app__notif-icon">
+                <IconBell />
+              </span>
+              DALIA
+              <span className="app__notif-time">maintenant</span>
+            </div>
+            <div className="app__notif-title">8 yaourts nature expirent dans 3 jours</div>
+            <div className="app__notif-body">Placez-les devant en rayon, pour qu’ils partent en premier.</div>
+            <div className="app__notif-actions">
+              <span className="app__notif-btn">Plus tard</span>
+              <span className="app__notif-btn app__notif-btn--primary">C’est fait</span>
+            </div>
+          </motion.div>
+        )}
+        {stage === 1 && !rotation && (
           <motion.div
             key="notif"
             className="app__notif"
@@ -144,7 +182,25 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
             </div>
           </motion.div>
         )}
-        {stage === 2 && (
+        {stage === 2 && rotation && (
+          <motion.div
+            key="toast-rotation"
+            className="app__toast"
+            initial={{ y: 40, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 20, opacity: 0 }}
+            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+          >
+            <span className="app__toast-check">
+              <IconCheck />
+            </span>
+            <span>
+              Yaourts mis en avant
+              <small>Devant en rayon, sans promo</small>
+            </span>
+          </motion.div>
+        )}
+        {stage === 2 && !rotation && (
           <motion.div
             key="toast"
             className="app__toast"
@@ -168,12 +224,12 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
 }
 
 /** Téléphone en CSS 3D (fallback sans WebGL, et visuel secondaire). */
-export function CssPhone({ stage = 2, style }: { stage?: 0 | 1 | 2; style?: CSSProperties }) {
+export function CssPhone({ stage = 2, mode, style }: { stage?: 0 | 1 | 2; mode?: AlertMode; style?: CSSProperties }) {
   return (
     <div className="phone-css" style={style}>
       <div className="phone-css__body">
         <div className="phone-css__glass">
-          <AppScreen stage={stage} />
+          <AppScreen stage={stage} mode={mode} />
         </div>
       </div>
     </div>

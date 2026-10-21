@@ -6,6 +6,7 @@ import { Ticker } from './components/Ticker'
 import { Problem } from './components/Problem'
 import { Calculator } from './components/Calculator'
 import { HowItWorks } from './components/HowItWorks'
+import { Modes } from './components/Modes'
 import { Metiers } from './components/Metiers'
 import { Features } from './components/Features'
 import { Pilots } from './components/Pilots'
@@ -35,6 +36,7 @@ function Home({ reducedMotion }: { reducedMotion: boolean }) {
       <Problem />
       <Calculator reducedMotion={reducedMotion} />
       <HowItWorks />
+      <Modes reducedMotion={reducedMotion} />
       <Metiers />
       <Features />
       <Pilots />
