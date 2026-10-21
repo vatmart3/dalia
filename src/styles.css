@@ -410,8 +410,26 @@ input {
   padding-top: calc(var(--header-h) + 1.75rem);
   padding-bottom: 1rem;
   display: flex;
-  background: radial-gradient(1000px 560px at 80% 20%, #f2f7ff, transparent 65%), #fff;
+  /* Fond : halos bleus doux sur un dégradé bleu très clair → blanc */
+  background:
+    radial-gradient(720px 520px at 82% 22%, rgba(11, 99, 206, 0.16), transparent 70%),
+    radial-gradient(560px 420px at 8% 92%, rgba(6, 43, 91, 0.07), transparent 70%),
+    linear-gradient(180deg, #eaf2fe 0%, #f5f9ff 55%, #ffffff 100%);
   overflow: hidden;
+}
+/* Quadrillage fin qui s'estompe vers les bords */
+.hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(11, 99, 206, 0.08) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(11, 99, 206, 0.08) 1px, transparent 1px);
+  background-size: 44px 44px;
+  background-position: center top;
+  -webkit-mask-image: radial-gradient(ellipse 75% 65% at 68% 35%, #000 25%, transparent 78%);
+  mask-image: radial-gradient(ellipse 75% 65% at 68% 35%, #000 25%, transparent 78%);
 }
 .hero__inner {
   position: relative;
@@ -1557,10 +1575,25 @@ input {
   min-height: min(100svh, 960px);
   display: flex;
   align-items: center;
-  background: var(--navy);
+  background:
+    radial-gradient(700px 500px at 15% 10%, rgba(11, 99, 206, 0.35), transparent 70%),
+    radial-gradient(600px 460px at 95% 100%, rgba(11, 99, 206, 0.22), transparent 70%),
+    var(--navy);
   color: #fff;
   padding-block: clamp(5rem, 10vw, 7rem);
   overflow: hidden;
+}
+.final::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 70% at 30% 40%, #000 20%, transparent 80%);
+  mask-image: radial-gradient(ellipse 80% 70% at 30% 40%, #000 20%, transparent 80%);
 }
 .final__grid {
   position: relative;
