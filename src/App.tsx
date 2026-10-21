@@ -15,6 +15,7 @@ import { FinalCta } from './components/FinalCta'
 import { FloatingCta } from './components/FloatingCta'
 import { Footer } from './components/Footer'
 import { MetierPage } from './components/MetierPage'
+import { Etal } from './components/etal/Etal'
 import { LegalPage } from './components/LegalPage'
 import { useReducedMotion } from './hooks/useReducedMotion'
 import { EstimateProvider } from './lib/estimate'
@@ -27,20 +28,20 @@ const HOME_DESCRIPTION =
 function Home({ reducedMotion }: { reducedMotion: boolean }) {
   useDocumentMeta(import.meta.env.MODE === 'demo' ? 'Dalia' : HOME_TITLE, HOME_DESCRIPTION)
   return (
-    <>
-      <Hero reducedMotion={reducedMotion} />
+    <Etal>
+      <Hero />
       <WasteCounter reducedMotion={reducedMotion} />
       <Problem />
       <Calculator reducedMotion={reducedMotion} />
       <HowItWorks />
       <Metiers />
-      <Features />
+      <Features reducedMotion={reducedMotion} />
       <Pilots />
       <Founder />
       <Offer />
       <Faq />
       <FinalCta reducedMotion={reducedMotion} />
-    </>
+    </Etal>
   )
 }
 

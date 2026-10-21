@@ -27,6 +27,7 @@ export function Sticker({
   delay = 0.2,
   className = '',
   style,
+  play,
 }: {
   children: ReactNode
   color?: string
@@ -34,21 +35,23 @@ export function Sticker({
   delay?: number
   className?: string
   style?: CSSProperties
+  /** Si fourni, le sticker se colle quand `play` passe à true (au lieu d'à l'apparition à l'écran). */
+  play?: boolean
 }) {
+  const stuck = {
+    opacity: [0, 1, 1, 1, 1],
+    scaleX: [2.2, 1.28, 0.9, 1.05, 1],
+    scaleY: [2.2, 0.74, 1.12, 0.96, 1],
+    rotate,
+    y: 0,
+  }
   return (
     <motion.div
       className={`sticker ${className}`}
       style={style}
       aria-hidden="true"
       initial={{ opacity: 0, scaleX: 2.2, scaleY: 2.2, rotate: rotate - 35, y: -50 }}
-      whileInView={{
-        opacity: [0, 1, 1, 1, 1],
-        scaleX: [2.2, 1.28, 0.9, 1.05, 1],
-        scaleY: [2.2, 0.74, 1.12, 0.96, 1],
-        rotate,
-        y: 0,
-      }}
-      viewport={{ once: true, amount: 0.6 }}
+      {...(play === undefined ? { whileInView: stuck, viewport: { once: true, amount: 0.6 } } : { animate: play ? stuck : undefined })}
       transition={{ duration: 0.75, times: [0, 0.45, 0.65, 0.85, 1], ease: 'easeOut', delay }}
     >
       <Burst color={color} />

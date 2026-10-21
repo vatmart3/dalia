@@ -1,5 +1,5 @@
-import { AnimatePresence, motion } from 'framer-motion'
-import { useId, useState } from 'react'
+import { useId, useState, type CSSProperties } from 'react'
+import { Crate } from './etal/Crate'
 import { CtaRow } from './CtaRow'
 import { PRICE } from '../lib/config'
 
@@ -38,54 +38,45 @@ const FAQ = [
   },
 ]
 
-function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; onToggle: () => void }) {
+/** Étiquette kraft : la question au recto, la réponse au verso (on la retourne). */
+function Tag({ q, a, open, onToggle, index }: { q: string; a: string; open: boolean; onToggle: () => void; index: number }) {
   const id = useId()
   return (
-    <div className={`faq__item ${open ? 'is-open' : ''}`}>
-      <h3 style={{ margin: 0 }}>
-        <button className="faq__q" aria-expanded={open} aria-controls={`${id}-a`} id={`${id}-q`} onClick={onToggle}>
-          {q}
-          <span className="faq__icon" aria-hidden="true" />
-        </button>
-      </h3>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={`${id}-a`}
-            role="region"
-            aria-labelledby={`${id}-q`}
-            className="faq__a"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 32 }}
-          >
-            <p>{a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </div>
+    <li className={`flip ${open ? 'is-open' : ''}`} style={{ '--tilt': `${[-2, 1.5, -1, 2, -1.5, 1, -2.5, 1.5][index % 8]}deg` } as CSSProperties}>
+      <button type="button" className="flip__btn" aria-expanded={open} aria-controls={`${id}-a`} onClick={onToggle}>
+        <span className="flip__card">
+          <span className="flip__face flip__face--front" aria-hidden={open}>
+            <span className="flip__q">{q}</span>
+            <span className="flip__hint">Retourner</span>
+          </span>
+          <span className="flip__face flip__face--back" id={`${id}-a`} aria-hidden={!open}>
+            <span className="flip__q flip__q--small">{q}</span>
+            <span className="flip__a">{a}</span>
+          </span>
+        </span>
+      </button>
+    </li>
   )
 }
 
 export function Faq() {
-  const [open, setOpen] = useState<number | null>(0)
+  const [open, setOpen] = useState<number | null>(null)
   return (
-    <section className="section sheet sheet--creme2" id="faq" aria-labelledby="faq-title">
-      <div className="wrap">
-        <div className="section-head section-head--center">
-          <span className="eyebrow">Questions fréquentes</span>
-          <h2 id="faq-title" className="h2">
-            Vos questions, nos réponses.
-          </h2>
-        </div>
-        <div className="faq__list">
-          {FAQ.map((item, i) => (
-            <Item key={item.q} {...item} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
-          ))}
-        </div>
-        <CtaRow center label="Une autre question ? Demandez à être rappelé" />
-      </div>
-    </section>
+    <Crate
+      id="faq"
+      titleId="faq-title"
+      className="panel--faq"
+      tone="creme"
+      label="carton"
+      eyebrow="Questions fréquentes"
+      title={<>Vos questions, nos réponses.</>}
+      aside={<CtaRow label="Une autre question ? Demandez à être rappelé" />}
+    >
+      <ul className="flips">
+        {FAQ.map((item, i) => (
+          <Tag key={item.q} {...item} index={i} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
+        ))}
+      </ul>
+    </Crate>
   )
 }

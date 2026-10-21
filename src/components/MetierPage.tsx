@@ -6,7 +6,8 @@ import { Reveal } from './Reveal'
 import { ProductThumb } from './ProductGlyph'
 import { IconBell } from './Icons'
 import { Sticker } from './Sticker'
-import { Blobs } from './Blobs'
+import { Awning } from './etal/Awning'
+import { Crate } from './etal/Crate'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 import { METIERS, metierBySlug } from '../lib/metiers'
 import { href, useDocumentMeta, type MetierSlug } from '../lib/router'
@@ -18,23 +19,20 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
 
   return (
     <>
-      <section className="section metier-hero" aria-labelledby="metier-title">
-        <Blobs
-          items={[
-            { color: 'var(--tomate)', size: '360px', top: '-80px', right: '-120px', opacity: 0.9 },
-            { color: 'var(--menthe)', size: '160px', bottom: '10%', left: '-50px', opacity: 0.6 },
-          ]}
-        />
-        <div className="wrap metier-hero__grid">
+      <section className="panel metier-hero" aria-labelledby="metier-title">
+        <Awning className="hero__awning" />
+        <div className="metier-hero__grid">
           <div>
             <a className="back-link" href={href('')}>
               ← Accueil
             </a>
-            <p className="badge">Dalia pour les {m.plural}</p>
-            <h1 id="metier-title" className="h1">
-              {m.title}
-            </h1>
-            <p className="lead hero__sub">{m.intro}</p>
+            <div className="slate">
+              <p className="carton hero__badge">Dalia pour les {m.plural}</p>
+              <h1 id="metier-title" className="h1">
+                {m.title}
+              </h1>
+            </div>
+            <p className="lead metier-hero__intro">{m.intro}</p>
             <div className="cta-row">
               <ButtonLink href={CTA_TARGET}>{CTA_LABEL}</ButtonLink>
             </div>
@@ -71,30 +69,22 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
         </div>
       </section>
 
-      <section className="section sheet sheet--abricot" aria-labelledby="cases-title">
-        <div className="wrap">
-          <div className="section-head">
-            <span className="eyebrow">Au quotidien</span>
-            <h2 id="cases-title" className="h2">
-              Ce que Dalia change dans votre {m.name.toLowerCase()}.
-            </h2>
-          </div>
-          <ul className="cases">
-            {m.cases.map((c, i) => (
-              <Reveal as="li" key={c.title} delay={i * 0.1} className="card case" rotate={i % 2 ? 1 : -1}>
-                <h3>{c.title}</h3>
-                <p>{c.text}</p>
-              </Reveal>
-            ))}
-          </ul>
-        </div>
-      </section>
+      <Crate titleId="cases-title" tone="abricot" eyebrow="Au quotidien" title={<>Ce que Dalia change dans votre {m.name.toLowerCase()}.</>}>
+        <ul className="pilots__list cases">
+          {m.cases.map((c, i) => (
+            <Reveal as="li" key={c.title} delay={i * 0.1} className="kraft" rotate={[-2, 1.5, -1][i % 3]}>
+              <h3>{c.title}</h3>
+              <p>{c.text}</p>
+            </Reveal>
+          ))}
+        </ul>
+      </Crate>
 
       <HowItWorks />
       <Founder />
 
-      <section className="section sheet sheet--creme2" aria-label="Autres métiers">
-        <div className="wrap other-metiers">
+      <section className="panel" aria-label="Autres métiers">
+        <div className="other-metiers">
           <span>Dalia existe aussi pour les</span>
           {others.map((o) => (
             <a key={o.slug} className="text-link" href={href(o.slug)}>

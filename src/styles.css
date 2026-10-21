@@ -1,7 +1,8 @@
 /* ==========================================================================
-   Dalia — « marché frais pop »
-   Sections empilées comme des feuilles aux coins très arrondis, chacune avec
-   sa couleur ; titres Anton en capitales, étiquettes de marché de travers.
+   Dalia — « L'étal qui défile »
+   La page est un étal de marché : chaque section est une cagette en bois posée
+   sur la planche, titrée par une étiquette (ardoise ou carton). Sur ordinateur,
+   le scroll fait longer l'étal à l'horizontale ; ailleurs, on descend l'étal.
    ========================================================================== */
 
 :root {
@@ -15,25 +16,28 @@
   --creme: #fff6e9;
   --creme-2: #ffecd2;
   --blanc: #fffdf8;
+  /* bois des cagettes et carton des étiquettes : nuances d'abricot */
+  --bois: #f2a33a;
+  --bois-fonce: #d98a2b;
+  --kraft: #f7dcae;
   --muted: #6e5a78;
   --line: rgba(59, 31, 74, 0.14);
 
   --display: 'Anton', 'Impact', 'Haettenschweiler', 'Arial Narrow Bold', sans-serif;
   --body: 'DM Sans', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
   --r-sm: 18px;
   --r: 32px;
-  --r-lg: 48px;
+  --r-lg: 44px;
   --r-pill: 999px;
-  --sheet: 56px;
 
   --gutter: clamp(16px, 5vw, 48px);
-  --maxw: 1200px;
   --header-h: 68px;
+  --awning-h: 72px;
 
   --pop: 5px 5px 0 var(--aubergine);
   --pop-sm: 3px 3px 0 var(--aubergine);
-  --soft: 0 18px 40px -18px rgba(59, 31, 74, 0.45);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
   --spring: cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -57,7 +61,7 @@ body {
   color: var(--aubergine);
   font-family: var(--body);
   font-size: 1.0625rem;
-  line-height: 1.6;
+  line-height: 1.55;
   overflow-x: clip;
   -webkit-font-smoothing: antialiased;
   -webkit-tap-highlight-color: transparent;
@@ -127,146 +131,50 @@ input {
 
 .wrap {
   position: relative;
-  z-index: 1;
   width: 100%;
-  max-width: var(--maxw);
+  max-width: 1200px;
   margin-inline: auto;
   padding-inline: var(--gutter);
 }
 
-/* ---------- Sections empilées ---------- */
+/* ---------- Typographie ---------- */
 
-.section {
-  position: relative;
-  padding-block: clamp(4.5rem, 10vw, 7.5rem);
-}
-.sheet {
-  background: var(--sheet-bg, var(--creme));
-  border-radius: var(--sheet) var(--sheet) 0 0;
-  margin-top: calc(-1 * var(--sheet));
-  padding-top: calc(clamp(4.5rem, 10vw, 7.5rem) + 1rem);
-  padding-bottom: calc(clamp(4.5rem, 10vw, 7.5rem) + var(--sheet));
-  overflow: clip;
-}
-.sheet--creme {
-  --sheet-bg: var(--creme);
-}
-.sheet--creme2 {
-  --sheet-bg: var(--creme-2);
-}
-.sheet--abricot {
-  --sheet-bg: var(--abricot);
-}
-.sheet--menthe {
-  --sheet-bg: var(--menthe);
-}
-.sheet--tomate {
-  --sheet-bg: var(--tomate);
-}
-.sheet--aubergine {
-  --sheet-bg: var(--aubergine);
-  color: var(--creme);
-}
-
-/* ---------- Typo ---------- */
-
-.eyebrow {
-  display: inline-block;
-  font-family: var(--body);
-  font-size: 0.82rem;
-  font-weight: 800;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  background: var(--aubergine);
-  color: var(--creme);
-  padding: 0.42em 1em;
-  border-radius: var(--r-pill);
-  transform: rotate(-2deg);
-  margin-bottom: 1.2rem;
-}
-.sheet--aubergine .eyebrow {
-  background: var(--abricot);
-  color: var(--aubergine);
-}
-
+/* Anton : uniquement les gros titres et les chiffres. */
 .h1,
-.h2,
-.display {
+.h2 {
   font-family: var(--display);
   font-weight: 400;
   text-transform: uppercase;
-  letter-spacing: 0.005em;
-  line-height: 0.95;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
   text-wrap: balance;
 }
 .h1 {
-  font-size: clamp(3.2rem, 14.5vw, 8.4rem);
+  font-size: clamp(2.9rem, 12.5vw, 6.4rem);
 }
 .h2 {
-  font-size: clamp(2.5rem, 9vw, 5.2rem);
-  line-height: 1.02;
-}
-.hl {
-  display: inline-block;
-  background: var(--blob, var(--abricot));
-  border-radius: 0.22em;
-  padding: 0.04em 0.12em 0;
-  transform: rotate(-2deg);
-}
-span:nth-child(even) > .hl {
-  transform: rotate(1.5deg);
-}
-.sheet--abricot {
-  --blob: var(--creme);
-}
-.sheet--aubergine {
-  --blob: var(--tomate);
-}
-.sheet--aubergine .hl {
-  color: var(--aubergine);
-}
-.sheet--menthe {
-  --blob: var(--abricot);
-}
-/* Mot posé sur un blob coloré */
-.blobword {
-  position: relative;
-  display: inline-block;
-  z-index: 0;
-  padding-inline: 0.1em;
-}
-.blobword::before {
-  content: '';
-  position: absolute;
-  inset: 0.06em -0.06em -0.02em;
-  z-index: -1;
-  background: var(--blob, var(--tomate));
-  border-radius: 46% 54% 42% 58% / 60% 44% 56% 40%;
-  transform: rotate(-3deg);
-}
-.tilt {
-  display: inline-block;
-  transform: rotate(-3deg);
+  font-size: clamp(2.1rem, 8vw, 3.1rem);
 }
 .lead {
-  font-size: clamp(1.08rem, 2.6vw, 1.3rem);
+  font-size: clamp(1.06rem, 2.4vw, 1.22rem);
   line-height: 1.5;
-  max-width: 36ch;
   font-weight: 500;
+  max-width: 40ch;
 }
-.section-head {
-  max-width: 820px;
-  margin-bottom: clamp(2.4rem, 6vw, 3.6rem);
+
+/* Mot surligné : le fond est celui du mot lui-même (inline-block), donc toujours
+   DERRIÈRE les lettres et jamais sur la ligne voisine. */
+.hl {
+  display: inline-block;
+  background: var(--hl-bg, var(--abricot));
+  color: var(--hl-fg, var(--aubergine));
+  border-radius: 0.18em;
+  padding: 0.06em 0.14em 0.02em;
+  margin-block: 0.03em;
+  transform: rotate(-1.5deg);
 }
-.section-head .lead {
-  margin-top: 1rem;
-}
-.section-head--center {
-  margin-inline: auto;
-  text-align: center;
-}
-.section-head--center .lead {
-  margin-inline: auto;
+span:nth-child(even) > .hl {
+  transform: rotate(1.2deg);
 }
 
 /* ---------- Boutons pilule ---------- */
@@ -279,14 +187,14 @@ span:nth-child(even) > .hl {
   align-items: center;
   justify-content: center;
   gap: 0.55em;
-  min-height: 56px;
-  padding: 0.85em 1.6em;
+  min-height: 54px;
+  padding: 0.8em 1.5em;
   border: 3px solid var(--aubergine);
   border-radius: var(--r-pill);
   background: var(--bg);
   color: var(--fg);
   font-weight: 800;
-  font-size: 1.06rem;
+  font-size: 1.04rem;
   line-height: 1.1;
   text-decoration: none;
   cursor: pointer;
@@ -296,7 +204,7 @@ span:nth-child(even) > .hl {
   user-select: none;
   -webkit-user-select: none;
   touch-action: manipulation;
-  transition: box-shadow 0.2s, background-color 0.2s;
+  transition: box-shadow 0.2s;
 }
 .btn:hover {
   box-shadow: 5px 6px 0 var(--aubergine);
@@ -307,6 +215,11 @@ span:nth-child(even) > .hl {
 .btn:disabled {
   opacity: 0.7;
   cursor: progress;
+}
+.btn > span:first-child {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5em;
 }
 .btn__arrow {
   display: inline-grid;
@@ -352,9 +265,10 @@ span:nth-child(even) > .hl {
   flex-wrap: wrap;
   align-items: center;
   gap: 0.8rem 1rem;
-  margin-top: 1.8rem;
+  margin-top: 1.4rem;
 }
 .cta-note {
+  margin-top: 0.9rem;
   font-size: 0.95rem;
   font-weight: 500;
   line-height: 1.4;
@@ -362,18 +276,15 @@ span:nth-child(even) > .hl {
 .cta-note strong {
   font-weight: 800;
 }
-
-/* Rappel en fin de section */
 .cta-link-row {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 0.6rem 1.2rem;
-  margin-top: 2.6rem;
+  gap: 0.6rem 1rem;
+  margin-top: 1.4rem;
 }
-.cta-link-row--center {
-  justify-content: center;
-  text-align: center;
+.cta-link-row .cta-note {
+  margin-top: 0;
 }
 .text-link {
   display: inline-flex;
@@ -391,79 +302,19 @@ span:nth-child(even) > .hl {
   transform: rotate(-2deg) scale(1.03);
 }
 
-/* ---------- Badges, étiquettes, stickers ---------- */
+/* ---------- Sticker promo (étoile) ---------- */
 
-.badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
-  padding: 0.45em 1em 0.45em 0.8em;
-  border-radius: var(--r-pill);
-  background: var(--abricot);
-  border: 2.5px solid var(--aubergine);
-  color: var(--aubergine);
-  font-size: 0.88rem;
-  font-weight: 800;
-  transform: rotate(-2deg);
-}
-.badge__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--tomate);
-  border: 2px solid var(--aubergine);
-}
-
-/* Étiquette de prix suspendue (ficelle + œillet) */
-.tag {
-  --tag: var(--creme);
-  --tilt: -4deg;
-  position: relative;
-  background: var(--tag);
-  color: var(--aubergine);
-  border: 3px solid var(--aubergine);
-  border-radius: 22px 36px 36px 22px;
-  padding: 1.3rem 1.4rem 1.3rem 3rem;
-  box-shadow: var(--pop);
-  transform: rotate(var(--tilt));
-}
-.tag::before {
-  content: '';
-  position: absolute;
-  left: 0.95rem;
-  top: 50%;
-  width: 16px;
-  height: 16px;
-  margin-top: -8px;
-  border-radius: 50%;
-  background: var(--sheet-bg, var(--creme));
-  border: 3px solid var(--aubergine);
-}
-.tag::after {
-  content: '';
-  position: absolute;
-  left: -40px;
-  top: calc(50% - 26px);
-  width: 56px;
-  height: 30px;
-  border: 3px solid var(--aubergine);
-  border-color: var(--aubergine) transparent transparent transparent;
-  border-radius: 50% 50% 0 0;
-  transform: rotate(-24deg);
-}
-
-/* Sticker promo rond (étoile) */
 .sticker {
   position: absolute;
   z-index: 6;
   display: grid;
   place-items: center;
-  width: var(--size, 96px);
-  height: var(--size, 96px);
+  width: var(--size, 92px);
+  height: var(--size, 92px);
   font-family: var(--display);
   text-transform: uppercase;
   color: var(--aubergine);
-  line-height: 0.95;
+  line-height: 1;
   text-align: center;
   pointer-events: none;
 }
@@ -475,61 +326,1614 @@ span:nth-child(even) > .hl {
 }
 .sticker span {
   position: relative;
-  font-size: calc(var(--size, 96px) * 0.3);
+  font-size: calc(var(--size, 92px) * 0.28);
 }
 .sticker small {
   display: block;
-  font-size: 0.45em;
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: 0.4em;
+  text-transform: none;
 }
 
-/* ---------- Blobs ondulants ---------- */
+/* ---------- Ardoise et carton ---------- */
 
-.blobs {
+.slate {
+  position: relative;
+  background: var(--aubergine);
+  color: var(--creme);
+  border: 10px solid var(--bois);
+  outline: 3px solid var(--aubergine);
+  border-radius: 26px;
+  padding: 2.4rem 1.4rem 1.6rem;
+  box-shadow: 8px 10px 0 rgba(59, 31, 74, 0.22);
+  --hl-bg: var(--tomate);
+}
+.carton {
+  display: inline-block;
+  background: var(--kraft);
+  color: var(--aubergine);
+  border: 3px solid var(--aubergine);
+  border-radius: 8px 18px 18px 8px;
+  padding: 0.35em 0.9em 0.35em 1.6em;
+  font-weight: 800;
+  font-size: 0.9rem;
+  position: relative;
+  box-shadow: var(--pop-sm);
+}
+.carton::before {
+  content: '';
   position: absolute;
-  inset: 0;
-  overflow: hidden;
-  pointer-events: none;
-  z-index: 0;
-}
-.blob {
-  position: absolute;
-  width: var(--s, 320px);
-  height: var(--s, 320px);
-  background: var(--c, var(--abricot));
-  opacity: var(--o, 1);
-  border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
-  animation:
-    blob-morph var(--d, 14s) ease-in-out infinite alternate,
-    blob-float calc(var(--d, 14s) * 1.3) ease-in-out infinite alternate;
-}
-@keyframes blob-morph {
-  0% {
-    border-radius: 42% 58% 63% 37% / 41% 44% 56% 59%;
-  }
-  33% {
-    border-radius: 63% 37% 41% 59% / 58% 62% 38% 42%;
-  }
-  66% {
-    border-radius: 36% 64% 52% 48% / 39% 52% 48% 61%;
-  }
-  100% {
-    border-radius: 55% 45% 34% 66% / 62% 38% 62% 38%;
-  }
-}
-@keyframes blob-float {
-  0% {
-    transform: translate(0, 0) rotate(0deg) scale(1);
-  }
-  100% {
-    transform: translate(var(--dx, 24px), var(--dy, -30px)) rotate(var(--rot, 18deg)) scale(1.06);
-  }
+  left: 0.55em;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  margin-top: -4.5px;
+  border-radius: 50%;
+  background: var(--creme);
+  border: 2.5px solid var(--aubergine);
 }
 
-.card {
-  background: var(--blanc);
+/* ==========================================================================
+   La cagette (une section)
+   ========================================================================== */
+
+.panel {
+  position: relative;
+  padding: 3.6rem var(--gutter) 1.6rem;
+}
+.crate {
+  --crate-bg: var(--blanc);
+  --hl-bg: var(--abricot);
+  position: relative;
+  display: grid;
+  gap: 1.8rem;
+  max-width: 1160px;
+  margin-inline: auto;
+  background: var(--crate-bg);
   border: 3px solid var(--aubergine);
   border-radius: var(--r);
+  padding: 2.6rem clamp(1.1rem, 4vw, 2.4rem) 5rem;
+  box-shadow: 0 10px 0 rgba(59, 31, 74, 0.16);
+}
+/* rebord supérieur en bois */
+.crate::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  height: 16px;
+  border-radius: 29px 29px 0 0;
+  background: var(--bois);
+  border-bottom: 3px solid var(--aubergine);
+}
+/* deux lattes à l'avant, avec leurs clous */
+.crate__slats {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 54px;
+  border-radius: 0 0 29px 29px;
+  overflow: hidden;
+  border-top: 3px solid var(--aubergine);
+  display: grid;
+  grid-template-rows: 1fr 1fr;
+}
+.crate__slats i {
+  background:
+    radial-gradient(circle at 22px 50%, var(--aubergine) 3px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 22px) 50%, var(--aubergine) 3px, transparent 3.5px),
+    var(--bois);
+}
+.crate__slats i + i {
+  border-top: 3px solid var(--aubergine);
+  background:
+    radial-gradient(circle at 22px 50%, var(--aubergine) 3px, transparent 3.5px),
+    radial-gradient(circle at calc(100% - 22px) 50%, var(--aubergine) 3px, transparent 3.5px),
+    var(--bois-fonce);
+}
+.crate--abricot {
+  --crate-bg: var(--abricot);
+  --hl-bg: var(--creme);
+}
+.crate--abricot .crate__slats i,
+.crate--abricot::before {
+  background-color: var(--bois-fonce);
+}
+.crate--menthe {
+  --crate-bg: var(--menthe);
+}
+.crate--tomate {
+  --crate-bg: var(--tomate);
+  --hl-bg: var(--creme);
+}
+.crate--aubergine {
+  --crate-bg: var(--aubergine);
+  --hl-bg: var(--tomate);
+  color: var(--creme);
+}
+.crate__side {
+  min-width: 0;
+}
+.crate__body {
+  min-width: 0;
+  position: relative;
+}
+.crate__lead {
+  margin-top: 1.2rem;
+  font-size: clamp(1.04rem, 2.4vw, 1.18rem);
+  font-weight: 500;
+  line-height: 1.5;
+  max-width: 40ch;
+}
+.crate--aubergine .text-link {
+  color: var(--abricot);
+}
+
+/* L'étiquette-titre, posée de travers sur le rebord de la cagette */
+.label {
+  position: relative;
+  display: inline-block;
+  max-width: 100%;
+  margin-top: -4.2rem;
+  transform: rotate(-1.8deg);
+}
+.label__eyebrow {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-family: var(--body);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+.label--ardoise {
+  background: var(--aubergine);
+  color: var(--creme);
+  border: 8px solid var(--bois);
+  outline: 3px solid var(--aubergine);
+  border-radius: 18px;
+  padding: 1rem 1.2rem 1.1rem;
+  box-shadow: 5px 7px 0 rgba(59, 31, 74, 0.25);
+  --hl-bg: var(--tomate);
+}
+.label--ardoise .label__eyebrow {
+  color: var(--abricot);
+}
+.label--carton {
+  background: var(--kraft);
+  color: var(--aubergine);
+  border: 3px solid var(--aubergine);
+  border-radius: 12px 26px 26px 12px;
+  padding: 1rem 1.3rem 1.1rem 2.6rem;
   box-shadow: var(--pop);
+  --hl-bg: var(--tomate);
+}
+.label--carton::before {
+  content: '';
+  position: absolute;
+  left: 0.9rem;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  margin-top: -7px;
+  border-radius: 50%;
+  background: var(--crate-bg, var(--creme));
+  border: 3px solid var(--aubergine);
+}
+.label--carton .label__eyebrow {
+  color: var(--tomate-fonce);
+}
+/* petit clou au-dessus de l'ardoise */
+.label--ardoise::before {
+  content: '';
+  position: absolute;
+  top: -20px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--aubergine);
+  box-shadow: 0 0 0 3px var(--bois);
+}
+
+/* ==========================================================================
+   Auvent rayé
+   ========================================================================== */
+
+.awning {
+  position: relative;
+  height: var(--awning-h);
+  pointer-events: none;
+}
+.awning__stripes {
+  height: 46px;
+  background: repeating-linear-gradient(90deg, var(--tomate) 0 44px, var(--creme) 44px 88px);
+  border-bottom: 3px solid var(--aubergine);
+}
+.awning__scallops {
+  height: 24px;
+  margin-top: -1px;
+  background:
+    radial-gradient(circle at 22px 0, var(--tomate) 20px, var(--aubergine) 20.5px 23px, transparent 23.5px) 0 0 / 88px 24px repeat-x,
+    radial-gradient(circle at 66px 0, var(--creme) 20px, var(--aubergine) 20.5px 23px, transparent 23.5px) 0 0 / 88px 24px repeat-x;
+  transform-origin: top center;
+  animation: flap 3.2s ease-in-out infinite alternate;
+}
+@keyframes flap {
+  0% {
+    transform: scaleY(1) skewX(0deg);
+  }
+  100% {
+    transform: scaleY(1.18) skewX(-3deg);
+  }
+}
+.etal__awning,
+.etal__board {
+  display: none;
+}
+
+/* ==========================================================================
+   Hero : ardoise + produits sur l'étal
+   ========================================================================== */
+
+.panel--hero {
+  padding-top: calc(var(--header-h) + var(--awning-h) + 1.8rem);
+  padding-bottom: 0;
+}
+.hero__awning {
+  position: absolute;
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+}
+.hero__layout {
+  display: grid;
+  gap: 1.6rem;
+  max-width: 1160px;
+  margin-inline: auto;
+}
+.hero__layout > * {
+  min-width: 0;
+}
+.hero__slate {
+  transform-origin: top center;
+}
+.hero__badge {
+  position: absolute;
+  top: -18px;
+  left: 18px;
+  transform: rotate(-3deg);
+  z-index: 2;
+  max-width: calc(100% - 36px);
+}
+.hero__title .line {
+  display: block;
+}
+.hero__punch {
+  color: var(--tomate);
+}
+.hero__aside .lead {
+  max-width: 34ch;
+}
+@media (max-width: 599px) {
+  .hero .btn--ghost {
+    display: none;
+  }
+}
+
+/* Rangée de produits posée sur la planche */
+.hero__products {
+  position: relative;
+  max-width: 1160px;
+  margin: 4rem auto 0;
+  padding: 0 0.6rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+  align-items: flex-end;
+  gap: 1.6rem 1rem;
+}
+.hero__products::after {
+  content: '';
+  position: absolute;
+  left: calc(-1 * var(--gutter));
+  right: calc(-1 * var(--gutter));
+  bottom: -30px;
+  height: 30px;
+  background:
+    radial-gradient(circle at 30px 50%, var(--aubergine) 3px, transparent 3.5px) 0 0 / 160px 100% repeat-x,
+    var(--bois);
+  border-top: 3px solid var(--aubergine);
+  border-bottom: 3px solid var(--aubergine);
+}
+.product {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.5rem;
+  padding-bottom: 6px;
+}
+.product__art {
+  display: flex;
+  align-items: flex-end;
+  gap: 4px;
+}
+.product--yogurt .product__art svg {
+  height: 78px;
+  width: auto;
+}
+.product--bread .product__art svg {
+  height: 52px;
+  width: auto;
+}
+.product--cheese .product__art svg {
+  height: 64px;
+  width: auto;
+}
+.product--apricots .product__art svg {
+  height: 62px;
+  width: auto;
+}
+.product__sticker {
+  top: -38px;
+  right: -26px;
+  --size: 74px;
+}
+.date-tag {
+  display: inline-block;
+  font-family: var(--display);
+  font-size: 1.05rem;
+  line-height: 1;
+  letter-spacing: 0.02em;
+  padding: 0.3em 0.55em 0.25em 1.1em;
+  background: var(--creme);
+  border: 2.5px solid var(--aubergine);
+  border-radius: 6px 12px 12px 6px;
+  position: relative;
+  text-transform: uppercase;
+}
+.date-tag::before {
+  content: '';
+  position: absolute;
+  left: 0.38em;
+  top: 50%;
+  width: 7px;
+  height: 7px;
+  margin-top: -3.5px;
+  border-radius: 50%;
+  border: 2px solid var(--aubergine);
+}
+.date-tag--menthe {
+  background: var(--menthe);
+}
+
+/* ==========================================================================
+   Ticket de caisse
+   ========================================================================== */
+
+.panel--ticket {
+  padding-top: 4.4rem;
+}
+.till {
+  display: grid;
+  justify-items: center;
+  max-width: 360px;
+  margin-inline: auto;
+}
+.till__printer {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 62px;
+  background: var(--aubergine);
+  border-radius: 22px 22px 14px 14px;
+  box-shadow: 0 6px 0 rgba(59, 31, 74, 0.25);
+  display: grid;
+  place-items: end center;
+  padding-bottom: 12px;
+}
+.till__printer::before {
+  content: '';
+  position: absolute;
+  top: 14px;
+  right: 22px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--menthe);
+}
+.till__slot {
+  width: 88%;
+  height: 8px;
+  border-radius: 6px;
+  background: #1c0f24;
+}
+.receipt {
+  position: relative;
+  width: 88%;
+  margin-top: -8px;
+  padding: 1.4rem 1.1rem 1.6rem;
+  background: var(--blanc);
+  border: 2.5px solid var(--aubergine);
+  border-top: 0;
+  box-shadow: 6px 8px 0 rgba(59, 31, 74, 0.18);
+}
+/* bord déchiré en dents de scie */
+.receipt::after {
+  content: '';
+  position: absolute;
+  left: -2.5px;
+  right: -2.5px;
+  bottom: -14px;
+  height: 14px;
+  background:
+    linear-gradient(135deg, var(--blanc) 7px, transparent 7.5px) 0 0 / 14px 14px repeat-x,
+    linear-gradient(225deg, var(--blanc) 7px, transparent 7.5px) 0 0 / 14px 14px repeat-x;
+}
+.receipt__label {
+  font-weight: 700;
+  font-size: 1rem;
+  line-height: 1.35;
+  text-align: center;
+}
+.receipt__lines {
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0.6rem 0 0;
+  border-top: 2px dashed rgba(59, 31, 74, 0.35);
+  font-family: var(--mono);
+  font-size: 0.82rem;
+  overflow: hidden;
+}
+.receipt__lines li {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  padding: 0.18rem 0;
+  overflow: hidden;
+}
+.receipt__lines li span:first-child {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.receipt__total {
+  margin-top: 0.8rem;
+  padding-top: 0.8rem;
+  border-top: 2px dashed rgba(59, 31, 74, 0.35);
+  text-align: center;
+}
+.receipt__value {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(2.8rem, 13vw, 3.6rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+  color: var(--tomate);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.receipt__source {
+  margin-top: 1rem;
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: var(--muted);
+  text-align: center;
+}
+
+/* ==========================================================================
+   Problème : étiquettes accrochées par une ficelle
+   ========================================================================== */
+
+.rail {
+  position: relative;
+}
+.rail__bar {
+  display: none;
+}
+.rail__tags {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.4rem;
+}
+.hang {
+  position: relative;
+  padding-top: 36px;
+  transform-origin: 50% 0;
+  animation: sway var(--sway, 4.5s) ease-in-out infinite alternate;
+}
+.hang::before {
+  content: '';
+  position: absolute;
+  top: 6px;
+  left: 50%;
+  width: 3px;
+  height: 34px;
+  margin-left: -1.5px;
+  background: var(--aubergine);
+}
+.hang::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--aubergine);
+}
+@keyframes sway {
+  0% {
+    transform: rotate(-2.5deg);
+  }
+  100% {
+    transform: rotate(2.5deg);
+  }
+}
+.price-tag {
+  position: relative;
+  background: var(--kraft);
+  border: 3px solid var(--aubergine);
+  border-radius: 18px;
+  padding: 1.6rem 1.2rem 1.2rem;
+  box-shadow: var(--pop);
+  text-align: center;
+}
+.price-tag::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: 50%;
+  width: 14px;
+  height: 14px;
+  margin-left: -7px;
+  border-radius: 50%;
+  background: var(--crate-bg, var(--creme));
+  border: 3px solid var(--aubergine);
+}
+.rail__tags li:nth-child(2) .price-tag {
+  background: var(--tomate);
+}
+.rail__tags li:nth-child(3) .price-tag {
+  background: var(--menthe);
+}
+.price-tag__value {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(3rem, 13vw, 4.2rem);
+  line-height: 1.05;
+  letter-spacing: 0.01em;
+}
+.price-tag__value {
+  white-space: nowrap;
+}
+.price-tag__value small {
+  font-size: 0.5em;
+  margin-left: 0.06em;
+}
+.price-tag__label {
+  display: block;
+  margin-top: 0.4rem;
+  font-weight: 700;
+  line-height: 1.35;
+}
+.rail__note {
+  margin-top: 1.4rem;
+  font-size: 0.85rem;
+  font-weight: 500;
+}
+@media (min-width: 700px) {
+  .rail {
+    padding-top: 6px;
+  }
+  .rail__bar {
+    display: block;
+    height: 20px;
+    margin-inline: -0.6rem;
+    border-radius: 10px;
+    border: 3px solid var(--aubergine);
+    background:
+      radial-gradient(circle at 18px 50%, var(--aubergine) 3px, transparent 3.5px) 0 0 / 120px 100% repeat-x,
+      var(--bois-fonce);
+  }
+  .rail__tags {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1.2rem;
+    align-items: start;
+  }
+  .hang {
+    padding-top: var(--string, 44px);
+  }
+  .hang::before {
+    top: 0;
+    height: var(--string, 44px);
+  }
+  .hang::after {
+    display: none;
+  }
+}
+
+/* ==========================================================================
+   Calculateur : la balance
+   ========================================================================== */
+
+.calc {
+  display: grid;
+  gap: 1.6rem;
+  align-items: center;
+}
+.calc > * {
+  min-width: 0;
+}
+.scale {
+  position: relative;
+  width: min(100%, 300px);
+  margin-inline: auto;
+}
+.scale__svg {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+.scale__move {
+  transition: transform 0.7s var(--spring);
+  transform-box: view-box;
+}
+.scale__dial {
+  position: absolute;
+  left: 50%;
+  top: 66%;
+  width: 40%;
+  translate: -50% 0;
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  pointer-events: none;
+}
+.scale__dial-label {
+  font-size: 0.66rem;
+  font-weight: 800;
+  line-height: 1.1;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.scale__dial-value {
+  font-family: var(--display);
+  font-size: clamp(1.25rem, 5.6vw, 1.6rem);
+  line-height: 1.05;
+  color: var(--tomate-fonce);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+.calc__controls {
+  background: var(--blanc);
+  border: 3px solid var(--aubergine);
+  border-radius: 24px;
+  padding: 1.3rem 1.2rem 1.4rem;
+  box-shadow: var(--pop);
+}
+.calc__label {
+  display: block;
+  font-weight: 800;
+  font-size: 1.05rem;
+}
+.calc__hint {
+  font-size: 0.92rem;
+  margin-top: 0.15rem;
+}
+.calc__weekly {
+  margin-top: 0.8rem;
+  font-family: var(--display);
+  font-size: clamp(2.6rem, 11vw, 3.4rem);
+  line-height: 1.05;
+  color: var(--tomate-fonce);
+  font-variant-numeric: tabular-nums;
+}
+.calc__weekly small {
+  font-family: var(--body);
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--aubergine);
+  margin-left: 0.4rem;
+}
+.range {
+  --p: 20%;
+  width: 100%;
+  height: 50px;
+  margin-top: 0.4rem;
+  appearance: none;
+  -webkit-appearance: none;
+  background: transparent;
+  cursor: pointer;
+  touch-action: pan-y;
+}
+.range::-webkit-slider-runnable-track {
+  height: 18px;
+  border-radius: 99px;
+  border: 3px solid var(--aubergine);
+  background: linear-gradient(90deg, var(--tomate) 0 var(--p), var(--creme-2) var(--p) 100%);
+}
+.range::-moz-range-track {
+  height: 12px;
+  border-radius: 99px;
+  border: 3px solid var(--aubergine);
+  background: linear-gradient(90deg, var(--tomate) 0 var(--p), var(--creme-2) var(--p) 100%);
+}
+.range::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 42px;
+  height: 42px;
+  margin-top: -15px;
+  border-radius: 50%;
+  border: 3px solid var(--aubergine);
+  background: var(--abricot);
+  box-shadow: 3px 3px 0 var(--aubergine);
+  transition: transform 0.25s var(--spring);
+}
+.range::-moz-range-thumb {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 3px solid var(--aubergine);
+  background: var(--abricot);
+  box-shadow: 3px 3px 0 var(--aubergine);
+}
+.range:active::-webkit-slider-thumb {
+  transform: scale(1.15, 0.88);
+}
+.range:focus-visible {
+  outline: none;
+}
+.range:focus-visible::-webkit-slider-thumb {
+  outline: 4px solid var(--aubergine);
+  outline-offset: 2px;
+}
+.range__scale {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+.save-tag {
+  position: relative;
+  margin-top: 1.2rem;
+  padding: 0.9rem 5.2rem 0.9rem 1rem;
+  background: var(--menthe);
+  border: 3px solid var(--aubergine);
+  border-radius: 10px 22px 22px 10px;
+}
+.save-tag .sticker {
+  top: 50%;
+  right: -10px;
+  translate: 0 -50%;
+  --size: 78px;
+}
+.save-tag__label {
+  display: block;
+  font-weight: 800;
+  font-size: 0.92rem;
+}
+.save-tag__value {
+  display: block;
+  font-family: var(--display);
+  font-size: clamp(2rem, 8vw, 2.5rem);
+  line-height: 1.05;
+  font-variant-numeric: tabular-nums;
+}
+.calc__hyp {
+  margin-top: 0.9rem;
+  font-size: 0.8rem;
+}
+@media (min-width: 760px) {
+  .calc {
+    grid-template-columns: 0.9fr 1.1fr;
+  }
+}
+
+/* ==========================================================================
+   Comment ça marche : trois petites cagettes
+   ========================================================================== */
+
+.mini-crates {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.2rem;
+}
+.mini-crate {
+  position: relative;
+  background: var(--creme);
+  border: 3px solid var(--aubergine);
+  border-radius: 24px;
+  padding: 0 0 1.2rem;
+  overflow: hidden;
+  transition: transform 0.4s var(--spring), box-shadow 0.3s;
+}
+.mini-crate.is-active {
+  transform: translateY(-4px);
+  box-shadow: var(--pop);
+}
+.mini-crate__stage {
+  position: relative;
+  height: 150px;
+  background: var(--creme-2);
+  border-bottom: 3px solid var(--aubergine);
+  display: grid;
+  place-items: center;
+}
+.mini-crate__stage::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 22px;
+  background:
+    radial-gradient(circle at 16px 50%, var(--aubergine) 2.5px, transparent 3px),
+    radial-gradient(circle at calc(100% - 16px) 50%, var(--aubergine) 2.5px, transparent 3px),
+    var(--bois);
+  border-top: 3px solid var(--aubergine);
+}
+.mini-crate__num {
+  position: absolute;
+  top: 8px;
+  left: 12px;
+  font-family: var(--display);
+  font-size: 2.4rem;
+  line-height: 1.05;
+  color: var(--tomate);
+}
+.mini-crate__pot {
+  position: relative;
+  z-index: 2;
+  margin-bottom: 14px;
+}
+.mini-crate__title {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin: 1rem 1.1rem 0;
+  font-family: var(--body);
+  font-weight: 800;
+  font-size: 1.08rem;
+  line-height: 1.25;
+}
+.mini-crate__title svg {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  padding: 6px;
+  border-radius: 50%;
+  background: var(--abricot);
+  border: 2.5px solid var(--aubergine);
+}
+.mini-crate p {
+  margin: 0.5rem 1.1rem 0;
+  font-size: 0.98rem;
+}
+.decor {
+  position: absolute;
+  inset: 16px 24% 30px;
+  pointer-events: none;
+}
+.decor--frame i {
+  position: absolute;
+  width: 22px;
+  height: 22px;
+  border: 0 solid var(--aubergine);
+}
+.decor--frame i:nth-child(1) {
+  top: 0;
+  left: 0;
+  border-top-width: 3px;
+  border-left-width: 3px;
+  border-top-left-radius: 10px;
+}
+.decor--frame i:nth-child(2) {
+  top: 0;
+  right: 0;
+  border-top-width: 3px;
+  border-right-width: 3px;
+  border-top-right-radius: 10px;
+}
+.decor--frame i:nth-child(3) {
+  bottom: 0;
+  left: 0;
+  border-bottom-width: 3px;
+  border-left-width: 3px;
+  border-bottom-left-radius: 10px;
+}
+.decor--frame i:nth-child(4) {
+  bottom: 0;
+  right: 0;
+  border-bottom-width: 3px;
+  border-right-width: 3px;
+  border-bottom-right-radius: 10px;
+}
+.decor__chip {
+  position: absolute;
+  top: -4px;
+  right: -46px;
+  font-family: var(--display);
+  font-size: 0.95rem;
+  line-height: 1;
+  padding: 0.3em 0.5em 0.25em;
+  background: var(--menthe);
+  border: 2.5px solid var(--aubergine);
+  border-radius: 8px;
+  transform: rotate(8deg);
+}
+.decor__chip--tomate {
+  background: var(--tomate);
+}
+.decor__chip--abricot {
+  background: var(--abricot);
+  font-size: 1.15rem;
+}
+@media (min-width: 700px) {
+  .mini-crates {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Métiers : quatre stands
+   ========================================================================== */
+
+.stands {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.4rem 1rem;
+}
+.stands > li {
+  min-width: 0;
+}
+.stand {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  text-decoration: none;
+  color: var(--aubergine);
+  transition: transform 0.35s var(--spring);
+}
+.stand:hover {
+  transform: translateY(-5px) rotate(-1deg);
+}
+.stand__awning {
+  height: 36px;
+  border: 3px solid var(--aubergine);
+  border-radius: 14px 14px 4px 4px;
+  background: repeating-linear-gradient(90deg, var(--stripe) 0 18px, var(--creme) 18px 36px);
+}
+.stand__name {
+  align-self: center;
+  margin-top: -10px;
+  position: relative;
+  padding: 0.25em 0.8em;
+  background: var(--blanc);
+  border: 2.5px solid var(--aubergine);
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.98rem;
+  transform: rotate(-2deg);
+}
+.stand__goods {
+  display: grid;
+  place-items: end center;
+  height: 84px;
+  margin-top: 0.4rem;
+}
+.stand__goods svg {
+  max-height: 72px;
+  width: auto;
+}
+.stand__counter {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  padding: 0.8rem 0.8rem 0.9rem;
+  background: var(--bois);
+  border: 3px solid var(--aubergine);
+  border-radius: 6px 6px 18px 18px;
+  box-shadow: var(--pop-sm);
+}
+.stand__title {
+  font-weight: 700;
+  font-size: 0.92rem;
+  line-height: 1.3;
+}
+.stand__more {
+  margin-top: auto;
+  font-weight: 800;
+}
+@media (min-width: 900px) {
+  .stands {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   L'appli : le téléphone dans sa cagette
+   ========================================================================== */
+
+.features__list {
+  list-style: none;
+  margin: 1.4rem 0 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.feature {
+  display: flex;
+  gap: 0.9rem;
+}
+.feature__icon {
+  flex: none;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--menthe);
+  color: var(--aubergine);
+  display: grid;
+  place-items: center;
+}
+.feature__icon svg {
+  width: 20px;
+  height: 20px;
+}
+.feature h3 {
+  font-size: 1.04rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+.feature p {
+  margin-top: 0.1rem;
+  font-size: 0.96rem;
+  opacity: 0.88;
+}
+.features__wrap {
+  display: grid;
+  gap: 1.6rem;
+  align-items: center;
+}
+.features__wrap > * {
+  min-width: 0;
+}
+.features__phone {
+  position: relative;
+  height: 540px;
+}
+@media (min-width: 760px) {
+  .features__wrap {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  }
+}
+.features__phone .phone-css {
+  bottom: 56px;
+}
+.features__phone .phone-css__body {
+  --phone-scale: 0.6;
+  --phone-tilt: 3deg;
+}
+.demo-steps {
+  position: absolute;
+  left: 50%;
+  bottom: 0;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 2px;
+  padding: 4px;
+  margin: 0;
+  list-style: none;
+  border-radius: var(--r-pill);
+  background: var(--creme);
+  border: 3px solid var(--aubergine);
+  color: var(--aubergine);
+}
+.demo-steps button {
+  position: relative;
+  z-index: 0;
+  min-height: 40px;
+  padding: 0.4em 0.9em;
+  border: 0;
+  background: none;
+  cursor: pointer;
+  font-size: 0.88rem;
+  font-weight: 800;
+  border-radius: var(--r-pill);
+  white-space: nowrap;
+  touch-action: manipulation;
+}
+.demo-steps__pill {
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  border-radius: var(--r-pill);
+  background: var(--tomate);
+}
+
+/* ==========================================================================
+   Commerces pilotes : le grand panneau
+   ========================================================================== */
+
+.pilots {
+  display: grid;
+  gap: 1.4rem;
+}
+.signboard {
+  position: relative;
+  justify-self: center;
+  display: grid;
+  justify-items: center;
+  padding: 1.2rem 2.4rem 1.4rem;
+  background:
+    linear-gradient(var(--aubergine), var(--aubergine)) 0 33% / 100% 3px no-repeat,
+    linear-gradient(var(--aubergine), var(--aubergine)) 0 66% / 100% 3px no-repeat,
+    var(--bois);
+  border: 3px solid var(--aubergine);
+  border-radius: 20px;
+  box-shadow: var(--pop);
+  transform: rotate(-2deg);
+}
+.signboard__num {
+  font-family: var(--display);
+  font-size: clamp(5rem, 24vw, 7.5rem);
+  line-height: 1;
+  color: var(--tomate);
+  background: var(--creme);
+  border: 3px solid var(--aubergine);
+  border-radius: 18px;
+  padding: 0.05em 0.3em 0;
+}
+.signboard__text {
+  margin-top: 0.4rem;
+  font-family: var(--display);
+  font-size: clamp(1.6rem, 7vw, 2.2rem);
+  line-height: 1.05;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+}
+.pilots__seats {
+  text-align: center;
+  font-weight: 800;
+}
+.pilots__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1rem;
+}
+.kraft {
+  position: relative;
+  background: var(--kraft);
+  border: 3px solid var(--aubergine);
+  border-radius: 10px 22px 22px 10px;
+  padding: 1rem 1.1rem 1.1rem 2.4rem;
+  box-shadow: var(--pop-sm);
+  transform: rotate(var(--tilt, -1deg));
+}
+.kraft::before {
+  content: '';
+  position: absolute;
+  left: 0.8rem;
+  top: 1.25rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--crate-bg, var(--creme));
+  border: 2.5px solid var(--aubergine);
+}
+.kraft h3 {
+  font-weight: 800;
+  font-size: 1.1rem;
+  line-height: 1.25;
+}
+.kraft p {
+  margin-top: 0.3rem;
+  font-size: 0.96rem;
+  line-height: 1.4;
+}
+@media (min-width: 760px) {
+  .pilots__list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Jérémy
+   ========================================================================== */
+
+.founder {
+  display: grid;
+  gap: 1.6rem;
+  align-items: center;
+}
+.founder > * {
+  min-width: 0;
+}
+.founder__photo {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: var(--tomate);
+  border: 3px solid var(--aubergine);
+  box-shadow: var(--pop);
+  display: grid;
+  place-items: center;
+  font-family: var(--display);
+  font-size: 4.4rem;
+  line-height: 1;
+  color: var(--creme);
+}
+.founder__photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.founder__sign {
+  margin-top: 1rem;
+  font-weight: 600;
+}
+.founder__sign strong {
+  font-weight: 800;
+}
+.founder__contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.8rem;
+  margin-top: 1.3rem;
+}
+.founder__number {
+  margin-top: 0.9rem;
+  font-weight: 700;
+}
+.founder__select {
+  font-family: var(--display);
+  font-size: 1.45rem;
+  letter-spacing: 0.02em;
+  user-select: all;
+  -webkit-user-select: all;
+}
+@media (min-width: 700px) {
+  .founder {
+    grid-template-columns: auto minmax(0, 1fr);
+    gap: 2.4rem;
+  }
+  .founder__photo {
+    width: 190px;
+    height: 190px;
+    font-size: 5.6rem;
+  }
+}
+
+/* ==========================================================================
+   Offre
+   ========================================================================== */
+
+.offer__promise {
+  font-weight: 600;
+}
+.offer__promise strong {
+  background: var(--menthe);
+  color: var(--aubergine);
+  padding: 0 0.25em;
+  border-radius: 6px;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.offer__side {
+  position: relative;
+  margin-top: 3.4rem;
+  max-width: 460px;
+  background: var(--creme);
+  color: var(--aubergine);
+  border: 3px solid var(--aubergine);
+  border-radius: 24px;
+  padding: 1.5rem 1.3rem;
+  box-shadow: 6px 6px 0 var(--tomate);
+}
+.offer__side .sticker {
+  top: -48px;
+  right: -10px;
+  --size: 96px;
+}
+[data-mode='h'] .offer__side {
+  margin-top: 0;
+}
+.offer__price {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  padding-right: 4.5rem;
+}
+.offer__price b {
+  white-space: nowrap;
+  font-family: var(--display);
+  font-weight: 400;
+  font-size: 3.4rem;
+  line-height: 1.05;
+  color: var(--tomate-fonce);
+}
+.offer__price span {
+  font-weight: 700;
+}
+.offer__after {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+.offer__after strong {
+  font-weight: 800;
+}
+.offer__list {
+  list-style: none;
+  padding: 0;
+  margin: 1rem 0 1.2rem;
+  display: grid;
+  gap: 0.55rem;
+}
+.offer__list li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: flex-start;
+  font-weight: 600;
+}
+.offer__list svg {
+  flex: none;
+  width: 22px;
+  height: 22px;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--menthe);
+  color: var(--aubergine);
+  margin-top: 1px;
+}
+.offer__seats {
+  margin-top: 0.9rem;
+  text-align: center;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+/* ==========================================================================
+   FAQ : étiquettes kraft qu'on retourne
+   ========================================================================== */
+
+.flips {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.1rem;
+}
+.flip {
+  transform: rotate(var(--tilt, 0deg));
+}
+.flip__btn {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  text-align: left;
+  cursor: pointer;
+  perspective: 1000px;
+  border-radius: 18px;
+}
+.flip__card {
+  display: grid;
+  transform-style: preserve-3d;
+  transition: transform 0.6s var(--spring);
+}
+.flip.is-open .flip__card {
+  transform: rotateY(180deg);
+}
+.flip__face {
+  grid-area: 1 / 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-height: 150px;
+  padding: 1.1rem 1.1rem 1rem 2.4rem;
+  background: var(--kraft);
+  border: 3px solid var(--aubergine);
+  border-radius: 10px 22px 22px 10px;
+  box-shadow: var(--pop-sm);
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+  position: relative;
+}
+.flip__face::before {
+  content: '';
+  position: absolute;
+  left: 0.8rem;
+  top: 1.3rem;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--crate-bg, var(--creme));
+  border: 2.5px solid var(--aubergine);
+}
+.flip__face--back {
+  transform: rotateY(180deg);
+  background: var(--creme);
+}
+.flip__q {
+  font-weight: 800;
+  font-size: 1.02rem;
+  line-height: 1.3;
+}
+.flip__q--small {
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+.flip__hint {
+  margin-top: auto;
+  align-self: flex-start;
+  font-weight: 800;
+  font-size: 0.82rem;
+  padding: 0.2em 0.7em;
+  border-radius: var(--r-pill);
+  background: var(--abricot);
+  border: 2px solid var(--aubergine);
+}
+.flip__hint::after {
+  content: ' ↻';
+}
+.flip__a {
+  font-size: 0.95rem;
+  line-height: 1.45;
+}
+@media (min-width: 640px) {
+  .flips {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* ==========================================================================
+   Bout de l'étal : le commerçant tend l'étiquette « Essai gratuit »
+   ========================================================================== */
+
+.final {
+  background: var(--tomate);
+  border-top: 3px solid var(--aubergine);
+  padding-top: 3rem;
+  padding-bottom: 3.4rem;
+  margin-top: 2.4rem;
+}
+.final__inner {
+  display: grid;
+  gap: 2rem;
+  max-width: 1200px;
+  margin-inline: auto;
+  align-items: center;
+}
+.final__inner > * {
+  min-width: 0;
+}
+.final__title {
+  font-family: var(--display);
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  line-height: 1.05;
+  font-size: clamp(2.8rem, 11vw, 4.6rem);
+  color: var(--aubergine);
+}
+.final__title span {
+  display: block;
+  color: var(--creme);
+}
+.final__sub {
+  margin-top: 1rem;
+  font-weight: 700;
+  font-size: clamp(1.04rem, 2.4vw, 1.2rem);
+  max-width: 36ch;
+}
+.final__trust {
+  list-style: none;
+  padding: 0;
+  margin: 1.4rem 0 0;
+  display: grid;
+  gap: 0.55rem;
+  font-weight: 700;
+}
+.final__trust li {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+.final__trust svg {
+  width: 26px;
+  height: 26px;
+  flex: none;
+  padding: 3px;
+  border-radius: 50%;
+  background: var(--creme);
+  color: var(--aubergine);
+}
+.merchant {
+  position: relative;
+  width: min(100%, 340px);
+  height: 260px;
+  justify-self: center;
+}
+.merchant__svg {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 190px;
+  height: auto;
+}
+/* L'étiquette part de la main du commerçant, à droite de la silhouette. */
+.merchant__tag {
+  position: absolute;
+  top: 54px;
+  left: 176px;
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 0.5em 1em 0.5em 1.7em;
+  background: var(--kraft);
+  border: 3px solid var(--aubergine);
+  border-radius: 8px 20px 20px 8px;
+  box-shadow: var(--pop);
+  font-family: var(--display);
+  font-size: 1.35rem;
+  line-height: 1.05;
+  text-transform: uppercase;
+  text-decoration: none;
+  white-space: nowrap;
+  transform: rotate(-8deg);
+  transform-origin: left center;
+  animation: offer 2.8s ease-in-out infinite alternate;
+  transition: box-shadow 0.2s;
+}
+.merchant__tag::before {
+  content: '';
+  position: absolute;
+  left: 0.55em;
+  top: 50%;
+  width: 10px;
+  height: 10px;
+  margin-top: -5px;
+  border-radius: 50%;
+  background: var(--tomate);
+  border: 2.5px solid var(--aubergine);
+}
+.merchant__tag:hover {
+  box-shadow: 6px 7px 0 var(--aubergine);
+}
+@keyframes offer {
+  0% {
+    transform: rotate(-8deg) translateY(0);
+  }
+  100% {
+    transform: rotate(-4deg) translateY(-6px);
+  }
+}
+@media (min-width: 900px) {
+  .final__inner {
+    grid-template-columns: minmax(0, 1fr) 340px minmax(340px, 0.95fr);
+    gap: 2rem;
+  }
+  .merchant {
+    width: 340px;
+  }
 }
 
 /* ==========================================================================
@@ -546,10 +1950,11 @@ span:nth-child(even) > .hl {
   padding-top: env(safe-area-inset-top);
   transition: background-color 0.3s, box-shadow 0.3s;
 }
+.site-header,
 .site-header.is-scrolled {
-  background: rgba(255, 246, 233, 0.92);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
+  background: var(--creme);
+}
+.site-header.is-scrolled {
   box-shadow: 0 2px 0 var(--line);
 }
 .site-header .wrap {
@@ -599,187 +2004,6 @@ span:nth-child(even) > .hl {
   }
 }
 
-/* ==========================================================================
-   Hero
-   ========================================================================== */
-
-.hero {
-  position: relative;
-  padding-top: calc(var(--header-h) + 1.5rem);
-  padding-bottom: 5rem;
-  background: var(--creme);
-  overflow: clip;
-}
-.hero__inner {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 1rem;
-}
-.hero__copy {
-  position: relative;
-  z-index: 8;
-  min-width: 0;
-}
-@media (max-width: 599px) {
-  .hero .btn--ghost {
-    display: none;
-  }
-}
-.hero .badge {
-  margin-bottom: 1.2rem;
-}
-.hero__title .line {
-  display: block;
-}
-.hero__title .tilt {
-  transform-origin: left center;
-}
-.hero__title .outline {
-  color: var(--creme);
-  -webkit-text-stroke: 3px var(--aubergine);
-  paint-order: stroke fill;
-  text-shadow: 5px 5px 0 var(--tomate);
-}
-.hero__sub {
-  margin-top: 1.2rem;
-}
-.hero .cta-row {
-  margin-top: 1.6rem;
-}
-
-/* Composition de fruits + téléphone */
-.hero__stage {
-  position: relative;
-  height: clamp(540px, 145vw, 640px);
-  margin-inline: calc(-1 * var(--gutter));
-}
-.hero__disc {
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: min(118vw, 600px);
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  background: var(--tomate);
-  border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%;
-  animation: blob-morph 16s ease-in-out infinite alternate;
-}
-.hero__phone {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-}
-.float {
-  position: absolute;
-  z-index: 4;
-  will-change: transform;
-}
-.float__inner {
-  animation: bob var(--bob, 6s) ease-in-out infinite alternate;
-  animation-delay: var(--delay, 0s);
-}
-@keyframes bob {
-  0% {
-    transform: translateY(0) rotate(var(--r0, -4deg));
-  }
-  100% {
-    transform: translateY(-14px) rotate(var(--r1, 5deg));
-  }
-}
-.float--back {
-  z-index: 2;
-}
-.price-chip {
-  font-family: var(--display);
-  text-transform: uppercase;
-  font-size: 1.6rem;
-  line-height: 1;
-  padding: 0.35em 0.6em 0.3em 1.2em;
-  background: var(--abricot);
-  border: 3px solid var(--aubergine);
-  border-radius: 14px 22px 22px 14px;
-  box-shadow: var(--pop-sm);
-  position: relative;
-  white-space: nowrap;
-}
-.price-chip::before {
-  content: '';
-  position: absolute;
-  left: 0.42em;
-  top: 50%;
-  width: 10px;
-  height: 10px;
-  margin-top: -5px;
-  border-radius: 50%;
-  background: var(--creme);
-  border: 2.5px solid var(--aubergine);
-}
-
-.hero__steps {
-  position: absolute;
-  z-index: 6;
-  left: 50%;
-  bottom: 0;
-  transform: translateX(-50%);
-  display: flex;
-  gap: 2px;
-  padding: 4px;
-  margin: 0;
-  list-style: none;
-  border-radius: var(--r-pill);
-  background: var(--creme);
-  border: 3px solid var(--aubergine);
-  box-shadow: var(--pop-sm);
-}
-.hero__steps button {
-  position: relative;
-  z-index: 0;
-  min-height: 40px;
-  padding: 0.4em 0.95em;
-  border: 0;
-  background: none;
-  cursor: pointer;
-  font-size: 0.88rem;
-  font-weight: 800;
-  color: var(--aubergine);
-  border-radius: var(--r-pill);
-  white-space: nowrap;
-  touch-action: manipulation;
-}
-.hero__steps-pill {
-  position: absolute;
-  inset: 0;
-  z-index: -1;
-  border-radius: var(--r-pill);
-  background: var(--tomate);
-}
-
-@media (min-width: 900px) {
-  .hero {
-    padding-top: calc(var(--header-h) + 2.5rem);
-    padding-bottom: 7rem;
-  }
-  .hero__inner {
-    grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
-    align-items: center;
-    gap: 2rem;
-    min-height: min(calc(100svh - var(--header-h) - 6rem), 760px);
-  }
-  .hero .h1 {
-    font-size: min(5.2vw, 6.2rem, 12svh);
-  }
-  .hero__title .line {
-    white-space: nowrap;
-  }
-  .hero__stage {
-    height: 660px;
-    margin: 0 calc(-1 * var(--gutter)) 0 -2rem;
-  }
-  .hero__disc {
-    width: 600px;
-  }
-}
 
 /* ==========================================================================
    Écran de l'appli (téléphone en aplat)
@@ -804,15 +2028,6 @@ span:nth-child(even) > .hl {
   padding: 8px;
   background: #1c0f24;
   border-radius: 55px;
-}
-.hero__phone .phone-css__body {
-  --phone-scale: 0.6;
-  --phone-y: 46%;
-}
-@media (min-width: 900px) {
-  .hero__phone .phone-css__body {
-    --phone-scale: 0.74;
-  }
 }
 
 .app {
@@ -866,10 +2081,9 @@ span:nth-child(even) > .hl {
   color: var(--muted);
 }
 .app__title {
-  font-family: var(--display);
-  font-size: 32px;
-  line-height: 1.05;
-  text-transform: uppercase;
+  font-weight: 800;
+  font-size: 26px;
+  line-height: 1.15;
 }
 .app__kpis {
   display: grid;
@@ -1376,913 +2590,252 @@ span:nth-child(even) > .hl {
   font-size: 15px;
 }
 
-/* ==========================================================================
-   Compteur
-   ========================================================================== */
-
-.counter {
-  position: relative;
-  z-index: 5;
-  width: calc(100% - 24px);
-  max-width: 1240px;
-  margin: -3.5rem auto 0;
-  padding: clamp(2.2rem, 6vw, 3.6rem) clamp(1.4rem, 5vw, 3.4rem);
-  background: var(--aubergine);
-  color: var(--creme);
-  border-radius: var(--r-lg);
-  transform: rotate(-1.4deg);
-  overflow: hidden;
-}
-.counter .blob {
-  opacity: 0.2;
-}
-.counter__label {
-  position: relative;
-  font-size: clamp(1.05rem, 2.6vw, 1.35rem);
-  font-weight: 600;
-  max-width: 40ch;
-}
-.counter__value {
-  position: relative;
-  display: block;
-  margin: 0.3rem 0;
-  font-family: var(--display);
-  font-size: clamp(3.6rem, 16vw, 9.5rem);
-  line-height: 1;
-  color: var(--tomate);
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.counter__source {
-  position: relative;
-  margin-top: 1rem;
-  font-size: 0.8rem;
-  opacity: 0.75;
-  max-width: 70ch;
-}
 
 /* ==========================================================================
-   Problème (abricot)
+   Cagettes en deux colonnes sur grand écran (étiquette à gauche, contenu à droite)
    ========================================================================== */
 
-.problem {
-  padding-top: calc(clamp(4.5rem, 10vw, 7.5rem) + 3rem);
-}
-.stats {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 0 36px;
-  display: grid;
-  gap: 2.8rem;
-}
-.stat {
-  max-width: 400px;
-}
-.stat:nth-child(2) {
-  justify-self: end;
-}
-.stat .tag {
-  --tag: var(--creme);
-}
-.stat:nth-child(2) .tag {
-  --tag: var(--tomate);
-}
-.stat:nth-child(3) .tag {
-  --tag: var(--menthe);
-}
-.stat__value {
-  display: block;
-  font-family: var(--display);
-  font-size: clamp(3.6rem, 16vw, 5.6rem);
-  line-height: 0.95;
-}
-.stat__value small {
-  font-size: 0.5em;
-  margin-left: 0.08em;
-}
-.stat__label {
-  display: block;
-  margin-top: 0.5rem;
-  font-weight: 700;
-  line-height: 1.35;
-  max-width: 26ch;
-}
-.stats__note {
-  margin-top: 2.4rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-}
 @media (min-width: 900px) {
-  .stats {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
-    align-items: start;
-  }
-  .stat:nth-child(2) {
-    margin-top: 4.5rem;
-    justify-self: auto;
-  }
-  .stat:nth-child(3) {
-    margin-top: 1.5rem;
-  }
-}
-
-/* ==========================================================================
-   Calculateur (menthe)
-   ========================================================================== */
-
-.calc__panel {
-  display: grid;
-  gap: 1.6rem;
-}
-.calc__input {
-  position: relative;
-  background: var(--creme);
-  border: 3px solid var(--aubergine);
-  border-radius: var(--r);
-  padding: clamp(1.4rem, 4vw, 2.4rem);
-  box-shadow: var(--pop);
-}
-.calc__input label {
-  display: block;
-  font-weight: 800;
-  font-size: 1.1rem;
-}
-.calc__input-hint {
-  font-size: 0.95rem;
-  margin-top: 0.2rem;
-}
-.calc__weekly {
-  margin-top: 1.2rem;
-  font-family: var(--display);
-  font-size: clamp(3.4rem, 13vw, 5rem);
-  line-height: 1;
-  color: var(--tomate);
-  -webkit-text-stroke: 2px var(--aubergine);
-  paint-order: stroke fill;
-  font-variant-numeric: tabular-nums;
-}
-.calc__weekly small {
-  font-family: var(--body);
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--aubergine);
-  -webkit-text-stroke: 0;
-  margin-left: 0.4rem;
-}
-.range {
-  --p: 20%;
-  width: 100%;
-  height: 52px;
-  margin-top: 0.8rem;
-  appearance: none;
-  -webkit-appearance: none;
-  background: transparent;
-  cursor: pointer;
-  touch-action: pan-y;
-}
-.range::-webkit-slider-runnable-track {
-  height: 20px;
-  border-radius: 99px;
-  border: 3px solid var(--aubergine);
-  background: linear-gradient(90deg, var(--tomate) 0 var(--p), var(--creme-2) var(--p) 100%);
-}
-.range::-moz-range-track {
-  height: 14px;
-  border-radius: 99px;
-  border: 3px solid var(--aubergine);
-  background: linear-gradient(90deg, var(--tomate) 0 var(--p), var(--creme-2) var(--p) 100%);
-}
-.range::-webkit-slider-thumb {
-  -webkit-appearance: none;
-  width: 44px;
-  height: 44px;
-  margin-top: -15px;
-  border-radius: 50%;
-  border: 3px solid var(--aubergine);
-  background: var(--abricot);
-  box-shadow: 3px 3px 0 var(--aubergine);
-  transition: transform 0.25s var(--spring);
-}
-.range::-moz-range-thumb {
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  border: 3px solid var(--aubergine);
-  background: var(--abricot);
-  box-shadow: 3px 3px 0 var(--aubergine);
-}
-.range:active::-webkit-slider-thumb {
-  transform: scale(1.15, 0.88);
-}
-.range:focus-visible {
-  outline: none;
-}
-.range:focus-visible::-webkit-slider-thumb {
-  outline: 4px solid var(--aubergine);
-  outline-offset: 2px;
-}
-.range__scale {
-  display: flex;
-  justify-content: space-between;
-  font-size: 0.85rem;
-  font-weight: 700;
-}
-.calc__result {
-  position: relative;
-  background: var(--aubergine);
-  color: var(--creme);
-  border-radius: var(--r-lg);
-  padding: clamp(1.8rem, 5vw, 2.8rem) clamp(1.4rem, 4vw, 2.4rem);
-}
-.calc__row + .calc__row {
-  margin-top: 1.6rem;
-}
-.calc__row-head {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: baseline;
-  justify-content: space-between;
-  gap: 0.2rem 1rem;
-}
-.calc__row-label {
-  font-weight: 700;
-}
-.calc__row-value {
-  font-family: var(--display);
-  font-size: clamp(2.6rem, 11vw, 4rem);
-  line-height: 1;
-  font-variant-numeric: tabular-nums;
-  white-space: nowrap;
-}
-.calc__row-value.is-loss {
-  color: var(--tomate);
-}
-.calc__row-value.is-save {
-  color: var(--menthe);
-}
-.calc__bar {
-  margin-top: 0.7rem;
-  height: 14px;
-  border-radius: 99px;
-  background: rgba(255, 246, 233, 0.15);
-  overflow: hidden;
-}
-.calc__bar span {
-  display: block;
-  height: 100%;
-  border-radius: 99px;
-  transform-origin: left center;
-}
-.calc__hyp {
-  margin-top: 1.4rem;
-  font-size: 0.82rem;
-  opacity: 0.8;
-}
-.calc__result .sticker {
-  top: -38px;
-  right: -10px;
-  --size: 104px;
-}
-@media (min-width: 900px) {
-  .calc__panel {
-    grid-template-columns: 1fr 1fr;
-    gap: 2.4rem;
+  .crate {
+    grid-template-columns: minmax(250px, 0.72fr) minmax(0, 1.6fr);
     align-items: center;
+    gap: 2.4rem;
   }
-  .calc__result {
-    transform: rotate(1.4deg);
+  .crate__side {
+    align-self: start;
+  }
+  .hero__layout {
+    grid-template-columns: minmax(0, 1.25fr) minmax(0, 0.75fr);
+    align-items: center;
+    gap: 3rem;
   }
 }
 
 /* ==========================================================================
-   Comment ça marche
+   L'étal qui défile (ordinateur) : piste horizontale épinglée
    ========================================================================== */
 
-.steps {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 2.6rem;
-}
-.steps > li {
-  min-width: 0;
-}
-.step {
-  position: relative;
-  padding: 1.2rem 1.2rem 1.6rem;
-  height: 100%;
-}
-.step__visual {
-  height: 176px;
-  border-radius: 24px;
-  background: var(--creme-2);
-  margin-bottom: 1.3rem;
+.etal[data-mode='h'] {
+  height: 100vh;
   overflow: hidden;
 }
-.steps > li:nth-child(2) .step__visual {
-  background: #d8f4ec;
+[data-mode='h'] .etal__track {
+  position: relative;
+  display: flex;
+  align-items: stretch;
+  gap: 4vw;
+  width: max-content;
+  height: 100vh;
+  padding-right: 5vw;
+  will-change: transform;
 }
-.steps > li:nth-child(3) .step__visual {
-  background: #ffe1d9;
-}
-.step__visual svg {
-  width: 100%;
-  height: 100%;
-}
-.step__num {
+[data-mode='h'] .etal__awning {
+  display: block;
   position: absolute;
-  top: -30px;
-  right: 16px;
-  z-index: 2;
-  font-family: var(--display);
-  font-size: 4.6rem;
-  line-height: 1;
-  color: var(--abricot);
-  -webkit-text-stroke: 3px var(--aubergine);
-  paint-order: stroke fill;
-  text-shadow: 4px 4px 0 var(--aubergine);
+  top: var(--header-h);
+  left: 0;
+  right: 0;
+  z-index: 3;
 }
-.step h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(1.7rem, 6vw, 2.1rem);
-  line-height: 1;
+[data-mode='h'] .etal__board {
+  display: block;
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 56px;
+  z-index: 0;
+  background:
+    radial-gradient(circle at 40px 30%, var(--aubergine) 3px, transparent 3.5px) 0 0 / 220px 100% repeat-x,
+    linear-gradient(var(--aubergine), var(--aubergine)) 0 55% / 100% 3px no-repeat,
+    var(--bois);
+  border-top: 3px solid var(--aubergine);
 }
-.step p {
-  margin-top: 0.6rem;
+[data-mode='h'] .hero__awning {
+  display: none;
 }
-@media (min-width: 900px) {
-  .steps {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1.6rem;
-  }
-  .steps > li:nth-child(2) {
-    margin-top: 3.5rem;
-  }
-  .steps > li:nth-child(3) {
-    margin-top: 1.2rem;
-  }
-}
-
-/* ==========================================================================
-   Métiers (onglets par commerce)
-   ========================================================================== */
-
-.metiers {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.2rem;
-}
-.metiers > li {
-  min-width: 0;
-}
-.metier-card {
-  --mc: var(--abricot);
+[data-mode='h'] .panel {
+  position: relative;
+  z-index: 1;
+  flex: none;
+  width: var(--pw, 1100px);
+  height: 100vh;
+  padding: calc(var(--header-h) + var(--awning-h) + 2.6rem) 0 76px;
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  height: 100%;
-  padding: 1.5rem 1.4rem;
-  background: var(--mc);
-  border: 3px solid var(--aubergine);
-  border-radius: var(--r);
-  box-shadow: var(--pop);
-  color: var(--aubergine);
-  text-decoration: none;
-  transition: transform 0.35s var(--spring), box-shadow 0.2s;
-}
-.metiers > li:nth-child(1) .metier-card {
-  transform: rotate(-1.5deg);
-}
-.metiers > li:nth-child(2) .metier-card {
-  --mc: var(--tomate);
-  transform: rotate(1deg);
-}
-.metiers > li:nth-child(3) .metier-card {
-  --mc: var(--menthe);
-  transform: rotate(-0.8deg);
-}
-.metiers > li:nth-child(4) .metier-card {
-  --mc: var(--aubergine);
-  color: var(--creme);
-  transform: rotate(1.4deg);
-}
-.metier-card:hover {
-  transform: rotate(0) translateY(-4px) scale(1.02);
-}
-.metier-card__name {
-  font-family: var(--display);
-  text-transform: uppercase;
-  font-size: 2rem;
-  line-height: 1;
-}
-.metier-card__title {
-  font-weight: 700;
-  line-height: 1.35;
-}
-.metier-card__more {
-  margin-top: auto;
-  padding-top: 0.6rem;
-  font-weight: 800;
-}
-@media (min-width: 600px) {
-  .metiers {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-  }
-}
-@media (min-width: 1000px) {
-  .metiers {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-  }
-}
-
-/* ==========================================================================
-   L'appli (aubergine)
-   ========================================================================== */
-
-.features {
-  display: grid;
-  gap: 2.6rem;
-  align-items: center;
-}
-.features > * {
-  min-width: 0;
-}
-.features__screen {
-  position: relative;
-  height: 520px;
-}
-.features__screen::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: min(100%, 460px);
-  aspect-ratio: 1;
-  translate: -50% -50%;
-  background: var(--tomate);
-  border-radius: 46% 54% 50% 50% / 52% 46% 54% 48%;
-  animation: blob-morph 14s ease-in-out infinite alternate;
-}
-.features__screen .phone-css__body {
-  --phone-scale: 0.6;
-  --phone-tilt: 5deg;
-}
-.features__screen .sticker {
-  top: 8%;
-  right: 6%;
-  --size: 110px;
-}
-.features__list {
-  list-style: none;
-  margin: 2rem 0 0;
-  padding: 0;
-  display: grid;
-  gap: 1.3rem;
-}
-.feature {
-  display: flex;
-  gap: 1rem;
-}
-.feature__icon {
-  flex: none;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  background: var(--menthe);
-  color: var(--aubergine);
-  display: grid;
-  place-items: center;
-}
-.feature__icon svg {
-  width: 22px;
-  height: 22px;
-}
-.feature h3 {
-  font-size: 1.1rem;
-  font-weight: 800;
-}
-.feature p {
-  margin-top: 0.15rem;
-  opacity: 0.85;
-}
-.sheet--aubergine .text-link {
-  color: var(--abricot);
-}
-@media (min-width: 900px) {
-  .features {
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-  }
-  .features__screen {
-    height: 640px;
-  }
-  .features__screen .phone-css__body {
-    --phone-scale: 0.76;
-  }
-}
-
-/* ==========================================================================
-   Commerces pilotes
-   ========================================================================== */
-
-.pilots__list {
-  list-style: none;
-  margin: 0;
-  padding: 0 0 0 36px;
-  display: grid;
-  gap: 2.4rem;
-}
-.pilot .tag {
-  --tag: var(--abricot);
-}
-.pilots__list > li:nth-child(2) .tag {
-  --tag: var(--menthe);
-}
-.pilots__list > li:nth-child(3) .tag {
-  --tag: var(--tomate);
-}
-.pilot h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(1.9rem, 7vw, 2.4rem);
-  line-height: 1;
-}
-.pilot p {
-  margin-top: 0.4rem;
-  font-weight: 600;
-  line-height: 1.4;
-}
-.pilots__seats {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 0.8rem;
-  margin-top: 2.6rem;
-  font-weight: 800;
-}
-.seat-dots {
-  display: inline-flex;
-  gap: 6px;
-}
-.seat-dots i {
-  width: 18px;
-  height: 18px;
-  border-radius: 50%;
-  border: 2.5px solid var(--aubergine);
-  background: var(--tomate);
-}
-@media (min-width: 900px) {
-  .pilots__list {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 3rem;
-  }
-  .pilots__list > li:nth-child(2) {
-    margin-top: 3rem;
-  }
-}
-
-/* ==========================================================================
-   Qui est derrière Dalia
-   ========================================================================== */
-
-.founder {
-  display: grid;
-  gap: 2rem;
-  align-items: center;
-}
-.founder > * {
-  min-width: 0;
-}
-.founder__photo {
-  position: relative;
-  width: 180px;
-  height: 180px;
-  border-radius: 50%;
-  overflow: hidden;
-  background: var(--tomate);
-  border: 3px solid var(--aubergine);
-  box-shadow: var(--pop);
-  display: grid;
-  place-items: center;
-  font-family: var(--display);
-  font-size: 5rem;
-  color: var(--creme);
-  -webkit-text-stroke: 2px var(--aubergine);
-  paint-order: stroke fill;
-}
-.founder__photo img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-.founder__text {
-  margin-top: 1.1rem;
-  max-width: 46ch;
-}
-.founder__sign {
-  margin-top: 1.2rem;
-  font-weight: 600;
-}
-.founder__sign strong {
-  font-weight: 800;
-}
-.founder__contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.8rem;
-  margin-top: 1.6rem;
-}
-.founder__number {
-  margin-top: 0.9rem;
-  font-weight: 700;
-}
-.founder__select {
-  font-family: var(--display);
-  font-size: 1.5rem;
-  letter-spacing: 0.02em;
-  user-select: all;
-  -webkit-user-select: all;
-}
-@media (min-width: 800px) {
-  .founder {
-    grid-template-columns: auto minmax(0, 1fr);
-    gap: 4rem;
-  }
-  .founder__photo {
-    width: 260px;
-    height: 260px;
-    font-size: 7.5rem;
-  }
-}
-
-/* ==========================================================================
-   Offre
-   ========================================================================== */
-
-.offer__card {
-  position: relative;
-  display: grid;
-  grid-template-columns: minmax(0, 1fr);
-  gap: 2.4rem;
-  background: var(--aubergine);
-  color: var(--creme);
-  border-radius: var(--r-lg);
-  padding: clamp(3.4rem, 8vw, 4.6rem) clamp(1.4rem, 5vw, 3.6rem) clamp(2rem, 6vw, 3.6rem);
-}
-.offer__card .eyebrow {
-  background: var(--abricot);
-  color: var(--aubergine);
-}
-.offer__title {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(2.6rem, 10vw, 5rem);
-  line-height: 0.95;
-}
-.offer__promise {
-  margin-top: 1.2rem;
-  font-size: clamp(1.1rem, 2.8vw, 1.35rem);
-  font-weight: 600;
-  max-width: 34ch;
-}
-.offer__promise strong {
-  background: var(--menthe);
-  color: var(--aubergine);
-  padding: 0 0.25em;
-  border-radius: 8px;
-  box-decoration-break: clone;
-  -webkit-box-decoration-break: clone;
-}
-.offer__side {
-  background: var(--creme);
-  color: var(--aubergine);
-  border: 3px solid var(--aubergine);
-  border-radius: var(--r);
-  padding: 1.6rem 1.4rem;
-  box-shadow: 6px 6px 0 var(--tomate);
-  transform: rotate(1.2deg);
-}
-.offer__price {
-  display: flex;
-  align-items: baseline;
-  gap: 0.5rem;
-}
-.offer__price b {
-  font-family: var(--display);
-  font-weight: 400;
-  font-size: 3.6rem;
-  line-height: 1;
-  color: var(--tomate);
-  -webkit-text-stroke: 2px var(--aubergine);
-  paint-order: stroke fill;
-}
-.offer__price span {
-  font-weight: 700;
-}
-.offer__after {
-  margin-top: 0.6rem;
-  font-size: 0.95rem;
-  line-height: 1.45;
-}
-.offer__after strong {
-  font-weight: 800;
-}
-.offer__list {
-  list-style: none;
-  padding: 0;
-  margin: 1.2rem 0 1.4rem;
-  display: grid;
-  gap: 0.6rem;
-}
-.offer__list li {
-  display: flex;
-  gap: 0.6rem;
-  align-items: flex-start;
-  font-weight: 600;
-}
-.offer__list svg {
-  flex: none;
-  width: 22px;
-  height: 22px;
-  padding: 3px;
-  border-radius: 50%;
-  background: var(--menthe);
-  color: var(--aubergine);
-  margin-top: 1px;
-}
-.offer__seats {
-  display: flex;
-  align-items: center;
   justify-content: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.9rem;
-  font-weight: 700;
 }
-.offer__card .sticker {
-  top: -46px;
-  right: -6px;
-  --size: 124px;
-}
-@media (min-width: 900px) {
-  .offer__card {
-    grid-template-columns: 1.25fr 0.95fr;
-    align-items: center;
-    gap: 4rem;
-  }
-  .offer__card .sticker {
-    --size: 168px;
-    top: -70px;
-    right: -40px;
-  }
-}
-
-/* ==========================================================================
-   FAQ
-   ========================================================================== */
-
-.faq__list {
-  max-width: 860px;
-  margin-inline: auto;
-  display: grid;
-  gap: 0.9rem;
-}
-.faq__item {
-  background: var(--blanc);
-  border: 3px solid var(--aubergine);
-  border-radius: var(--r);
-  overflow: hidden;
-  transition: background-color 0.25s;
-}
-.faq__item.is-open {
-  background: var(--creme-2);
-}
-.faq__q {
+[data-mode='h'] .panel > .crate {
   width: 100%;
-  display: flex;
-  align-items: center;
+  max-width: none;
+  margin: 0;
+  padding: 2rem 2.2rem 4.2rem;
+}
+[data-mode='h'] .label {
+  margin-top: -2.2rem;
+}
+[data-mode='h'] .h2 {
+  font-size: clamp(2rem, 4.4vh, 2.8rem);
+}
+[data-mode='h'] .crate__lead {
+  margin-top: 1rem;
+}
+[data-mode='h'] .price-tag__value {
+  font-size: 3.4rem;
+}
+
+/* largeur de chaque cagette sur l'étal */
+.panel--hero {
+  --pw: 100vw;
+}
+.panel--ticket {
+  --pw: 400px;
+}
+.panel--problem {
+  --pw: 1120px;
+}
+.panel--calc {
+  --pw: 1100px;
+}
+.panel--how {
+  --pw: 1200px;
+}
+.panel--metiers {
+  --pw: 1180px;
+}
+.panel--features {
+  --pw: 1240px;
+}
+.panel--pilots {
+  --pw: 1180px;
+}
+.panel--founder {
+  --pw: 980px;
+}
+.panel--offer {
+  --pw: 1020px;
+}
+.panel--faq {
+  --pw: 2140px;
+}
+.panel--final {
+  --pw: 1360px;
+}
+
+/* Hero : l'ardoise et les produits occupent tout l'écran */
+[data-mode='h'] .panel--hero {
+  padding-inline: 5vw;
+  padding-bottom: 56px;
   justify-content: space-between;
-  gap: 1rem;
-  text-align: left;
-  background: none;
-  border: 0;
-  padding: 1.15rem 1.1rem 1.15rem 1.4rem;
-  font-weight: 800;
-  font-size: 1.06rem;
-  line-height: 1.3;
-  cursor: pointer;
-  min-height: 64px;
 }
-.faq__icon {
-  flex: none;
-  width: 38px;
-  height: 38px;
-  border-radius: 50%;
-  background: var(--abricot);
-  border: 2.5px solid var(--aubergine);
-  position: relative;
-  transition: background-color 0.25s;
+[data-mode='h'] .hero__layout {
+  width: 100%;
+  margin-block: auto;
 }
-.faq__icon::before,
-.faq__icon::after {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 50%;
-  width: 14px;
-  height: 3px;
-  margin: -1.5px 0 0 -7px;
-  border-radius: 2px;
-  background: var(--aubergine);
+[data-mode='h'] .hero .h1 {
+  font-size: min(5.6vw, 10vh, 6.4rem);
 }
-.faq__icon::after {
-  transform: rotate(90deg);
-  transition: transform 0.35s var(--spring);
+[data-mode='h'] .hero__products {
+  width: 100%;
+  margin-top: 0;
+  padding-bottom: 2px;
 }
-.is-open .faq__icon {
-  background: var(--tomate);
+[data-mode='h'] .hero__products::after {
+  display: none;
 }
-.is-open .faq__icon::after {
-  transform: rotate(0deg);
+[data-mode='h'] .product--yogurt .product__art svg {
+  height: 98px;
 }
-.faq__a {
-  overflow: hidden;
+[data-mode='h'] .product--bread .product__art svg {
+  height: 64px;
 }
-.faq__a p {
-  padding: 0 1.4rem 1.4rem;
-  max-width: 64ch;
+[data-mode='h'] .product--cheese .product__art svg {
+  height: 80px;
+}
+[data-mode='h'] .product--apricots .product__art svg {
+  height: 78px;
+}
+
+/* Ticket */
+[data-mode='h'] .panel--ticket {
+  justify-content: flex-start;
+  padding-top: calc(var(--header-h) + var(--awning-h) + 0.6rem);
+}
+
+/* Téléphone : sa taille suit la hauteur de l'écran */
+[data-mode='h'] .features__phone {
+  height: calc(100vh - 420px);
+}
+[data-mode='h'] .features__phone .phone-css__body {
+  --phone-scale: 0.44;
+}
+@media (min-height: 860px) {
+  [data-mode='h'] .features__phone .phone-css__body {
+    --phone-scale: 0.52;
+  }
+}
+@media (min-height: 960px) {
+  [data-mode='h'] .features__phone .phone-css__body {
+    --phone-scale: 0.6;
+  }
+}
+@media (min-height: 1060px) {
+  [data-mode='h'] .features__phone .phone-css__body {
+    --phone-scale: 0.7;
+  }
+}
+
+/* Panneau pilote : panneau à gauche, avantages empilés à droite */
+[data-mode='h'] .pilots {
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 1rem 2.4rem;
+}
+[data-mode='h'] .pilots__seats {
+  grid-column: 1;
+  grid-row: 2;
+}
+[data-mode='h'] .pilots__list {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  grid-template-columns: 1fr;
+}
+
+/* FAQ : 4 colonnes d'étiquettes */
+[data-mode='h'] .flips {
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+[data-mode='h'] .flip__face {
+  min-height: 120px;
+  padding: 0.9rem 1rem 0.8rem 2.2rem;
+}
+[data-mode='h'] .flip__a {
+  font-size: 0.9rem;
+}
+
+/* Bout de l'étal */
+[data-mode='h'] .final {
+  margin-top: 0;
+  border-top: 0;
+  border-left: 3px solid var(--aubergine);
+  border-radius: 44px 0 0 0;
+  padding-inline: 3vw;
+  padding-bottom: 76px;
+}
+[data-mode='h'] .final .field {
+  margin-bottom: 0.6rem;
+}
+[data-mode='h'] .final .field input {
+  min-height: 46px;
+}
+[data-mode='h'] .final .form-card {
+  min-height: 0;
+  padding: 1.5rem 1.6rem 1.3rem;
 }
 
 /* ==========================================================================
-   CTA final (tomate plein) + formulaire
+   Formulaire
    ========================================================================== */
-
-.final {
-  position: relative;
-  min-height: min(100svh, 980px);
-  display: flex;
-  align-items: center;
-}
-.final__grid {
-  display: grid;
-  gap: 2.6rem;
-  align-items: center;
-}
-.final__grid > * {
-  min-width: 0;
-}
-.final__title {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: clamp(3.4rem, 14vw, 8rem);
-  line-height: 0.95;
-  color: var(--creme);
-  text-shadow: 5px 5px 0 var(--aubergine);
-}
-.final__title span {
-  display: block;
-  transform: rotate(-3deg);
-  transform-origin: left;
-  margin-top: 0.06em;
-  color: var(--abricot);
-}
-.final__sub {
-  margin-top: 1.3rem;
-  font-weight: 700;
-  font-size: clamp(1.08rem, 2.6vw, 1.3rem);
-  max-width: 36ch;
-}
-.final__trust {
-  list-style: none;
-  padding: 0;
-  margin: 1.8rem 0 0;
-  display: grid;
-  gap: 0.6rem;
-  font-weight: 700;
-}
-.final__trust li {
-  display: flex;
-  gap: 0.6rem;
-  align-items: center;
-}
-.final__trust svg {
-  width: 26px;
-  height: 26px;
-  flex: none;
-  padding: 3px;
-  border-radius: 50%;
-  background: var(--creme);
-  color: var(--aubergine);
-}
 
 .form-card {
   position: relative;
@@ -2295,11 +2848,9 @@ span:nth-child(even) > .hl {
   min-height: 540px;
 }
 .form-card h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 2.1rem;
-  line-height: 1;
+  font-weight: 800;
+  font-size: 1.5rem;
+  line-height: 1.2;
 }
 .form-card__intro {
   font-size: 0.98rem;
@@ -2426,29 +2977,39 @@ span:nth-child(even) > .hl {
   }
 }
 
+
 /* ==========================================================================
    Pages métier et légales
    ========================================================================== */
 
 .metier-hero {
-  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 3.5rem));
-  padding-bottom: calc(clamp(4.5rem, 10vw, 7.5rem) + 2rem);
-  background: var(--creme);
-  overflow: clip;
+  padding-top: calc(var(--header-h) + var(--awning-h) + 1.4rem);
+  padding-bottom: 3rem;
 }
 .metier-hero__grid {
   display: grid;
   gap: 3rem;
   align-items: center;
+  max-width: 1160px;
+  margin-inline: auto;
+}
+.metier-hero .slate {
+  padding-top: 2.6rem;
+}
+.metier-hero .hero__badge {
+  position: absolute;
+  top: -18px;
+  left: 18px;
+  transform: rotate(-3deg);
+}
+.metier-hero__intro {
+  margin-top: 1.4rem;
 }
 .metier-hero__grid > * {
   min-width: 0;
 }
-.metier-hero .badge {
-  margin-bottom: 1.2rem;
-}
 .metier-hero .h1 {
-  font-size: clamp(3rem, 13vw, 6.6rem);
+  font-size: clamp(2.6rem, 11vw, 5rem);
 }
 .back-link {
   display: block;
@@ -2497,33 +3058,9 @@ span:nth-child(even) > .hl {
     gap: 4rem;
   }
 }
-.cases {
-  list-style: none;
-  margin: 0;
-  padding: 0;
-  display: grid;
-  gap: 1.4rem;
-}
-.case {
-  padding: 1.6rem 1.5rem;
-  height: 100%;
-}
-.case h3 {
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 1.8rem;
-  line-height: 1;
-}
-.case p {
-  margin-top: 0.6rem;
-}
-@media (min-width: 900px) {
-  .cases {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
-}
 .other-metiers {
+  max-width: 1160px;
+  margin-inline: auto;
   display: flex;
   flex-wrap: wrap;
   align-items: center;
@@ -2532,7 +3069,7 @@ span:nth-child(even) > .hl {
 }
 
 .legal {
-  padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 3.5rem));
+  padding: calc(var(--header-h) + clamp(2rem, 6vw, 3.5rem)) 0 4rem;
 }
 .legal__wrap {
   max-width: 780px;
@@ -2542,11 +3079,9 @@ span:nth-child(even) > .hl {
 }
 .legal__body h2 {
   margin-top: 2rem;
-  font-family: var(--display);
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 1.6rem;
-  line-height: 1.05;
+  font-weight: 800;
+  font-size: 1.25rem;
+  line-height: 1.25;
 }
 .legal__body p,
 .legal__body ul {
@@ -2563,6 +3098,7 @@ span:nth-child(even) > .hl {
   font-weight: 600;
 }
 
+
 /* ==========================================================================
    Pied de page + CTA flottant
    ========================================================================== */
@@ -2570,10 +3106,10 @@ span:nth-child(even) > .hl {
 .footer {
   background: var(--aubergine);
   color: var(--creme);
-  border-radius: var(--sheet) var(--sheet) 0 0;
-  margin-top: calc(-1 * var(--sheet));
+  border-radius: 44px 44px 0 0;
+  margin-top: calc(-1 * 44px);
   position: relative;
-  padding: calc(3rem + var(--sheet) / 2) 0 calc(6.5rem + env(safe-area-inset-bottom));
+  padding: calc(3rem + 44px / 2) 0 calc(6.5rem + env(safe-area-inset-bottom));
   font-size: 0.95rem;
 }
 .footer__grid {
@@ -2643,8 +3179,9 @@ span:nth-child(even) > .hl {
   }
 }
 
+
 /* ==========================================================================
-   Mouvement réduit
+   Mouvement réduit : défilement vertical simple, rien ne se balance
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
@@ -2654,14 +3191,7 @@ span:nth-child(even) > .hl {
   *,
   *::before,
   *::after {
-    animation-duration: 0.001ms !important;
-    animation-iteration-count: 1 !important;
+    animation: none !important;
     transition-duration: 0.001ms !important;
   }
-}
-
-.btn > span:first-child {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5em;
 }
