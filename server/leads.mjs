@@ -5,8 +5,10 @@
 // GET  /api/leads.csv?token= → export CSV (nécessite ADMIN_TOKEN)
 //
 // Les leads sont ajoutés ligne par ligne dans data/leads.jsonl.
-// Si LEADS_WEBHOOK_URL est défini (Zapier, Make, Google Apps Script, Slack…),
-// chaque lead y est aussi transmis en JSON.
+// Transmission (au moins l'une des deux, sinon les demandes ne sont pas conservées sur Vercel) :
+// - GOOGLE_FORM_URL : lien prérempli d'un Google Forms relié à une feuille Google Sheets
+//   (Google ajoute la ligne et envoie lui-même l'e-mail de notification) ;
+// - LEADS_WEBHOOK_URL : n'importe quel webhook JSON (Zapier, Make, Google Apps Script, Slack…).
 
 import { appendFile, mkdir, readFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
@@ -87,10 +89,7 @@ export function validateLead(input) {
 
 async function forwardToWebhook(entry) {
   const url = process.env.LEADS_WEBHOOK_URL
-  if (!url) {
-    console.warn('[leads] LEADS_WEBHOOK_URL absente : la demande n’est transmise nulle part (ni feuille, ni e-mail).')
-    return
-  }
+  if (!url) return false
   try {
     // Google Apps Script répond par une redirection ; un démarrage à froid peut prendre plusieurs secondes.
     const r = await fetch(url, {
@@ -114,7 +113,67 @@ async function forwardToWebhook(entry) {
   } catch (err) {
     console.error('[leads] webhook injoignable :', err.message)
   }
+  return true
 }
+
+// Lien prérempli Google Forms (même lien pour tout le monde : il n'a rien de secret).
+// Peut aussi être défini dans la variable d'environnement GOOGLE_FORM_URL.
+const DEFAULT_GOOGLE_FORM_URL = ''
+
+const plain = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase()
+
+/** 0611718368 → « 06 11 71 83 68 » (avec espaces, Google Sheets garde le 0 du début). */
+const spacedPhone = (p) => (p ? p.replace(/(\d{2})(?=\d)/g, '$1 ') : '')
+
+/**
+ * Envoie la demande à un Google Forms. Dans le lien prérempli, chaque question contient le mot
+ * du champ à y mettre : nom, commerce, ville, telephone (et, si vous les avez ajoutées : pertes, source).
+ */
+async function forwardToGoogleForm(entry) {
+  const raw = process.env.GOOGLE_FORM_URL || DEFAULT_GOOGLE_FORM_URL
+  if (!raw) return false
+  try {
+    const link = new URL(raw)
+    const action = `${link.origin}${link.pathname.replace(/\/(viewform|formResponse)\/?$/, '')}/formResponse`
+    const values = {
+      nom: entry.nom,
+      commerce: entry.commerce,
+      ville: entry.ville,
+      telephone: spacedPhone(entry.telephone),
+      pertes: entry.pertesSemaine ?? '',
+      source: entry.source,
+    }
+    const body = new URLSearchParams()
+    for (const [key, value] of link.searchParams) {
+      if (!key.startsWith('entry.')) continue
+      const field = plain(value)
+      if (field in values) body.append(key, String(values[field]))
+      else console.warn(`[leads] Google Forms : question préremplie avec « ${value} » non reconnue (attendu : nom, commerce, ville, telephone, pertes, source)`)
+    }
+    if (![...body.keys()].length) {
+      console.error('[leads] Google Forms : aucun champ reconnu dans GOOGLE_FORM_URL (préremplissez nom, commerce, ville, telephone).')
+      return true
+    }
+    const r = await fetch(action, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body,
+      redirect: 'follow',
+      signal: AbortSignal.timeout(15000),
+    })
+    if (/accounts\.google\.com|ServiceLogin/.test(r.url)) {
+      console.error('[leads] Google Forms demande une connexion : dans les paramètres du formulaire, désactivez « Limiter à 1 réponse » et la collecte des adresses e-mail.')
+    } else if (!r.ok) {
+      console.error(`[leads] Google Forms en échec : HTTP ${r.status}`)
+    } else {
+      console.log('[leads] Google Forms OK : demande ajoutée à la feuille')
+    }
+  } catch (err) {
+    console.error('[leads] Google Forms injoignable :', err.message)
+  }
+  return true
+}
+
 
 const csvCell = (v) => `"${String(v ?? '').replace(/"/g, '""')}"`
 
@@ -165,7 +224,10 @@ export async function handleLeadsApi(req, res) {
     const entry = { id: randomUUID(), date: new Date().toISOString(), ...lead, pertesSemaine, source: clean(input?.source, 40) || 'landing' }
     await mkdir(DATA_DIR, { recursive: true })
     await appendFile(LEADS_FILE, JSON.stringify(entry) + '\n', 'utf8')
-    await forwardToWebhook(entry)
+    const [sentToForm, sentToWebhook] = await Promise.all([forwardToGoogleForm(entry), forwardToWebhook(entry)])
+    if (!sentToForm && !sentToWebhook) {
+      console.warn('[leads] Ni GOOGLE_FORM_URL ni LEADS_WEBHOOK_URL : la demande n’est transmise nulle part (ni feuille, ni e-mail).')
+    }
     console.log(`[leads] nouveau lead : ${entry.commerce} (${entry.ville})`)
     return send(res, 201, { ok: true, id: entry.id })
   } catch (err) {
