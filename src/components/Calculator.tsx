@@ -21,11 +21,13 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
   return (
     <section className="section section--soft" id="calculateur" aria-labelledby="calc-title">
       <div className="wrap">
-        <div className="section-head section-head--center">
-          <span className="eyebrow">Calculateur</span>
-          <h2 id="calc-title" className="h2">
-            Combien jetez-vous par semaine&nbsp;?
-          </h2>
+        <div className="section-head section-head--split">
+          <div>
+            <span className="eyebrow">Calculateur</span>
+            <h2 id="calc-title" className="h2">
+              Combien <em>jetez</em>-vous par semaine&nbsp;?
+            </h2>
+          </div>
           <p className="lead">Faites glisser le curseur. Le chiffre annuel surprend souvent.</p>
         </div>
 
@@ -67,7 +69,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
                 </span>
               </div>
               <div className="calc__bar" aria-hidden="true">
-                <motion.span style={{ background: 'var(--red)' }} animate={{ scaleX: Math.max(0.04, lossShare) }} transition={barSpring} />
+                <motion.span style={{ background: 'var(--ink)' }} animate={{ scaleX: Math.max(0.04, lossShare) }} transition={barSpring} />
               </div>
             </div>
 
@@ -80,7 +82,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
               </div>
               <div className="calc__bar" aria-hidden="true">
                 <motion.span
-                  style={{ background: 'var(--green)' }}
+                  style={{ background: 'var(--blue)' }}
                   animate={{ scaleX: Math.max(0.02, lossShare * DALIA_SAVINGS_RATE) }}
                   transition={barSpring}
                 />
@@ -96,7 +98,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
           </div>
         </div>
 
-        <CtaRow center label="Mesurer mon vrai chiffre avec 1 mois gratuit" />
+        <CtaRow label="Mesurer mon vrai chiffre avec 1 mois gratuit" />
       </div>
     </section>
   )

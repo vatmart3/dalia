@@ -72,19 +72,19 @@ export function Faq() {
   const [open, setOpen] = useState<number | null>(0)
   return (
     <section className="section section--soft" id="faq" aria-labelledby="faq-title">
-      <div className="wrap">
-        <div className="section-head section-head--center">
+      <div className="wrap faq">
+        <div className="faq__head">
           <span className="eyebrow">Questions fréquentes</span>
           <h2 id="faq-title" className="h2">
-            Vos questions, nos réponses.
+            Vos questions, nos <em>réponses</em>.
           </h2>
+          <CtaRow label="Une autre question ? Demandez à être rappelé" />
         </div>
         <div className="faq__list">
           {FAQ.map((item, i) => (
             <Item key={item.q} {...item} open={open === i} onToggle={() => setOpen(open === i ? null : i)} />
           ))}
         </div>
-        <CtaRow center label="Une autre question ? Demandez à être rappelé" />
       </div>
     </section>
   )

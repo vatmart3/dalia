@@ -17,8 +17,8 @@ export function Offer() {
         <Reveal className="offer__card" y={40}>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <span className="eyebrow">Offre pilote</span>
-            <h2 id="offer-title" className="offer__title">
-              Vous ne risquez rien. Vraiment.
+            <h2 id="offer-title" className="offer__title display">
+              Vous ne risquez rien. <em>Vraiment.</em>
             </h2>
             <p className="offer__promise">
               Installation sur place, 1 mois gratuit, sans engagement. <strong>Si vous n’économisez rien, vous arrêtez.</strong>

@@ -4,15 +4,17 @@ import { FinalCta } from './FinalCta'
 import { Founder } from './Founder'
 import { Reveal } from './Reveal'
 import { ProductThumb } from './ProductGlyph'
+import { PhotoSlot } from './PhotoSlot'
 import { IconBell } from './Icons'
-import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
-import { METIERS, metierBySlug } from '../lib/metiers'
+import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS, SHOP_PHOTOS } from '../lib/config'
+import { METIERS, metierBySlug, splitKeyword } from '../lib/metiers'
 import { href, useDocumentMeta, type MetierSlug } from '../lib/router'
 
 export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedMotion: boolean }) {
   const m = metierBySlug(slug)
   useDocumentMeta(m.seoTitle, m.seoDescription)
   const others = METIERS.filter((o) => o.slug !== slug)
+  const [before, keyword, after] = splitKeyword(m.title, m.keyword)
 
   return (
     <>
@@ -24,7 +26,9 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
             </a>
             <p className="badge">Dalia pour les {m.plural}</p>
             <h1 id="metier-title" className="h1">
-              {m.title}
+              {before}
+              <em>{keyword}</em>
+              {after}
             </h1>
             <p className="lead hero__sub">{m.intro}</p>
             <div className="cta-row">
@@ -65,9 +69,10 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
           <div className="section-head">
             <span className="eyebrow">Au quotidien</span>
             <h2 id="cases-title" className="h2">
-              Ce que Dalia change dans votre {m.name.toLowerCase()}.
+              Ce que Dalia change dans votre <em>{m.name.toLowerCase()}</em>.
             </h2>
           </div>
+          <PhotoSlot className="cases__photo" src={SHOP_PHOTOS[slug]} alt={`${m.name} équipée de Dalia`} what={m.photoHint} />
           <ul className="cases">
             {m.cases.map((c, i) => (
               <Reveal as="li" key={c.title} delay={i * 0.06} className="card case">

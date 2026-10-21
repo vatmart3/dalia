@@ -20,12 +20,12 @@ export function Features() {
         <div>
           <span className="eyebrow">L’appli</span>
           <h2 id="features-title" className="h2">
-            Une alerte claire. <em>Au bon moment.</em>
+            Une alerte claire. Au bon <em>moment</em>.
           </h2>
           <ul className="features__list">
             {FEATURES.map(({ Icon, title, text }, i) => (
               <Reveal as="li" key={title} className="feature" delay={i * 0.06} y={16}>
-                <span className="feature__icon">
+                <span className="feature__icon" aria-hidden="true">
                   <Icon />
                 </span>
                 <div>

@@ -37,11 +37,22 @@ export const FOUNDER = {
   name: 'Jérémy',
   firstName: 'Jérémy',
   role: 'Fondateur de Dalia, basé à Sète',
-  /** Chemin d'une photo carrée dans public/ (ex. '/jeremy.jpg'), ou null pour l'initiale. */
+  /** Photo portrait (format 4:5) dans public/ (ex. '/photos/jeremy.jpg'). null = cadre « photo à remplacer ». */
   photo: null as string | null,
   phone: '06 11 71 83 68',
   tel: '+33611718368',
   whatsapp: '33611718368',
+}
+
+/**
+ * Photos de vrais commerces (dans public/photos/), avec l'accord des commerçants.
+ * null = cadre « photo à remplacer » affiché à la place. Pas d'images générées.
+ */
+export const SHOP_PHOTOS: Record<'boulangerie' | 'boucherie' | 'epicerie' | 'superette', string | null> = {
+  boulangerie: null,
+  boucherie: null,
+  epicerie: null,
+  superette: null,
 }
 
 /** Informations légales (page « Mentions légales »). */

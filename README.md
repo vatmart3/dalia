@@ -8,7 +8,7 @@ Landing page one-page de **Dalia**, l'appli anti-gaspillage pour les petits comm
 ## Stack
 
 - **Vite + React 19 + TypeScript**
-- **Design sobre et pro** : bleu #0B63CE, bleu foncé #062B5B, marine #031B3A, fonds blancs et gris très clair #F5F7FB ; police Inter ; cartes arrondies, ombres douces.
+- **Design** : bleu profond #1D3FBF, marine #0E1A3A pour le texte, fonds blanc et crème #FBFAF7, un seul accent abricot #F2A541 réservé aux promos (étiquettes « −20 % », mois offert, flèche du bouton principal). Titres en Anton avec un mot clé penché en bleu, texte en Inter, signature manuscrite en Caveat. Bordures fines plutôt qu'ombres, mises en page asymétriques, léger grain de papier.
 - **Hero** : titre à gauche, maquette de téléphone en CSS (inspirée de l'iPhone 17 Pro Max) à droite, avec la démo Photo → Alerte → Promo. Aucune 3D.
 - **GSAP ScrollTrigger** : sur ordinateur, le hero est épinglé le temps de la démo (bouton « Passer l'intro ») ; sur mobile, la démo joue toute seule.
 - **Framer Motion** : apparitions douces au scroll, accordéons, confirmation du formulaire.
@@ -72,7 +72,8 @@ Plausible, désactivé par défaut. Pour l'activer : `VITE_PLAUSIBLE_DOMAIN=votr
 Tout ce qui est marqué « VALEURS D'EXEMPLE » dans `src/lib/config.ts` :
 
 - `PRICE` : tarif après le mois gratuit (**39 € HT/mois est un exemple**, affiché dans l'offre et la FAQ).
-- `FOUNDER` : Jérémy, 06 11 71 83 68 (appel et WhatsApp) ; ajoutez une photo carrée dans `public/` pour remplacer l'initiale.
+- `FOUNDER` : Jérémy, 06 11 71 83 68 (appel et WhatsApp) ; `photo` : un vrai portrait (format 4:5) dans `public/photos/`, sinon un cadre « Photo à remplacer » s'affiche.
+- `SHOP_PHOTOS` : vraies photos des commerces pilotes (boulangerie, boucherie, épicerie, supérette), avec leur accord. Pas d'images générées : tant qu'une photo manque, un cadre « Photo à remplacer » indique ce qu'il faut photographier.
 - `COMPANY` : forme juridique, adresse, SIRET, RCS, TVA, directeur de la publication, hébergeur (page Mentions légales).
 - `LEAD_RETENTION` : durée de conservation des prospects (3 ans, recommandation CNIL).
 

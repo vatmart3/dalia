@@ -4,7 +4,7 @@ const base = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strok
 export type Product = 'yaourt' | 'brioche' | 'fromage' | 'fruit'
 
 const TINT: Record<Product, { bg: string; fg: string }> = {
-  yaourt: { bg: '#EEF5FF', fg: '#0B63CE' },
+  yaourt: { bg: '#EEF1FB', fg: '#1D3FBF' },
   brioche: { bg: '#FFF4E5', fg: '#B26100' },
   fromage: { bg: '#FFF8E1', fg: '#9A7B00' },
   fruit: { bg: '#E7F6EE', fg: '#13804C' },

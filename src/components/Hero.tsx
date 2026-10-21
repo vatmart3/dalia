@@ -114,7 +114,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             {PILOT_SEATS} places pilotes à {PILOT_AREA}
           </motion.p>
           <motion.h1 id="hero-title" className="h1" {...fadeUp(0.08)}>
-            Dalia veille, et <em>votre marge</em> ne part pas.
+            Dalia veille, et votre <em>marge</em> ne part pas.
           </motion.h1>
           <motion.p className="lead hero__sub" {...fadeUp(0.16)}>
             L’appli qui surveille vos dates limites et transforme vos invendus en ventes.

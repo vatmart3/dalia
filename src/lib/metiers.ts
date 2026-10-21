@@ -6,6 +6,10 @@ export type Metier = {
   /** Pour « Dalia pour les … » */
   plural: string
   title: string
+  /** Mot du titre mis en italique. */
+  keyword: string
+  /** Ce que doit montrer la vraie photo du commerce. */
+  photoHint: string
   intro: string
   cases: { title: string; text: string }[]
   alert: { title: string; body: string; product: 'yaourt' | 'brioche' | 'fromage' | 'fruit' }
@@ -19,6 +23,8 @@ export const METIERS: Metier[] = [
     name: 'Boulangerie',
     plural: 'boulangeries',
     title: 'Moins d’invendus en fin de journée.',
+    keyword: 'invendus',
+    photoHint: 'Votre vitrine en fin de journée, viennoiseries et sandwichs',
     intro: 'Viennoiseries, sandwichs, desserts en vitrine : Dalia suit ce qui doit partir aujourd’hui et vous dit quand baisser le prix.',
     cases: [
       { title: 'Les produits du jour', text: 'Indiquez la durée de vente une fois. Dalia vous prévient en fin d’après-midi de ce qui reste à écouler.' },
@@ -34,6 +40,8 @@ export const METIERS: Metier[] = [
     name: 'Boucherie',
     plural: 'boucheries',
     title: 'Chaque barquette vendue avant sa date.',
+    keyword: 'vendue',
+    photoHint: 'Le comptoir de la boucherie et ses barquettes',
     intro: 'Les dates limites sont courtes et la marge est serrée. Dalia surveille vos barquettes, votre charcuterie et votre traiteur.',
     cases: [
       { title: 'Barquettes et sous-vide', text: 'Une photo à la mise en rayon : Dalia lit la date limite et vous alerte la veille, pas le jour même.' },
@@ -49,6 +57,8 @@ export const METIERS: Metier[] = [
     name: 'Épicerie',
     plural: 'épiceries',
     title: 'Des centaines de références, aucune date oubliée.',
+    keyword: 'oubliée',
+    photoHint: 'Les rayons de l’épicerie, côté frais',
     intro: 'Rayon frais, épicerie fine, fruits et légumes : Dalia garde l’œil sur tout ce que vous n’avez pas le temps de vérifier.',
     cases: [
       { title: 'Le rayon frais', text: 'Yaourts, fromages, jambon en libre-service : les dates courtes remontent en haut de l’écran.' },
@@ -64,6 +74,8 @@ export const METIERS: Metier[] = [
     name: 'Supérette',
     plural: 'supérettes',
     title: 'Tout le rayon frais sous contrôle.',
+    keyword: 'frais',
+    photoHint: 'Le rayon frais de la supérette',
     intro: 'Plusieurs livraisons par semaine, des produits qui tournent vite : Dalia vous dit chaque matin ce qu’il faut traiter en premier.',
     cases: [
       { title: 'Plusieurs livraisons par semaine', text: 'Chaque arrivage est photographié en quelques secondes, sans saisie ni tableur.' },
@@ -77,3 +89,10 @@ export const METIERS: Metier[] = [
 ]
 
 export const metierBySlug = (slug: MetierSlug) => METIERS.find((m) => m.slug === slug)!
+
+/** Découpe un titre autour de son mot clé, pour le mettre en italique. */
+export function splitKeyword(text: string, keyword: string): [string, string, string] {
+  const i = text.indexOf(keyword)
+  if (i < 0) return [text, '', '']
+  return [text.slice(0, i), keyword, text.slice(i + keyword.length)]
+}

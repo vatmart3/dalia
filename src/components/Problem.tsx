@@ -14,14 +14,15 @@ export function Problem() {
         <div className="section-head">
           <span className="eyebrow">Le problème</span>
           <h2 id="problem-title" className="h2">
-            Chaque date ratée, c’est de la marge <em>à la poubelle</em>.
+            Chaque date ratée, c’est de la marge à la <em>poubelle</em>.
           </h2>
           <p className="lead">Entre la caisse, les livraisons et les clients, personne n’a le temps de surveiller chaque produit.</p>
         </div>
 
+        {/* Bento : le premier chiffre en grand, les deux autres empilés à côté. */}
         <ul className="stats">
           {STATS.map(({ value, unit, label }, i) => (
-            <Reveal as="li" key={value} className="stat" delay={i * 0.08}>
+            <Reveal as="li" key={value} className={`stat ${i === 0 ? 'stat--big' : ''}`} delay={i * 0.08}>
               <span className="stat__value">
                 {value}
                 {unit && <small>{unit}</small>}

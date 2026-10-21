@@ -15,8 +15,8 @@ export function FinalCta({ reducedMotion, source }: { reducedMotion: boolean; so
           viewport={{ once: true, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 110, damping: 20 }}
         >
-          <h2 id="final-title" className="final__title">
-            Dalia veille. <span>Et vous, vous vendez.</span>
+          <h2 id="final-title" className="final__title display">
+            Dalia veille. <span>Et vous, vous <em>vendez</em>.</span>
           </h2>
           <p className="final__sub">
             {PILOT_SEATS} places pilotes à {PILOT_AREA}. Réservez la vôtre, on s’occupe du reste.

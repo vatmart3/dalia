@@ -27,19 +27,28 @@ export function HowItWorks() {
         <div className="section-head">
           <span className="eyebrow">Comment ça marche</span>
           <h2 id="how-title" className="h2">
-            Trois gestes. <em>Aucune formation.</em>
+            Trois gestes. Aucune <em>formation</em>.
           </h2>
         </div>
         <ol className="steps">
           {STEPS.map(({ title, text, Visual }, i) => (
-            <Reveal as="li" key={title} delay={i * 0.08}>
-              <div className="card step">
+            <Reveal as="li" key={title} delay={i * 0.08} className={i === 0 ? 'steps__lead' : undefined}>
+              <div className="step">
                 <div className="step__visual">
                   <Visual />
                 </div>
-                <span className="step__num">Étape {i + 1}</span>
-                <h3>{title}</h3>
-                <p>{text}</p>
+                <div className="step__body">
+                  <span className="step__num" aria-hidden="true">
+                    0{i + 1}
+                  </span>
+                  <div>
+                    <h3>
+                      <span className="sr-only">Étape {i + 1} : </span>
+                      {title}
+                    </h3>
+                    <p>{text}</p>
+                  </div>
+                </div>
               </div>
             </Reveal>
           ))}
