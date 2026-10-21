@@ -1,6 +1,6 @@
 /*
  * Mesure d'audience sans cookies (Plausible), désactivée par défaut.
- * Pour l'activer : VITE_PLAUSIBLE_DOMAIN=dalia.fr npm run build
+ * Pour l'activer : VITE_PLAUSIBLE_DOMAIN=votre-domaine.fr npm run build
  * Rien n'est chargé dans l'aperçu « démo » ni sans cette variable.
  */
 

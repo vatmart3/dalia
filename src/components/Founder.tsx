@@ -1,26 +1,24 @@
 import { Reveal } from './Reveal'
+import { Hl } from './Highlight'
+import { ButtonLink } from './Button'
+import { Blobs } from './Blobs'
 import { IconPhone } from './Icons'
 import { FOUNDER } from '../lib/config'
 
 /** « Qui est derrière Dalia » : un visage et un numéro direct, pour rassurer. */
 export function Founder() {
-  const initials = FOUNDER.name
-    .split(/\s+/)
-    .map((w) => w[0])
-    .join('')
-    .slice(0, 2)
-    .toUpperCase()
   return (
-    <section className="section section--soft" id="equipe" aria-labelledby="founder-title">
+    <section className="section sheet sheet--abricot" id="equipe" aria-labelledby="founder-title">
+      <Blobs items={[{ color: 'var(--tomate)', size: '220px', bottom: '-60px', right: '8%', opacity: 0.35 }]} />
       <div className="wrap">
         <Reveal className="founder">
           <div className="founder__photo">
-            {FOUNDER.photo ? <img src={FOUNDER.photo} alt={`Portrait de ${FOUNDER.name}`} width="240" height="240" /> : <span aria-hidden="true">{initials}</span>}
+            {FOUNDER.photo ? <img src={FOUNDER.photo} alt={`Portrait de ${FOUNDER.name}`} width="260" height="260" /> : <span aria-hidden="true">{FOUNDER.name[0]}</span>}
           </div>
-          <div className="founder__body">
+          <div>
             <span className="eyebrow">Qui est derrière Dalia</span>
-            <h2 id="founder-title" className="h2 founder__title">
-              Une personne d’ici, <em>pas un centre d’appels.</em>
+            <h2 id="founder-title" className="h2">
+              Une personne d’ici, <Hl>pas un centre d’appels.</Hl>
             </h2>
             <p className="lead founder__text">
               Je m’appelle {FOUNDER.firstName}, je suis à Sète. Je viens installer Dalia dans votre boutique, je vous montre sur vos propres produits, et vous
@@ -30,16 +28,15 @@ export function Founder() {
               <strong>{FOUNDER.name}</strong> · {FOUNDER.role}
             </p>
             <div className="founder__contact">
-              <a className="btn btn--ghost" href={`tel:${FOUNDER.phone.replace(/\s/g, '')}`}>
-                <IconPhone />
-                <span>{FOUNDER.phone}</span>
-              </a>
-              <a className="btn btn--ghost" href={`https://wa.me/${FOUNDER.whatsapp}`} target="_blank" rel="noopener noreferrer">
-                <span>Écrire sur WhatsApp</span>
-              </a>
+              <ButtonLink href={`tel:${FOUNDER.tel}`} variant="dark" arrow={false}>
+                <IconPhone /> Appeler {FOUNDER.firstName}
+              </ButtonLink>
+              <ButtonLink href={`https://wa.me/${FOUNDER.whatsapp}`} variant="ghost" arrow={false} target="_blank" rel="noopener noreferrer">
+                Écrire sur WhatsApp
+              </ButtonLink>
             </div>
-            <p className="founder__mail">
-              Ou par e-mail : <span className="founder__select">{FOUNDER.email}</span>
+            <p className="founder__number">
+              Ou notez le numéro : <span className="founder__select">{FOUNDER.phone}</span>
             </p>
           </div>
         </Reveal>

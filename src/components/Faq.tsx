@@ -71,7 +71,7 @@ function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; o
 export function Faq() {
   const [open, setOpen] = useState<number | null>(0)
   return (
-    <section className="section section--soft" id="faq" aria-labelledby="faq-title">
+    <section className="section sheet sheet--creme2" id="faq" aria-labelledby="faq-title">
       <div className="wrap">
         <div className="section-head section-head--center">
           <span className="eyebrow">Questions fréquentes</span>

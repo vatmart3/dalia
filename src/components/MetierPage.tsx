@@ -5,6 +5,8 @@ import { Founder } from './Founder'
 import { Reveal } from './Reveal'
 import { ProductThumb } from './ProductGlyph'
 import { IconBell } from './Icons'
+import { Sticker } from './Sticker'
+import { Blobs } from './Blobs'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 import { METIERS, metierBySlug } from '../lib/metiers'
 import { href, useDocumentMeta, type MetierSlug } from '../lib/router'
@@ -17,6 +19,12 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
   return (
     <>
       <section className="section metier-hero" aria-labelledby="metier-title">
+        <Blobs
+          items={[
+            { color: 'var(--tomate)', size: '360px', top: '-80px', right: '-120px', opacity: 0.9 },
+            { color: 'var(--menthe)', size: '160px', bottom: '10%', left: '-50px', opacity: 0.6 },
+          ]}
+        />
         <div className="wrap metier-hero__grid">
           <div>
             <a className="back-link" href={href('')}>
@@ -34,7 +42,10 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
               <strong>1 mois offert</strong>, installation faite par nous. {PILOT_SEATS} places pilotes à {PILOT_AREA}.
             </p>
           </div>
-          <Reveal className="metier-alert" y={24}>
+          <Reveal className="metier-alert" y={40}>
+            <Sticker color="#FFB23E" rotate={14}>
+              {m.alert.body.match(/−\d+ %/)?.[0].replace(' ', '') ?? '−20%'}
+            </Sticker>
             <div className="metier-alert__card">
               <div className="app__notif-top">
                 <span className="app__notif-icon">
@@ -60,7 +71,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
         </div>
       </section>
 
-      <section className="section section--soft" aria-labelledby="cases-title">
+      <section className="section sheet sheet--abricot" aria-labelledby="cases-title">
         <div className="wrap">
           <div className="section-head">
             <span className="eyebrow">Au quotidien</span>
@@ -70,7 +81,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
           </div>
           <ul className="cases">
             {m.cases.map((c, i) => (
-              <Reveal as="li" key={c.title} delay={i * 0.06} className="card case">
+              <Reveal as="li" key={c.title} delay={i * 0.1} className="card case" rotate={i % 2 ? 1 : -1}>
                 <h3>{c.title}</h3>
                 <p>{c.text}</p>
               </Reveal>
@@ -82,7 +93,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
       <HowItWorks />
       <Founder />
 
-      <section className="section section--tight" aria-label="Autres métiers">
+      <section className="section sheet sheet--creme2" aria-label="Autres métiers">
         <div className="wrap other-metiers">
           <span>Dalia existe aussi pour les</span>
           {others.map((o) => (

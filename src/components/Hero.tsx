@@ -1,174 +1,182 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { createPortal } from 'react-dom'
-import { AnimatePresence, motion } from 'framer-motion'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import { useEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { motion, useMotionValue, useSpring, useTransform, type MotionValue } from 'framer-motion'
 import { ButtonLink } from './Button'
-import { AppScreen, CssPhone } from './AppScreen'
-import { ErrorBoundary } from './ErrorBoundary'
-import { IconSkip } from './Icons'
-import { useWebGL } from '../hooks/useWebGL'
+import { CssPhone } from './AppScreen'
+import { Apricot, Baguette, Eggplant, MintLeaf, Tomato } from './Fruits'
 import { useInViewport } from '../hooks/useInViewport'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
-gsap.registerPlugin(ScrollTrigger)
-
-const PhoneScene = lazy(() => import('../three/PhoneScene'))
-
 type Stage = 0 | 1 | 2
 const STEPS = ['Photo', 'Alerte', 'Promo']
-const stageOf = (p: number): Stage => (p < 0.3 ? 0 : p < 0.68 ? 1 : 2)
-// Position de l'intro qui correspond à chaque étape (pour l'autoplay et les clics sur les étapes).
-const STAGE_PROGRESS = [0, 0.5, 1]
-// Autoplay (mobile) : durée de chaque étape. L'étape Photo laisse jouer un scan complet.
+// Durée de chaque étape : l'étape Photo laisse jouer un scan complet.
 const STAGE_MS = [5200, 3400, 3400]
-// Intro au scroll réservée aux écrans larges avec souris ; ailleurs elle joue toute seule.
-const SCROLL_INTRO_QUERY = '(min-width: 900px) and (hover: hover) and (pointer: fine)'
 
-type Mode = 'scroll' | 'auto' | 'static'
+const word = {
+  hidden: { y: '110%', rotate: 6, opacity: 0 },
+  show: (i: number) => ({
+    y: '0%',
+    rotate: 0,
+    opacity: 1,
+    transition: { type: 'spring' as const, stiffness: 300, damping: 14, delay: 0.1 + i * 0.09 },
+  }),
+}
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
-  transition: { type: 'spring' as const, stiffness: 120, damping: 20, delay },
-})
+/** Élément flottant : ondule doucement (CSS) et suit un peu la souris (profondeur `depth`). */
+function Float({
+  mx,
+  my,
+  depth,
+  style,
+  bob = 6,
+  r0 = -4,
+  r1 = 5,
+  back = false,
+  children,
+}: {
+  mx: MotionValue<number>
+  my: MotionValue<number>
+  depth: number
+  style: CSSProperties
+  bob?: number
+  r0?: number
+  r1?: number
+  back?: boolean
+  children: ReactNode
+}) {
+  const x = useTransform(mx, (v) => v * depth * 28)
+  const y = useTransform(my, (v) => v * depth * 22)
+  return (
+    <motion.div className={`float ${back ? 'float--back' : ''}`} style={{ ...style, x, y }} aria-hidden="true">
+      <div className="float__inner" style={{ '--bob': `${bob}s`, '--r0': `${r0}deg`, '--r1': `${r1}deg`, '--delay': `${-bob / 3}s` } as CSSProperties}>
+        {children}
+      </div>
+    </motion.div>
+  )
+}
 
 export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
-  const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
-  const triggerRef = useRef<ScrollTrigger | null>(null)
-  const progress = useRef(0)
   const [stage, setStage] = useState<Stage>(reducedMotion ? 2 : 0)
-  const [introDone, setIntroDone] = useState(reducedMotion)
-  const [mode, setMode] = useState<Mode>(reducedMotion ? 'static' : 'auto')
-  const webgl = useWebGL()
-  // Élément DOM de l'écran, projeté sur le téléphone 3D par la scène.
-  const [screenEl] = useState(() => {
-    const el = document.createElement('div')
-    el.setAttribute('aria-hidden', 'true')
-    return el
-  })
   const visible = useInViewport(stageRef, '0px')
 
-  // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
-  // Mobile / tactile : pas d'épinglage (saccadé avec la barre d'adresse), l'intro joue toute seule.
-  useLayoutEffect(() => {
-    if (!sectionRef.current) return
-    const mm = gsap.matchMedia()
-    mm.add({ desktop: SCROLL_INTRO_QUERY, reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
-      const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean }
-      if (reduce) {
-        progress.current = 1
-        setMode('static')
-        setStage(2)
-        setIntroDone(true)
-        return
-      }
-      if (!desktop) {
-        progress.current = 0
-        setMode('auto')
-        setStage(0)
-        setIntroDone(false)
-        return
-      }
-      setMode('scroll')
-      const st = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: '+=120%',
-        pin: true,
-        scrub: 0.5,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          progress.current = self.progress
-          setStage(stageOf(self.progress))
-          setIntroDone(self.progress > 0.97)
-        },
-      })
-      triggerRef.current = st
-      return () => {
-        triggerRef.current = null
-        st.kill()
-      }
-    })
-    return () => mm.revert()
-  }, [])
-
-  // Autoplay : enchaîne Photo → Alerte → Promo en boucle tant que le téléphone est visible.
+  // Souris → parallaxe douce (ressort), désactivée si mouvement réduit.
+  const rawX = useMotionValue(0)
+  const rawY = useMotionValue(0)
+  const mx = useSpring(rawX, { stiffness: 60, damping: 18 })
+  const my = useSpring(rawY, { stiffness: 60, damping: 18 })
   useEffect(() => {
-    if (mode !== 'auto' || !visible) return
-    const tween = gsap.to(progress, { current: STAGE_PROGRESS[stage], duration: 1.1, ease: 'power2.inOut' })
+    if (reducedMotion) return
+    const onMove = (e: PointerEvent) => {
+      if (e.pointerType !== 'mouse') return
+      rawX.set((e.clientX / window.innerWidth) * 2 - 1)
+      rawY.set((e.clientY / window.innerHeight) * 2 - 1)
+    }
+    window.addEventListener('pointermove', onMove, { passive: true })
+    return () => window.removeEventListener('pointermove', onMove)
+  }, [reducedMotion, rawX, rawY])
+
+  // Démo de l'appli : Photo → Alerte → Promo en boucle, en pause hors écran.
+  useEffect(() => {
+    if (reducedMotion || !visible) return
     const timer = window.setTimeout(() => setStage(((stage + 1) % 3) as Stage), STAGE_MS[stage])
-    return () => {
-      window.clearTimeout(timer)
-      tween.kill()
-    }
-  }, [mode, stage, visible])
-
-  const goToStage = (i: Stage) => {
-    const st = triggerRef.current
-    if (mode === 'scroll' && st) {
-      const target = i === 0 ? 0.05 : i === 1 ? 0.5 : 0.92
-      window.scrollTo({ top: st.start + (st.end - st.start) * target, behavior: 'smooth' })
-      return
-    }
-    setStage(i)
-  }
-
-  // Passe directement au contenu qui suit le hero.
-  const skipIntro = () => {
-    const st = triggerRef.current
-    const next = sectionRef.current?.closest('.pin-spacer') ?? sectionRef.current
-    const top = st ? st.end + 1 : (next?.getBoundingClientRect().bottom ?? window.innerHeight) + window.scrollY - 40
-    if (mode !== 'scroll') {
-      setStage(2)
-      setIntroDone(true)
-    }
-    window.scrollTo({ top, behavior: mode === 'scroll' ? ('instant' as ScrollBehavior) : 'smooth' })
-  }
+    return () => window.clearTimeout(timer)
+  }, [reducedMotion, stage, visible])
 
   return (
-    <section ref={sectionRef} className="hero" id="top" aria-labelledby="hero-title">
+    <section className="hero" id="top" aria-labelledby="hero-title">
       <div className="wrap hero__inner">
         <div className="hero__copy">
-          <motion.p className="badge" {...fadeUp(0)}>
+          <motion.p
+            className="badge"
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: -2 }}
+            transition={{ type: 'spring', stiffness: 300, damping: 12 }}
+          >
             <span className="badge__dot" aria-hidden="true" />
             {PILOT_SEATS} places pilotes à {PILOT_AREA}
           </motion.p>
-          <motion.h1 id="hero-title" className="h1" {...fadeUp(0.08)}>
-            Dalia veille, et <em>votre marge</em> ne part pas.
-          </motion.h1>
-          <motion.p className="lead hero__sub" {...fadeUp(0.16)}>
+          <h1 id="hero-title" className="h1 hero__title">
+            {[
+              <>Dalia veille,</>,
+              <span className="tilt">
+                et votre <span className="blobword">marge</span>
+              </span>,
+              <span className="outline">ne part pas.</span>,
+            ].map((content, i) => (
+              <span key={i} className="line" style={{ overflow: 'hidden', padding: '0.14em 0.3em 0.1em 0', margin: '-0.14em -0.3em -0.02em 0' }}>
+                <motion.span style={{ display: 'inline-block' }} variants={word} initial="hidden" animate="show" custom={i}>
+                  {content}
+                </motion.span>
+              </span>
+            ))}
+          </h1>
+          <motion.p
+            className="lead hero__sub"
+            initial={{ opacity: 0, y: 24 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ type: 'spring', stiffness: 200, damping: 16, delay: 0.45 }}
+          >
             L’appli qui surveille vos dates limites et transforme vos invendus en ventes.
           </motion.p>
-          <motion.div className="cta-row" {...fadeUp(0.24)}>
+          <motion.div
+            className="cta-row"
+            initial={{ opacity: 0, y: 30, scale: 0.9 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ type: 'spring', stiffness: 260, damping: 12, delay: 0.6 }}
+          >
             <ButtonLink href={CTA_TARGET}>{CTA_LABEL}</ButtonLink>
             <ButtonLink href="#calculateur" variant="ghost" arrow={false}>
               Calculer mes pertes
             </ButtonLink>
           </motion.div>
-          <motion.p className="cta-note" style={{ marginTop: '1rem' }} {...fadeUp(0.3)}>
+          <motion.p className="cta-note" style={{ marginTop: '1rem' }} initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.8 }}>
             <strong>1 mois offert</strong>, installation faite par nous. Sans engagement.
           </motion.p>
         </div>
 
-        <motion.div
-          ref={stageRef}
-          className="hero__stage"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
-        >
-          {webgl ? (
-            <ErrorBoundary fallback={<CssPhone stage={stage} />}>
-              <Suspense fallback={<CssPhone stage={stage} />}>
-                <PhoneScene progress={progress} reducedMotion={reducedMotion} active={visible} screen={screenEl} />
-              </Suspense>
-              {createPortal(<AppScreen stage={stage} />, screenEl)}
-            </ErrorBoundary>
-          ) : (
+        <div ref={stageRef} className="hero__stage">
+          <motion.div
+            className="hero__disc"
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: 'spring', stiffness: 120, damping: 12, delay: 0.15 }}
+            aria-hidden="true"
+          />
+
+          <Float mx={mx} my={my} depth={-0.6} back style={{ left: '2%', top: '30%' }} bob={7} r0={-12} r1={-4}>
+            <Eggplant size={118} />
+          </Float>
+          <Float mx={mx} my={my} depth={0.5} back style={{ right: '4%', top: '4%' }} bob={8} r0={10} r1={18}>
+            <Baguette size={150} />
+          </Float>
+
+          <motion.div
+            className="hero__phone"
+            initial={{ y: 80, opacity: 0, rotate: 6 }}
+            animate={{ y: 0, opacity: 1, rotate: 0 }}
+            transition={{ type: 'spring', stiffness: 140, damping: 14, delay: 0.3 }}
+          >
             <CssPhone stage={stage} />
-          )}
+          </motion.div>
+
+          <Float mx={mx} my={my} depth={1.2} style={{ left: '6%', top: '6%' }} bob={5.5}>
+            <Tomato size={92} />
+          </Float>
+          <Float mx={mx} my={my} depth={1} style={{ right: '3%', bottom: '18%' }} bob={6.5} r0={6} r1={-6}>
+            <Apricot size={86} />
+          </Float>
+          <Float mx={mx} my={my} depth={0.8} style={{ left: '4%', bottom: '24%' }} bob={5} r0={-18} r1={-8}>
+            <MintLeaf size={62} />
+          </Float>
+          <Float mx={mx} my={my} depth={1.5} style={{ right: '6%', top: '30%' }} bob={4.5} r0={8} r1={14}>
+            <span className="price-chip">−20 %</span>
+          </Float>
+          <Float mx={mx} my={my} depth={1.3} style={{ left: '10%', bottom: '10%' }} bob={5.2} r0={-10} r1={-3}>
+            <span className="price-chip" style={{ background: 'var(--menthe)' }}>
+              J-2
+            </span>
+          </Float>
+
           <p className="sr-only" aria-live="polite">
             {stage === 0 && 'L’appli Dalia photographie un pot de yaourt et lit sa date limite : 16 mai.'}
             {stage === 1 && 'Alerte Dalia : 12 yaourts expirent dans 2 jours, promo conseillée moins 20 %.'}
@@ -178,32 +186,15 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
           <ol className="hero__steps" aria-label="Étapes de la démonstration">
             {STEPS.map((label, i) => (
               <li key={label}>
-                <button type="button" className={stage === i ? 'is-active' : ''} aria-current={stage === i ? 'step' : undefined} onClick={() => goToStage(i as Stage)}>
-                  {stage === i && <motion.span layoutId="hero-step" className="hero__steps-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+                <button type="button" aria-current={stage === i ? 'step' : undefined} onClick={() => setStage(i as Stage)}>
+                  {stage === i && <motion.span layoutId="hero-step" className="hero__steps-pill" transition={{ type: 'spring', stiffness: 400, damping: 30 }} />}
                   {i + 1}. {label}
                 </button>
               </li>
             ))}
           </ol>
-        </motion.div>
+        </div>
       </div>
-
-      <AnimatePresence>
-        {!introDone && (
-          <motion.button
-            type="button"
-            className="skip-intro"
-            onClick={skipIntro}
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ delay: 0.6 }}
-          >
-            Passer l’intro
-            <IconSkip />
-          </motion.button>
-        )}
-      </AnimatePresence>
     </section>
   )
 }

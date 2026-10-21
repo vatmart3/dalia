@@ -4,10 +4,10 @@ const base = { viewBox: '0 0 24 24', fill: 'none', stroke: 'currentColor', strok
 export type Product = 'yaourt' | 'brioche' | 'fromage' | 'fruit'
 
 const TINT: Record<Product, { bg: string; fg: string }> = {
-  yaourt: { bg: '#EEF5FF', fg: '#0B63CE' },
-  brioche: { bg: '#FFF4E5', fg: '#B26100' },
-  fromage: { bg: '#FFF8E1', fg: '#9A7B00' },
-  fruit: { bg: '#E7F6EE', fg: '#13804C' },
+  yaourt: { bg: '#D8F4EC', fg: '#1F8C72' },
+  brioche: { bg: '#FFEFCF', fg: '#A75F00' },
+  fromage: { bg: '#FFE7C2', fg: '#3B1F4A' },
+  fruit: { bg: '#FFE1D9', fg: '#D8432A' },
 }
 
 function Glyph({ kind }: { kind: Product }) {

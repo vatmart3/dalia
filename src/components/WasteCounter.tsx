@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { Blobs } from './Blobs'
 import { RETAIL_WASTE_EUR_PER_SECOND, eur } from '../lib/config'
 
 /** « Pendant que vous lisez ceci… » — compteur en temps réel depuis l'arrivée sur la page. */
@@ -27,7 +28,13 @@ export function WasteCounter({ reducedMotion }: { reducedMotion: boolean }) {
   const perSecond = Math.round(RETAIL_WASTE_EUR_PER_SECOND)
   return (
     <section className="counter" aria-labelledby="counter-title">
-      <div className="wrap">
+      <Blobs
+        items={[
+          { color: 'var(--tomate)', size: '320px', top: '-45%', right: '-6%' },
+          { color: 'var(--menthe)', size: '200px', bottom: '-55%', left: '24%' },
+        ]}
+      />
+      <div>
         <p id="counter-title" className="counter__label">
           Pendant que vous lisez ceci, les commerces français ont jeté
         </p>

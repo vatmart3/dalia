@@ -34,15 +34,14 @@ export const PRICE = { monthly: 39, unit: '€ HT / mois' }
 
 /** La personne derrière Dalia (section « Qui est derrière Dalia »). */
 export const FOUNDER = {
-  name: 'Prénom Nom',
-  firstName: 'Prénom',
-  role: 'Fondateur de Dalia',
-  /** Chemin d'une photo carrée dans public/ (ex. '/fondateur.jpg'), ou null pour les initiales. */
+  name: 'Jérémy',
+  firstName: 'Jérémy',
+  role: 'Fondateur de Dalia, basé à Sète',
+  /** Chemin d'une photo carrée dans public/ (ex. '/jeremy.jpg'), ou null pour l'initiale. */
   photo: null as string | null,
-  /** Numéro affiché (format lisible) et version internationale pour WhatsApp (sans + ni espaces). */
-  phone: '06 00 00 00 00',
-  whatsapp: '33600000000',
-  email: 'bonjour@dalia.fr',
+  phone: '06 11 71 83 68',
+  tel: '+33611718368',
+  whatsapp: '33611718368',
 }
 
 /** Informations légales (page « Mentions légales »). */
@@ -55,7 +54,6 @@ export const COMPANY = {
   vat: '[Numéro de TVA intracommunautaire]',
   director: '[Prénom Nom du directeur de la publication]',
   host: '[Hébergeur : nom, adresse, téléphone]',
-  siteUrl: 'https://dalia.fr',
 }
 
 /** Durée de conservation des demandes d'essai sans suite (prospects). */

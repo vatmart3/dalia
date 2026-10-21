@@ -1,4 +1,5 @@
 import { Reveal } from './Reveal'
+import { Sticker } from './Sticker'
 import { ButtonLink } from './Button'
 import { IconCheck } from './Icons'
 import { CTA_TARGET, PILOT_AREA, PILOT_SEATS, PRICE } from '../lib/config'
@@ -12,9 +13,12 @@ export function Offer() {
   const days = PRICE.monthly / (weekly / 7)
   const daysLabel = days <= 1 ? 'une journée' : `${Math.ceil(days)} jours`
   return (
-    <section className="section" id="offre" aria-labelledby="offer-title">
+    <section className="section sheet sheet--creme" id="offre" aria-labelledby="offer-title">
       <div className="wrap">
-        <Reveal className="offer__card" y={40}>
+        <Reveal className="offer__card" y={60} rotate={-0.8}>
+          <Sticker color="#FF5A3C" rotate={10} delay={0.35}>
+            1 mois<small>offert</small>
+          </Sticker>
           <div style={{ position: 'relative', zIndex: 1 }}>
             <span className="eyebrow">Offre pilote</span>
             <h2 id="offer-title" className="offer__title">
@@ -40,7 +44,7 @@ export function Offer() {
                 </li>
               ))}
             </ul>
-            <ButtonLink href={CTA_TARGET} variant="white" block>
+            <ButtonLink href={CTA_TARGET} block>
               Je réserve ma place pilote
             </ButtonLink>
             <p className="offer__seats">

@@ -15,7 +15,7 @@ function MentionsLegales() {
         <br />
         TVA intracommunautaire : {COMPANY.vat}
         <br />
-        Contact : {FOUNDER.email} · {FOUNDER.phone}
+        Contact : {FOUNDER.name}, {FOUNDER.phone} (appel ou WhatsApp)
       </p>
       <h2>Directeur de la publication</h2>
       <p>{COMPANY.director}</p>
@@ -42,7 +42,7 @@ function Confidentialite() {
       </p>
       <h2>Responsable du traitement</h2>
       <p>
-        {COMPANY.name}, {COMPANY.address}. Contact : {FOUNDER.email}.
+        {COMPANY.name}, {COMPANY.address}. Contact : {FOUNDER.phone}.
       </p>
       <h2>Données collectées</h2>
       <ul>
@@ -66,7 +66,7 @@ function Confidentialite() {
       </p>
       <h2>Vos droits</h2>
       <p>
-        Vous pouvez demander l’accès, la rectification ou la suppression de vos données, ou vous opposer à leur traitement, en écrivant à {FOUNDER.email}. Nous
+        Vous pouvez demander l’accès, la rectification ou la suppression de vos données, ou vous opposer à leur traitement, en appelant ou en écrivant sur WhatsApp au {FOUNDER.phone}. Nous
         répondons sous un mois. Vous pouvez aussi adresser une réclamation à la CNIL (cnil.fr).
       </p>
       <h2>Cookies et mesure d’audience</h2>

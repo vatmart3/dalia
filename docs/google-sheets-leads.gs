@@ -8,7 +8,7 @@
  * 4. Copiez l'URL obtenue dans la variable LEADS_WEBHOOK_URL du serveur Dalia.
  */
 
-const NOTIFY_EMAIL = 'bonjour@dalia.fr' // ← votre adresse
+const NOTIFY_EMAIL = 'votre.adresse@exemple.fr' // ← votre adresse
 
 function doPost(e) {
   const lead = JSON.parse(e.postData.contents)

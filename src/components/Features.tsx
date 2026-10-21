@@ -1,5 +1,7 @@
 import { CssPhone } from './AppScreen'
+import { Hl } from './Highlight'
 import { CtaRow } from './CtaRow'
+import { Sticker } from './Sticker'
 import { Reveal } from './Reveal'
 import { IconBell, IconPhone, IconPrinter, IconTag } from './Icons'
 
@@ -12,15 +14,18 @@ const FEATURES = [
 
 export function Features() {
   return (
-    <section className="section section--soft" aria-labelledby="features-title">
+    <section className="section sheet sheet--aubergine" aria-labelledby="features-title">
       <div className="wrap features">
         <Reveal className="features__screen" y={40}>
           <CssPhone stage={1} />
+          <Sticker color="#2EC4A0" rotate={-14}>
+            −20%
+          </Sticker>
         </Reveal>
         <div>
           <span className="eyebrow">L’appli</span>
           <h2 id="features-title" className="h2">
-            Une alerte claire. <em>Au bon moment.</em>
+            Une alerte claire. <Hl>Au bon moment.</Hl>
           </h2>
           <ul className="features__list">
             {FEATURES.map(({ Icon, title, text }, i) => (

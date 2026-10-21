@@ -1,4 +1,3 @@
 User-agent: *
 Allow: /
 Disallow: /api/
-Sitemap: https://dalia.fr/sitemap.xml

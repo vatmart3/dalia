@@ -2,6 +2,8 @@ import { motion } from 'framer-motion'
 import { useCallback, type CSSProperties } from 'react'
 import { AnimatedNumber } from './AnimatedNumber'
 import { CtaRow } from './CtaRow'
+import { Blobs } from './Blobs'
+import { Sticker } from './Sticker'
 import { CALCULATOR, DALIA_SAVINGS_RATE, eur } from '../lib/config'
 import { useEstimate } from '../lib/estimate'
 import { track } from '../lib/analytics'
@@ -19,7 +21,13 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
   const fmt = useCallback((n: number) => eur(Math.round(n)), [])
 
   return (
-    <section className="section section--soft" id="calculateur" aria-labelledby="calc-title">
+    <section className="section sheet sheet--menthe" id="calculateur" aria-labelledby="calc-title">
+      <Blobs
+        items={[
+          { color: 'var(--abricot)', size: '260px', top: '-60px', left: '-90px', opacity: 0.7 },
+          { color: 'var(--creme)', size: '200px', bottom: '8%', right: '-70px', opacity: 0.4 },
+        ]}
+      />
       <div className="wrap">
         <div className="section-head section-head--center">
           <span className="eyebrow">Calculateur</span>
@@ -29,7 +37,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
           <p className="lead">Faites glisser le curseur. Le chiffre annuel surprend souvent.</p>
         </div>
 
-        <div className="card calc__panel">
+        <div className="calc__panel">
           <div className="calc__input">
             <label htmlFor="weekly">Produits jetés par semaine</label>
             <p className="calc__input-hint">Périmés, abîmés ou bradés trop tard.</p>
@@ -59,6 +67,9 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
           </div>
 
           <div className="calc__result">
+            <Sticker color="#FFB23E" rotate={12}>
+              −{Math.round(DALIA_SAVINGS_RATE * 100)}%<small>de pertes</small>
+            </Sticker>
             <div className="calc__row">
               <div className="calc__row-head">
                 <span className="calc__row-label">Perte sur un an</span>

@@ -7,7 +7,7 @@ import { Calculator } from './components/Calculator'
 import { HowItWorks } from './components/HowItWorks'
 import { Metiers } from './components/Metiers'
 import { Features } from './components/Features'
-import { Testimonials } from './components/Testimonials'
+import { Pilots } from './components/Pilots'
 import { Founder } from './components/Founder'
 import { Offer } from './components/Offer'
 import { Faq } from './components/Faq'
@@ -35,7 +35,7 @@ function Home({ reducedMotion }: { reducedMotion: boolean }) {
       <HowItWorks />
       <Metiers />
       <Features />
-      <Testimonials />
+      <Pilots />
       <Founder />
       <Offer />
       <Faq />

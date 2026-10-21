@@ -44,7 +44,7 @@ function Success({ name }: { name: string }) {
           cx="44"
           cy="44"
           r="40"
-          fill="#E7F6EE"
+          fill="#D8F4EC"
           initial={{ scale: 0.4, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ type: 'spring', stiffness: 260, damping: 16 }}
@@ -55,7 +55,7 @@ function Success({ name }: { name: string }) {
           cy="44"
           r="40"
           fill="none"
-          stroke="#13804C"
+          stroke="#1F8C72"
           strokeWidth="3"
           initial={{ pathLength: 0 }}
           animate={{ pathLength: 1 }}
@@ -64,7 +64,7 @@ function Success({ name }: { name: string }) {
         <motion.path
           d="M28 45l11 11 21-23"
           fill="none"
-          stroke="#13804C"
+          stroke="#1F8C72"
           strokeWidth="5"
           strokeLinecap="round"
           strokeLinejoin="round"
