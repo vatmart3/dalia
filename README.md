@@ -8,11 +8,10 @@ Landing page one-page de **Dalia**, l'appli anti-gaspillage pour les petits comm
 ## Stack
 
 - **Vite + React 19 + TypeScript**
-- **Direction artistique « marché frais pop »** : tomate, abricot, menthe, aubergine sur fond crème ; titres Anton, texte DM Sans.
-- **Concept « L'étal qui défile »** : la page est un stand de marché. Chaque section est une cagette en bois avec son étiquette (ardoise ou carton) ; auvent rayé, produits avec leur date (J-2 → « Vendu »), ticket de caisse, étiquettes suspendues, balance du calculateur, stands métiers, étiquettes kraft de la FAQ.
-- **GSAP ScrollTrigger** (`src/components/etal/Etal.tsx`) : sur ordinateur (≥ 1024 × 760 px, souris), la section est épinglée et le scroll vertical fait défiler l'étal horizontalement ; les liens du menu amènent la cagette au centre de l'écran. Sur mobile et tablette : défilement vertical, cagette par cagette.
-- **Framer Motion** : stickers « −20 % » qui se collent (squash & stretch), étiquettes qui se retournent, démo du téléphone, confirmation du formulaire.
-- Décors en SVG et CSS uniquement (aucune image lourde, aucune 3D).
+- **Design sobre et pro** : bleu #0B63CE, bleu foncé #062B5B, marine #031B3A, fonds blancs et gris très clair #F5F7FB ; police Inter ; cartes arrondies, ombres douces.
+- **Hero** : titre à gauche, maquette de téléphone en CSS (inspirée de l'iPhone 17 Pro Max) à droite, avec la démo Photo → Alerte → Promo. Aucune 3D.
+- **GSAP ScrollTrigger** : sur ordinateur, le hero est épinglé le temps de la démo (bouton « Passer l'intro ») ; sur mobile, la démo joue toute seule.
+- **Framer Motion** : apparitions douces au scroll, accordéons, confirmation du formulaire.
 - API de leads en Node pur, sans dépendance (`server/`).
 
 ## Démarrer
@@ -64,8 +63,8 @@ Plausible, désactivé par défaut. Pour l'activer : `VITE_PLAUSIBLE_DOMAIN=votr
 ## Accessibilité et performance
 
 - Mobile-first, bouton CTA flottant sur mobile, cibles tactiles ≥ 44 px, champs à 16 px (pas de zoom iOS).
-- `prefers-reduced-motion` respecté : défilement vertical simple (pas d'étal horizontal), ni balancement ni auvent animé, état final affiché directement.
-- Aucune 3D : décors en SVG/CSS, démo du téléphone en HTML animé, en pause hors écran.
+- `prefers-reduced-motion` respecté : pas d'épinglage, démo affichée directement sur l'écran final, animations coupées.
+- Aucune 3D : téléphone en HTML/CSS, démo en pause hors écran.
 - SEO : title, meta description, Open Graph / Twitter (`public/og-image.png`), JSON-LD, robots.txt. Le sitemap et les balises canonical / og:url seront à ajouter quand le nom de domaine existera.
 
 ## À personnaliser avant la mise en ligne

@@ -54,7 +54,7 @@ export function AppScreen({ stage = 2 }: { stage?: 0 | 1 | 2 }) {
             <div className="app__name">Yaourts nature × 12</div>
             <div className="app__meta">Rayon frais · 16/05</div>
           </div>
-          {applied ? <span className="app__pill app__pill--dark">−20 % actif</span> : <span className="app__pill app__pill--red">J-2</span>}
+          {applied ? <span className="app__pill app__pill--blue">−20 % actif</span> : <span className="app__pill app__pill--red">J-2</span>}
         </div>
         <div className="app__item">
           <ProductThumb kind="brioche" />

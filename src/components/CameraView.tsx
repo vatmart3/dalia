@@ -27,13 +27,13 @@ function Product() {
     <svg className="cam__feed" viewBox="0 0 340 470" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
       <defs>
         <linearGradient id="cam-bg" x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#3a2347" />
-          <stop offset="1" stopColor="#1c0f24" />
+          <stop offset="0" stopColor="#2b3140" />
+          <stop offset="1" stopColor="#12151c" />
         </linearGradient>
         <linearGradient id="cam-pot" x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0" stopColor="#F3E6D3" />
-          <stop offset="0.35" stopColor="#FFFAF2" />
-          <stop offset="1" stopColor="#EAD9C2" />
+          <stop offset="0" stopColor="#e9e6df" />
+          <stop offset="0.35" stopColor="#fbfaf7" />
+          <stop offset="1" stopColor="#d9d5cc" />
         </linearGradient>
         <filter id="cam-blur" x="-50%" y="-50%" width="200%" height="200%">
           <feGaussianBlur stdDeviation="14" />
@@ -42,35 +42,35 @@ function Product() {
       {/* rayon flou en arrière-plan */}
       <rect width="340" height="470" fill="url(#cam-bg)" />
       <g filter="url(#cam-blur)" opacity="0.75">
-        <rect x="-20" y="392" width="380" height="26" fill="#c9b48f" />
-        <circle cx="30" cy="250" r="46" fill="#FF5A3C" />
-        <circle cx="320" cy="210" r="52" fill="#FFB23E" />
-        <circle cx="300" cy="380" r="40" fill="#2EC4A0" />
-        <circle cx="40" cy="390" r="36" fill="#2EC4A0" />
+        <rect x="-20" y="392" width="380" height="26" fill="#9aa6bb" />
+        <circle cx="30" cy="250" r="46" fill="#c8432f" />
+        <circle cx="320" cy="210" r="52" fill="#e0a932" />
+        <circle cx="300" cy="380" r="40" fill="#3f7fd8" />
+        <circle cx="40" cy="390" r="36" fill="#5aa36a" />
       </g>
       {/* pot de yaourt */}
       <ellipse cx="170" cy="404" rx="96" ry="10" fill="#000" opacity="0.35" />
       <path d="M62 112 L278 112 L258 392 Q256 402 246 402 L94 402 Q84 402 82 392 Z" fill="url(#cam-pot)" />
-      <rect x="54" y="88" width="232" height="30" rx="10" fill="#FF5A3C" />
-      <rect x="54" y="88" width="232" height="9" rx="4" fill="#FF8A6E" />
-      <text x="170" y="178" textAnchor="middle" fontFamily="'DM Sans', sans-serif" fontWeight="800" fontSize="30" letterSpacing="-1" fill="#FF5A3C">
+      <rect x="54" y="88" width="232" height="30" rx="10" fill="#1f5fc4" />
+      <rect x="54" y="88" width="232" height="9" rx="4" fill="#3a7be0" />
+      <text x="170" y="178" textAnchor="middle" fontFamily="Inter, sans-serif" fontWeight="800" fontSize="30" letterSpacing="-1" fill="#1f5fc4">
         Yaourt
       </text>
-      <text x="170" y="208" textAnchor="middle" fontFamily="'DM Sans', sans-serif" fontWeight="600" fontSize="17" fill="#573468">
+      <text x="170" y="208" textAnchor="middle" fontFamily="Inter, sans-serif" fontWeight="600" fontSize="17" fill="#41506b">
         nature au lait entier
       </text>
-      <text x="170" y="240" textAnchor="middle" fontFamily="'DM Sans', sans-serif" fontSize="13" fill="#8A7590">
+      <text x="170" y="240" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="13" fill="#6b778c">
         4 × 125 g
       </text>
       {/* étiquette de date */}
-      <rect x="104" y="296" width="132" height="60" rx="6" fill="#fff" stroke="#e8d6c0" />
-      <text x="170" y="315" textAnchor="middle" fontFamily="'DM Sans', sans-serif" fontSize="9.5" fill="#6E5A78">
+      <rect x="104" y="296" width="132" height="60" rx="6" fill="#fff" stroke="#d6dae2" />
+      <text x="170" y="315" textAnchor="middle" fontFamily="Inter, sans-serif" fontSize="9.5" fill="#5a6478">
         À consommer jusqu’au
       </text>
-      <text x="170" y="337" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace" fontWeight="700" fontSize="19" fill="#3B1F4A">
+      <text x="170" y="337" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace" fontWeight="700" fontSize="19" fill="#111">
         16/05/26
       </text>
-      <text x="170" y="350" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace" fontSize="8.5" fill="#8A7590">
+      <text x="170" y="350" textAnchor="middle" fontFamily="ui-monospace, Menlo, monospace" fontSize="8.5" fill="#6b778c">
         L2611 08:42
       </text>
     </svg>

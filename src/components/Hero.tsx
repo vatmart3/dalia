@@ -1,117 +1,181 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { gsap } from 'gsap'
+import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ButtonLink } from './Button'
-import { Sticker } from './Sticker'
-import { Hl } from './Highlight'
-import { Awning } from './etal/Awning'
-import { Apricots, Baguette, Cheese, Yogurt } from './etal/Products'
+import { CssPhone } from './AppScreen'
+import { IconSkip } from './Icons'
+import { useInViewport } from '../hooks/useInViewport'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
-/** Petite étiquette de date suspendue à un produit. */
-function DateTag({ children, tone = 'creme', style }: { children: ReactNode; tone?: 'creme' | 'menthe'; style?: CSSProperties }) {
-  return (
-    <span className={`date-tag date-tag--${tone}`} style={style}>
-      {children}
-    </span>
-  )
-}
+gsap.registerPlugin(ScrollTrigger)
 
-export function Hero() {
-  // Au premier scroll, Dalia colle « −20 % » sur les yaourts et ils partent.
-  const [sold, setSold] = useState(false)
+type Stage = 0 | 1 | 2
+const STEPS = ['Photo', 'Alerte', 'Promo']
+const stageOf = (p: number): Stage => (p < 0.3 ? 0 : p < 0.68 ? 1 : 2)
+// Autoplay (mobile) : durée de chaque étape. L'étape Photo laisse jouer un scan complet.
+const STAGE_MS = [5200, 3400, 3400]
+// Intro au scroll réservée aux écrans larges avec souris ; ailleurs elle joue toute seule.
+const SCROLL_INTRO_QUERY = '(min-width: 900px) and (hover: hover) and (pointer: fine)'
+
+type Mode = 'scroll' | 'auto' | 'static'
+
+const fadeUp = (delay: number) => ({
+  initial: { opacity: 0, y: 24 },
+  animate: { opacity: 1, y: 0 },
+  transition: { type: 'spring' as const, stiffness: 120, damping: 20, delay },
+})
+
+export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
+  const sectionRef = useRef<HTMLElement>(null)
+  const stageRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<ScrollTrigger | null>(null)
+  const [stage, setStage] = useState<Stage>(reducedMotion ? 2 : 0)
+  const [introDone, setIntroDone] = useState(reducedMotion)
+  const [mode, setMode] = useState<Mode>(reducedMotion ? 'static' : 'auto')
+  const visible = useInViewport(stageRef, '0px')
+
+  // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
+  // Mobile / tactile : pas d'épinglage (saccadé avec la barre d'adresse), l'intro joue toute seule.
+  useLayoutEffect(() => {
+    if (!sectionRef.current) return
+    const mm = gsap.matchMedia()
+    mm.add({ desktop: SCROLL_INTRO_QUERY, reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
+      const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean }
+      if (reduce) {
+        setMode('static')
+        setStage(2)
+        setIntroDone(true)
+        return
+      }
+      if (!desktop) {
+        setMode('auto')
+        setStage(0)
+        setIntroDone(false)
+        return
+      }
+      setMode('scroll')
+      const st = ScrollTrigger.create({
+        trigger: sectionRef.current,
+        start: 'top top',
+        end: '+=120%',
+        pin: true,
+        scrub: 0.5,
+        anticipatePin: 1,
+        onUpdate: (self) => {
+          setStage(stageOf(self.progress))
+          setIntroDone(self.progress > 0.97)
+        },
+      })
+      triggerRef.current = st
+      return () => {
+        triggerRef.current = null
+        st.kill()
+      }
+    })
+    return () => mm.revert()
+  }, [])
+
+  // Autoplay : enchaîne Photo → Alerte → Promo en boucle tant que le téléphone est visible.
   useEffect(() => {
-    if (sold) return
-    const onScroll = () => {
-      if (window.scrollY > 24) setSold(true)
+    if (mode !== 'auto' || !visible) return
+    const timer = window.setTimeout(() => setStage(((stage + 1) % 3) as Stage), STAGE_MS[stage])
+    return () => window.clearTimeout(timer)
+  }, [mode, stage, visible])
+
+  const goToStage = (i: Stage) => {
+    const st = triggerRef.current
+    if (mode === 'scroll' && st) {
+      const target = i === 0 ? 0.05 : i === 1 ? 0.5 : 0.92
+      window.scrollTo({ top: st.start + (st.end - st.start) * target, behavior: 'smooth' })
+      return
     }
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
-  }, [sold])
+    setStage(i)
+  }
+
+  // Passe directement au contenu qui suit le hero.
+  const skipIntro = () => {
+    const st = triggerRef.current
+    const next = sectionRef.current?.closest('.pin-spacer') ?? sectionRef.current
+    const top = st ? st.end + 1 : (next?.getBoundingClientRect().bottom ?? window.innerHeight) + window.scrollY - 40
+    if (mode !== 'scroll') {
+      setStage(2)
+      setIntroDone(true)
+    }
+    window.scrollTo({ top, behavior: mode === 'scroll' ? ('instant' as ScrollBehavior) : 'smooth' })
+  }
 
   return (
-    <section className="panel panel--hero hero" id="top" aria-labelledby="hero-title">
-      <Awning className="hero__awning" />
-      <div className="hero__layout">
-        <motion.div
-          className="slate hero__slate"
-          initial={{ y: -40, rotate: -4, opacity: 0 }}
-          animate={{ y: 0, rotate: -1, opacity: 1 }}
-          transition={{ type: 'spring', stiffness: 160, damping: 11 }}
-        >
-          <p className="carton hero__badge">
+    <section ref={sectionRef} className="hero" id="top" aria-labelledby="hero-title">
+      <div className="wrap hero__inner">
+        <div className="hero__copy">
+          <motion.p className="badge" {...fadeUp(0)}>
+            <span className="badge__dot" aria-hidden="true" />
             {PILOT_SEATS} places pilotes à {PILOT_AREA}
-          </p>
-          <h1 id="hero-title" className="h1 hero__title">
-            <span className="line">Dalia veille,</span>
-            <span className="line">
-              et votre <Hl>marge</Hl>
-            </span>
-            <span className="line hero__punch">ne part pas.</span>
-          </h1>
-        </motion.div>
-
-        <motion.div
-          className="hero__aside"
-          initial={{ opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ type: 'spring', stiffness: 180, damping: 16, delay: 0.25 }}
-        >
-          <p className="lead">L’appli qui surveille vos dates limites et transforme vos invendus en ventes.</p>
-          <div className="cta-row">
+          </motion.p>
+          <motion.h1 id="hero-title" className="h1" {...fadeUp(0.08)}>
+            Dalia veille, et <em>votre marge</em> ne part pas.
+          </motion.h1>
+          <motion.p className="lead hero__sub" {...fadeUp(0.16)}>
+            L’appli qui surveille vos dates limites et transforme vos invendus en ventes.
+          </motion.p>
+          <motion.div className="cta-row" {...fadeUp(0.24)}>
             <ButtonLink href={CTA_TARGET}>{CTA_LABEL}</ButtonLink>
             <ButtonLink href="#calculateur" variant="ghost" arrow={false}>
               Calculer mes pertes
             </ButtonLink>
-          </div>
-          <p className="cta-note">
+          </motion.div>
+          <motion.p className="cta-note" style={{ marginTop: '1rem' }} {...fadeUp(0.3)}>
             <strong>1 mois offert</strong>, installation faite par nous. Sans engagement.
+          </motion.p>
+        </div>
+
+        <motion.div
+          ref={stageRef}
+          className="hero__stage"
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
+        >
+          {/* De face pour la photo, puis légèrement de biais pour l'alerte et la promo. */}
+          <div className={`hero__phone hero__phone--s${stage}`} aria-hidden="true">
+            <CssPhone stage={stage} />
+          </div>
+          <p className="sr-only" aria-live="polite">
+            {stage === 0 && 'L’appli Dalia photographie un pot de yaourt et lit sa date limite : 16 mai.'}
+            {stage === 1 && 'Alerte Dalia : 12 yaourts expirent dans 2 jours, promo conseillée moins 20 %.'}
+            {stage === 2 && 'Promo moins 20 % activée, étiquette envoyée à l’imprimante.'}
           </p>
+
+          <ol className="hero__steps" aria-label="Étapes de la démonstration">
+            {STEPS.map((label, i) => (
+              <li key={label}>
+                <button type="button" className={stage === i ? 'is-active' : ''} aria-current={stage === i ? 'step' : undefined} onClick={() => goToStage(i as Stage)}>
+                  {stage === i && <motion.span layoutId="hero-step" className="hero__steps-pill" transition={{ type: 'spring', stiffness: 400, damping: 32 }} />}
+                  {i + 1}. {label}
+                </button>
+              </li>
+            ))}
+          </ol>
         </motion.div>
       </div>
 
-      <div className="hero__products" aria-hidden="true">
-        <div className="product product--yogurt">
-          <div className="product__art">
-            <Yogurt size={86} />
-            <Yogurt size={86} />
-          </div>
-          <Sticker color="#FFB23E" rotate={-14} play={sold} className="product__sticker">
-            −20%
-          </Sticker>
-          <AnimatePresence mode="wait" initial={false}>
-            {sold ? (
-              <motion.span key="vendu" initial={{ rotateY: 90 }} animate={{ rotateY: 0 }} transition={{ duration: 0.3, delay: 0.55 }} style={{ display: 'inline-block' }}>
-                <DateTag tone="menthe">Vendu</DateTag>
-              </motion.span>
-            ) : (
-              <motion.span key="j2" exit={{ rotateY: -90 }} transition={{ duration: 0.25, delay: 0.3 }} style={{ display: 'inline-block' }}>
-                <DateTag>J-2</DateTag>
-              </motion.span>
-            )}
-          </AnimatePresence>
-        </div>
-        <div className="product product--bread">
-          <div className="product__art">
-            <Baguette size={150} />
-          </div>
-          <DateTag>J-1</DateTag>
-        </div>
-        <div className="product product--cheese">
-          <div className="product__art">
-            <Cheese size={112} />
-          </div>
-          <DateTag>J-5</DateTag>
-        </div>
-        <div className="product product--apricots">
-          <div className="product__art">
-            <Apricots size={124} />
-          </div>
-          <DateTag>J-3</DateTag>
-        </div>
-      </div>
-      <p className="sr-only" aria-live="polite">
-        {sold ? 'Dalia a mis les yaourts à −20 % : ils sont vendus.' : ''}
-      </p>
+      <AnimatePresence>
+        {!introDone && (
+          <motion.button
+            type="button"
+            className="skip-intro"
+            onClick={skipIntro}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ delay: 0.6 }}
+          >
+            Passer l’intro
+            <IconSkip />
+          </motion.button>
+        )}
+      </AnimatePresence>
     </section>
   )
 }

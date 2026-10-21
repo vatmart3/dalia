@@ -9,7 +9,7 @@ export function Footer() {
       <div className="wrap footer__grid">
         <div className="footer__brand">
           <span className="footer__logo">
-            <Logo inverted />
+            <Logo />
           </span>
           <p>L’anti-gaspi des commerces de proximité, depuis Sète.</p>
         </div>

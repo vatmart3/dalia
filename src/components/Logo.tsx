@@ -1,18 +1,13 @@
-/** Wordmark Dalia : lettres rondes posées sur un blob tomate, feuille menthe sur le i. */
-export function Logo({ inverted = false }: { inverted?: boolean }) {
-  const ink = inverted ? '#FFF6E9' : '#3B1F4A'
+/** Logo Dalia : pastille bleue (œil / feuille) + wordmark. */
+export function Logo({ color = '#0B1221' }: { color?: string }) {
   return (
-    <svg viewBox="0 0 220 80" role="img" aria-label="Dalia">
-      <path
-        d="M22 14C46 2 96 4 140 6c34 2 62 6 70 26 8 22-10 38-44 42-40 5-96 6-128-2C12 68 2 52 4 38 6 26 12 19 22 14Z"
-        fill="#FF5A3C"
-        stroke={ink}
-        strokeWidth="3"
-      />
-      <text x="110" y="54" textAnchor="middle" fontFamily="'DM Sans', system-ui, sans-serif" fontWeight="900" fontSize="46" letterSpacing="-2.5" fill="#3B1F4A">
+    <svg viewBox="0 0 118 32" role="img" aria-label="Dalia">
+      <rect width="32" height="32" rx="9" fill="#0B63CE" />
+      <path d="M7 16c2.6-4.6 5.6-6.8 9-6.8s6.4 2.2 9 6.8c-2.6 4.6-5.6 6.8-9 6.8S9.6 20.6 7 16z" fill="none" stroke="#fff" strokeWidth="2.2" strokeLinejoin="round" />
+      <circle cx="16" cy="16" r="3" fill="#fff" />
+      <text x="40" y="23.5" fontFamily="Inter, -apple-system, sans-serif" fontWeight="700" fontSize="22" letterSpacing="-0.8" fill={color}>
         dalia
       </text>
-      <path d="M128 21c2-9 9-14 19-14-2 10-9 15-19 14Z" fill="#2EC4A0" stroke="#3B1F4A" strokeWidth="2.5" strokeLinejoin="round" />
     </svg>
   )
 }

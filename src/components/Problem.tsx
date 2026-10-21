@@ -1,7 +1,5 @@
-import type { CSSProperties } from 'react'
-import { Crate } from './etal/Crate'
+import { Reveal } from './Reveal'
 import { CtaRow } from './CtaRow'
-import { Hl } from './Highlight'
 
 const STATS = [
   { value: '150', unit: '€', label: 'de produits jetés chaque semaine, en moyenne, dans un petit commerce alimentaire.' },
@@ -11,37 +9,31 @@ const STATS = [
 
 export function Problem() {
   return (
-    <Crate
-      id="probleme"
-      titleId="problem-title"
-      className="panel--problem"
-      tone="abricot"
-      eyebrow="Le problème"
-      title={
-        <>
-          Chaque date ratée, c’est de la marge <Hl>à la poubelle</Hl>.
-        </>
-      }
-      lead={<p>Entre la caisse, les livraisons et les clients, personne n’a le temps de surveiller chaque produit.</p>}
-      aside={<CtaRow note={<>Dalia fait le tour des dates à votre place.</>} />}
-    >
-      <div className="rail">
-        <div className="rail__bar" aria-hidden="true" />
-        <ul className="rail__tags">
+    <section className="section" id="probleme" aria-labelledby="problem-title">
+      <div className="wrap">
+        <div className="section-head">
+          <span className="eyebrow">Le problème</span>
+          <h2 id="problem-title" className="h2">
+            Chaque date ratée, c’est de la marge <em>à la poubelle</em>.
+          </h2>
+          <p className="lead">Entre la caisse, les livraisons et les clients, personne n’a le temps de surveiller chaque produit.</p>
+        </div>
+
+        <ul className="stats">
           {STATS.map(({ value, unit, label }, i) => (
-            <li key={value} className="hang" style={{ '--sway': `${4.2 + i * 0.7}s`, '--string': `${46 + i * 22}px` } as CSSProperties}>
-              <div className="price-tag">
-                <span className="price-tag__value">
-                  {value}
-                  {unit && <small>{unit}</small>}
-                </span>
-                <span className="price-tag__label">{label}</span>
-              </div>
-            </li>
+            <Reveal as="li" key={value} className="stat" delay={i * 0.08}>
+              <span className="stat__value">
+                {value}
+                {unit && <small>{unit}</small>}
+              </span>
+              <span className="stat__label">{label}</span>
+            </Reveal>
           ))}
         </ul>
-        <p className="rail__note">Ordres de grandeur pour un commerce alimentaire de proximité.</p>
+        <p className="stats__note">Ordres de grandeur pour un commerce alimentaire de proximité.</p>
+
+        <CtaRow note={<>Dalia fait le tour des dates à votre place.</>} />
       </div>
-    </Crate>
+    </section>
   )
 }
