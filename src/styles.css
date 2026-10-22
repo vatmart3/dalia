@@ -501,8 +501,14 @@ input {
 }
 .logo {
   display: inline-flex;
+  align-items: center;
+  gap: 9px;
   text-decoration: none;
   flex: none;
+}
+.logo > img {
+  width: 34px;
+  height: 34px;
 }
 .logo > svg {
   height: 30px;
@@ -2433,6 +2439,15 @@ input {
   padding: 2.5rem 0 calc(6.5rem + env(safe-area-inset-bottom));
   font-size: 0.88rem;
   color: var(--muted);
+}
+.footer__logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.footer__logo > img {
+  width: 30px;
+  height: 30px;
 }
 .footer__logo > svg {
   height: 26px;
