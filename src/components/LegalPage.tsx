@@ -23,7 +23,7 @@ function MentionsLegales() {
       <p>{COMPANY.host}</p>
       <h2>Propriété intellectuelle</h2>
       <p>
-        Les textes, visuels et le logo Dalia sont la propriété de {COMPANY.name}. Toute reproduction sans autorisation écrite est interdite.
+        Les textes, visuels et le logo Frescy sont la propriété de {COMPANY.name}. Toute reproduction sans autorisation écrite est interdite.
       </p>
       <h2>Données personnelles</h2>
       <p>
@@ -38,7 +38,7 @@ function Confidentialite() {
     <>
       <h1 className="h2">Politique de confidentialité</h1>
       <p className="legal__intro">
-        Nous collectons le strict nécessaire pour vous rappeler au sujet de l’essai de Dalia. Rien de plus, et rien n’est revendu.
+        Nous collectons le strict nécessaire pour vous rappeler au sujet de l’essai de Frescy. Rien de plus, et rien n’est revendu.
       </p>
       <h2>Responsable du traitement</h2>
       <p>
@@ -52,12 +52,12 @@ function Confidentialite() {
       </ul>
       <h2>Pourquoi</h2>
       <p>
-        Uniquement pour vous recontacter, organiser l’installation et l’essai gratuit de Dalia. Base légale : les mesures précontractuelles prises à votre demande
+        Uniquement pour vous recontacter, organiser l’installation et l’essai gratuit de Frescy. Base légale : les mesures précontractuelles prises à votre demande
         (article 6.1.b du RGPD).
       </p>
       <h2>Qui y a accès</h2>
       <p>
-        L’équipe Dalia uniquement, ainsi que notre hébergeur et, le cas échéant, l’outil qui nous notifie des nouvelles demandes (par exemple un tableur en
+        L’équipe Frescy uniquement, ainsi que notre hébergeur et, le cas échéant, l’outil qui nous notifie des nouvelles demandes (par exemple un tableur en
         ligne), dans la limite de ce qui est nécessaire à leur service.
       </p>
       <h2>Combien de temps</h2>
@@ -80,8 +80,8 @@ function Confidentialite() {
 
 export function LegalPage({ slug }: { slug: LegalSlug }) {
   useDocumentMeta(
-    slug === 'mentions-legales' ? 'Mentions légales · Dalia' : 'Politique de confidentialité · Dalia',
-    slug === 'mentions-legales' ? 'Mentions légales du site Dalia.' : 'Comment Dalia traite les informations envoyées par le formulaire d’essai.',
+    slug === 'mentions-legales' ? 'Mentions légales · Frescy' : 'Politique de confidentialité · Frescy',
+    slug === 'mentions-legales' ? 'Mentions légales du site Frescy.' : 'Comment Frescy traite les informations envoyées par le formulaire d’essai.',
   )
   return (
     <section className="section legal">

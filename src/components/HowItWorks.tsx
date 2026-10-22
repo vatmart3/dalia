@@ -5,11 +5,11 @@ import { AlertVisual, PhotoVisual, PromoVisual } from './StepVisuals'
 const STEPS = [
   {
     title: 'Photographiez vos produits',
-    text: 'À la livraison, une photo de l’étiquette suffit. Dalia lit la date limite toute seule. Pas de saisie, pas de tableur.',
+    text: 'À la livraison, une photo de l’étiquette suffit. Frescy lit la date limite toute seule. Pas de saisie, pas de tableur.',
     Visual: PhotoVisual,
   },
   {
-    title: 'Dalia vous alerte avant la date',
+    title: 'Frescy vous alerte avant la date',
     text: 'Une notification claire sur votre téléphone, quelques jours avant : quel produit, combien, où dans le magasin.',
     Visual: AlertVisual,
   },

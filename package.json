@@ -1,9 +1,9 @@
 {
-  "name": "dalia-landing",
+  "name": "frescy-landing",
   "private": true,
   "version": "1.0.0",
   "type": "module",
-  "description": "Landing page Dalia — l'appli anti-gaspillage pour les petits commerces alimentaires.",
+  "description": "Landing page Frescy — l'appli anti-gaspillage pour les petits commerces alimentaires.",
   "scripts": {
     "dev": "vite",
     "build": "tsc --noEmit -p . && vite build",

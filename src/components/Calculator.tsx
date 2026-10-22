@@ -2,7 +2,7 @@ import { motion } from 'framer-motion'
 import { useCallback, type CSSProperties } from 'react'
 import { AnimatedNumber } from './AnimatedNumber'
 import { CtaRow } from './CtaRow'
-import { CALCULATOR, DALIA_SAVINGS_RATE, eur } from '../lib/config'
+import { CALCULATOR, FRESCY_SAVINGS_RATE, eur } from '../lib/config'
 import { useEstimate } from '../lib/estimate'
 import { track } from '../lib/analytics'
 
@@ -12,7 +12,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
   const { weekly, touched, setWeekly } = useEstimate()
 
   const yearly = weekly * 52
-  const saved = Math.round(yearly * DALIA_SAVINGS_RATE)
+  const saved = Math.round(yearly * FRESCY_SAVINGS_RATE)
   const pct = ((weekly - CALCULATOR.min) / (CALCULATOR.max - CALCULATOR.min)) * 100
   const lossShare = weekly / CALCULATOR.max
 
@@ -78,7 +78,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
 
             <div className="calc__row">
               <div className="calc__row-head">
-                <span className="calc__row-label">Récupérable avec Dalia</span>
+                <span className="calc__row-label">Récupérable avec Frescy</span>
                 <span className="calc__row-value is-save">
                   <AnimatedNumber value={saved} format={fmt} reducedMotion={reducedMotion} />
                 </span>
@@ -86,17 +86,17 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
               <div className="calc__bar" aria-hidden="true">
                 <motion.span
                   style={{ background: 'var(--blue)' }}
-                  animate={{ scaleX: Math.max(0.02, lossShare * DALIA_SAVINGS_RATE) }}
+                  animate={{ scaleX: Math.max(0.02, lossShare * FRESCY_SAVINGS_RATE) }}
                   transition={barSpring}
                 />
               </div>
             </div>
 
             <p className="sr-only" aria-live="polite">
-              Perte annuelle : {eur(yearly)}. Récupérable avec Dalia : {eur(saved)} par an.
+              Perte annuelle : {eur(yearly)}. Récupérable avec Frescy : {eur(saved)} par an.
             </p>
             <p className="calc__hyp">
-              Hypothèse prudente : {Math.round(DALIA_SAVINGS_RATE * 100)} % des pertes évitées grâce aux alertes et aux promos au bon moment.
+              Hypothèse prudente : {Math.round(FRESCY_SAVINGS_RATE * 100)} % des pertes évitées grâce aux alertes et aux promos au bon moment.
             </p>
           </div>
         </div>

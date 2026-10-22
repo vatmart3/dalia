@@ -19,7 +19,7 @@ export function Header({ home = true, ctaHref = CTA_TARGET }: { home?: boolean; 
   return (
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>
       <div className="wrap">
-        <a className="logo" href={home ? '#top' : href('')} aria-label={home ? 'Dalia, retour en haut de page' : 'Dalia, accueil'}>
+        <a className="logo" href={home ? '#top' : href('')} aria-label={home ? 'Frescy, retour en haut de page' : 'Frescy, accueil'}>
           <Logo />
         </a>
         {home && (

@@ -6,7 +6,7 @@ import { handleLeadsApi } from './server/leads.mjs'
 // En dev, on branche la même API de leads que le serveur de production.
 function leadsApi(): Plugin {
   return {
-    name: 'dalia-leads-api',
+    name: 'frescy-leads-api',
     configureServer(server) {
       server.middlewares.use((req, res, next) => {
         if (req.url?.startsWith('/api/leads')) {

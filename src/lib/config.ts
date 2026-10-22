@@ -12,12 +12,12 @@ export const PILOT_AREA = 'Sète et alentours'
 export const RETAIL_WASTE_EUR_PER_YEAR = 2_240_000_000
 export const RETAIL_WASTE_EUR_PER_SECOND = RETAIL_WASTE_EUR_PER_YEAR / (365 * 24 * 3600)
 
-/** Part des pertes qu'on estime évitable avec Dalia (hypothèse prudente du calculateur). */
-export const DALIA_SAVINGS_RATE = 0.4
+/** Part des pertes qu'on estime évitable avec Frescy (hypothèse prudente du calculateur). */
+export const FRESCY_SAVINGS_RATE = 0.4
 
 export const CALCULATOR = { min: 20, max: 800, step: 10, initial: 150 }
 
-export const CTA_LABEL = 'Je veux tester Dalia'
+export const CTA_LABEL = 'Je veux tester Frescy'
 export const CTA_TARGET = '#essai'
 
 export const eur = (n: number, digits = 0) =>
@@ -32,11 +32,11 @@ export const num = (n: number) => new Intl.NumberFormat('fr-FR', { maximumFracti
 /** Tarif après le mois gratuit (affiché dans l'offre et la FAQ). */
 export const PRICE = { monthly: 39, unit: '€ HT / mois' }
 
-/** La personne derrière Dalia (section « Qui est derrière Dalia »). */
+/** La personne derrière Frescy (section « Qui est derrière Frescy »). */
 export const FOUNDER = {
   name: 'Jérémy',
   firstName: 'Jérémy',
-  role: 'Fondateur de Dalia, basé à Sète',
+  role: 'Fondateur de Frescy, basé à Sète',
   /** Photo portrait (format 4:5) dans public/ (ex. '/photos/jeremy.jpg'). null = cadre « photo à remplacer ». */
   photo: null as string | null,
   phone: '06 11 71 83 68',
@@ -57,7 +57,7 @@ export const SHOP_PHOTOS: Record<'boulangerie' | 'boucherie' | 'epicerie' | 'sup
 
 /** Informations légales (page « Mentions légales »). */
 export const COMPANY = {
-  name: 'Dalia',
+  name: 'Frescy',
   legalForm: '[Forme juridique et capital, ex. SAS au capital de 1 000 €]',
   address: '[Adresse du siège], 34200 Sète',
   siret: '[Numéro SIRET]',

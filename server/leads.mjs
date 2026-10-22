@@ -1,4 +1,4 @@
-// API de collecte des leads Dalia — sans dépendance, partagée entre
+// API de collecte des leads Frescy — sans dépendance, partagée entre
 // le serveur de dev Vite et le serveur de production (server.mjs).
 //
 // POST /api/leads            → enregistre une demande d'essai (JSON)
@@ -17,7 +17,7 @@ import { fileURLToPath } from 'node:url'
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..')
 // Sur Vercel, seul /tmp est inscriptible (et il est vidé régulièrement : utilisez LEADS_WEBHOOK_URL).
-const DATA_DIR = process.env.LEADS_DIR || (process.env.VERCEL ? '/tmp/dalia-leads' : path.join(ROOT, 'data'))
+const DATA_DIR = process.env.LEADS_DIR || (process.env.VERCEL ? '/tmp/frescy-leads' : path.join(ROOT, 'data'))
 const LEADS_FILE = path.join(DATA_DIR, 'leads.jsonl')
 const MAX_BODY = 8 * 1024
 
@@ -230,7 +230,7 @@ async function exportCsv(req, res, url) {
   const csv = [cols.join(';'), ...rows.map((r) => cols.map((c) => csvCell(r[c])).join(';'))].join('\n')
   send(res, 200, '﻿' + csv, {
     'Content-Type': 'text/csv; charset=utf-8',
-    'Content-Disposition': 'attachment; filename="dalia-leads.csv"',
+    'Content-Disposition': 'attachment; filename="frescy-leads.csv"',
   })
 }
 

@@ -43,7 +43,7 @@ export function Problem() {
         </ul>
         <p className="stats__note">Ordres de grandeur pour un commerce alimentaire de proximité.</p>
 
-        <CtaRow note={<>Dalia fait le tour des dates à votre place.</>} />
+        <CtaRow note={<>Frescy fait le tour des dates à votre place.</>} />
       </div>
     </section>
   )

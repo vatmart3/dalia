@@ -63,4 +63,4 @@ http
     if (req.method !== 'GET' && req.method !== 'HEAD') return res.writeHead(405).end()
     serveStatic(req, res)
   })
-  .listen(PORT, () => console.log(`Dalia → http://localhost:${PORT}`))
+  .listen(PORT, () => console.log(`Frescy → http://localhost:${PORT}`))

@@ -4,7 +4,7 @@ import { IconCheck } from './Icons'
 import { ProductThumb } from './ProductGlyph'
 
 /*
- * Étape « Photo » : l'appareil photo de Dalia scanne un pot de yaourt.
+ * Étape « Photo » : l'appareil photo de Frescy scanne un pot de yaourt.
  * Boucle : recherche de la date → date verrouillée → déclenchement + flash → fiche produit.
  */
 

@@ -9,13 +9,13 @@ const MODES: { id: AlertMode; num: string; title: string; text: string }[] = [
     id: 'promo',
     num: '1',
     title: 'Mode promo',
-    text: 'À l’approche de la date limite, Dalia suggère une remise (ex. −20 %) et prépare l’étiquette.',
+    text: 'À l’approche de la date limite, Frescy suggère une remise (ex. −20 %) et prépare l’étiquette.',
   },
   {
     id: 'rotation',
     num: '2',
     title: 'Mode rotation, sans promo',
-    text: 'Dalia vous rappelle de mettre l’article en avant, devant en rayon, pour qu’il soit vendu en premier.',
+    text: 'Frescy vous rappelle de mettre l’article en avant, devant en rayon, pour qu’il soit vendu en premier.',
   },
 ]
 
@@ -41,7 +41,7 @@ export function Modes({ reducedMotion }: { reducedMotion: boolean }) {
           <h2 id="modes-title" className="h2">
             Avec ou sans promo, c’est vous qui <em>choisissez</em>.
           </h2>
-          <p className="lead modes__lead">Selon votre commerce et vos habitudes, Dalia s’adapte à votre façon de vendre.</p>
+          <p className="lead modes__lead">Selon votre commerce et vos habitudes, Frescy s’adapte à votre façon de vendre.</p>
 
           <div className="modes__list" role="group" aria-label="Choisir un mode pour voir l’alerte">
             {MODES.map((m, i) => (

@@ -5,7 +5,6 @@ import { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ButtonLink } from './Button'
 import { CssPhone } from './AppScreen'
 import { IconCheck, IconSkip } from './Icons'
-import { useInViewport } from '../hooks/useInViewport'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
 gsap.registerPlugin(ScrollTrigger)
@@ -13,8 +12,11 @@ gsap.registerPlugin(ScrollTrigger)
 type Stage = 0 | 1 | 2
 const STEPS = ['Photo', 'Alerte', 'Promo']
 const stageOf = (p: number): Stage => (p < 0.3 ? 0 : p < 0.68 ? 1 : 2)
-// Autoplay (mobile) : durée de chaque étape. L'étape Photo laisse jouer un scan complet.
-const STAGE_MS = [5200, 3400, 3400]
+// Lecture automatique (mobile, tactile) : durée de chaque étape.
+const AUTO_MS = 3000
+// Taille réelle de la maquette (écran 340 × 736 + verre + cadre), avant mise à l'échelle.
+const PHONE_W = 364
+const PHONE_H = 760
 // Intro au scroll réservée aux écrans larges avec souris ; ailleurs elle joue toute seule.
 const SCROLL_INTRO_QUERY = '(min-width: 900px) and (hover: hover) and (pointer: fine)'
 
@@ -29,11 +31,14 @@ const fadeUp = (delay: number) => ({
 export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
+  const phoneRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<ScrollTrigger | null>(null)
   const [stage, setStage] = useState<Stage>(reducedMotion ? 2 : 0)
   const [introDone, setIntroDone] = useState(reducedMotion)
   const [mode, setMode] = useState<Mode>(reducedMotion ? 'static' : 'auto')
-  const visible = useInViewport(stageRef, '0px')
+  const [inView, setInView] = useState(false)
+  // Change à chaque appui sur un onglet : relance le compte à rebours de la boucle.
+  const [loopKey, setLoopKey] = useState(0)
 
   // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
   // Mobile / tactile : pas d'épinglage (saccadé avec la barre d'adresse), l'intro joue toute seule.
@@ -76,12 +81,42 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
     return () => mm.revert()
   }, [])
 
-  // Autoplay : enchaîne Photo → Alerte → Promo en boucle tant que le téléphone est visible.
+  // La boucle ne tourne que quand la maquette est à l'écran (pause hors écran).
   useEffect(() => {
-    if (mode !== 'auto' || !visible) return
-    const timer = window.setTimeout(() => setStage(((stage + 1) % 3) as Stage), STAGE_MS[stage])
+    const el = stageRef.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.25 })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
+
+  // Lecture automatique : Photo → Alerte → Promo, 3 s par étape, en boucle.
+  useEffect(() => {
+    if (mode !== 'auto' || !inView) return
+    const timer = window.setTimeout(() => setStage((s) => ((s + 1) % 3) as Stage), AUTO_MS)
     return () => window.clearTimeout(timer)
-  }, [mode, stage, visible])
+  }, [mode, stage, inView, loopKey])
+
+  // Mobile : la maquette tient dans 75 % de la largeur et 70 % de la hauteur de l'écran.
+  // (Ignoré sur grand écran : les règles CSS du bureau fixent la taille.)
+  useEffect(() => {
+    const el = phoneRef.current
+    if (!el) return
+    let lastWidth = 0
+    const fit = () => {
+      const w = window.innerWidth
+      // La barre d'adresse d'iOS change la hauteur pendant le scroll : on ne recalcule qu'au changement de largeur.
+      if (w === lastWidth) return
+      lastWidth = w
+      const h = document.documentElement.clientHeight
+      const scale = Math.min(0.68, (0.75 * w) / PHONE_W, (0.7 * h) / PHONE_H)
+      el.style.setProperty('--hero-phone-scale', scale.toFixed(4))
+      el.style.setProperty('--hero-phone-h', `${Math.ceil(PHONE_H * scale)}px`)
+    }
+    fit()
+    window.addEventListener('resize', fit)
+    return () => window.removeEventListener('resize', fit)
+  }, [])
 
   const goToStage = (i: Stage) => {
     const st = triggerRef.current
@@ -91,6 +126,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
       return
     }
     setStage(i)
+    setLoopKey((k) => k + 1)
   }
 
   // Passe directement au contenu qui suit le hero.
@@ -114,7 +150,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             {PILOT_SEATS} places pilotes à {PILOT_AREA}
           </motion.p>
           <motion.h1 id="hero-title" className="h1" {...fadeUp(0.08)}>
-            Dalia veille, et votre <em>marge</em> ne part pas.
+            Frescy veille, et votre <em>marge</em> ne part pas.
           </motion.h1>
           <motion.p className="lead hero__sub" {...fadeUp(0.16)}>
             L’appli qui surveille vos dates limites et transforme vos invendus en ventes.
@@ -138,7 +174,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
           transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
         >
           {/* De face pour la photo, puis légèrement de biais pour l'alerte et la promo. */}
-          <div className={`hero__phone hero__phone--s${stage}`} aria-hidden="true">
+          <div ref={phoneRef} className={`hero__phone hero__phone--s${stage}`} aria-hidden="true">
             <CssPhone stage={stage} />
           </div>
           {/* Petites étiquettes autour du téléphone (grands écrans) : elles s'allument au fil de la démo. */}
@@ -160,8 +196,8 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             <span className="hand-note hero__hand">la date est lue toute seule</span>
           </div>
           <p className="sr-only" aria-live="polite">
-            {stage === 0 && 'L’appli Dalia photographie un pot de yaourt et lit sa date limite : 16 mai.'}
-            {stage === 1 && 'Alerte Dalia : 12 yaourts expirent dans 2 jours, promo conseillée moins 20 %.'}
+            {stage === 0 && 'L’appli Frescy photographie un pot de yaourt et lit sa date limite : 16 mai.'}
+            {stage === 1 && 'Alerte Frescy : 12 yaourts expirent dans 2 jours, promo conseillée moins 20 %.'}
             {stage === 2 && 'Promo moins 20 % activée, étiquette envoyée à l’imprimante.'}
           </p>
 

@@ -1,15 +1,15 @@
 /**
- * Dalia — réception des demandes d'essai par e-mail + dans une feuille Google Sheets.
+ * Frescy — réception des demandes d'essai par e-mail + dans une feuille Google Sheets.
  *
  * 1. Sur ordinateur, ouvrez script.google.com → « Nouveau projet ».
  *    (Ou, depuis une feuille Google Sheets : Extensions → Apps Script.)
  * 2. Collez ce fichier à la place du contenu, enregistrez.
  * 3. Choisissez la fonction « testEmail » en haut de l'éditeur → « Exécuter »
  *    (Google demande l'autorisation la 1re fois) : vous recevez un e-mail de test,
- *    et une feuille « Demandes Dalia » est créée dans votre Google Drive.
+ *    et une feuille « Demandes Frescy » est créée dans votre Google Drive.
  * 4. Déployer → Nouveau déploiement → Application Web
  *    (Exécuter en tant que : moi ; Qui a accès : tout le monde).
- * 5. Copiez l'URL obtenue (…/exec) dans la variable LEADS_WEBHOOK_URL du serveur Dalia (Vercel).
+ * 5. Copiez l'URL obtenue (…/exec) dans la variable LEADS_WEBHOOK_URL du serveur Frescy (Vercel).
  */
 
 const NOTIFY_EMAIL = 'jeremyvatuonepro@gmail.com' // ← adresse qui reçoit les demandes d'essai
@@ -21,7 +21,7 @@ function getSheet() {
   const props = PropertiesService.getScriptProperties()
   let id = props.getProperty('SHEET_ID')
   if (!id) {
-    id = SpreadsheetApp.create('Demandes Dalia').getId()
+    id = SpreadsheetApp.create('Demandes Frescy').getId()
     props.setProperty('SHEET_ID', id)
   }
   return SpreadsheetApp.openById(id).getSheets()[0]
@@ -46,5 +46,5 @@ function doPost(e) {
 
 /** À lancer depuis l'éditeur (bouton « Exécuter ») : simule une demande d'essai. */
 function testEmail() {
-  doPost({ postData: { contents: JSON.stringify({ date: new Date().toISOString(), nom: 'Test Dalia', commerce: 'Épicerie test', ville: 'Sète', telephone: '0600000000', pertesSemaine: 150, source: 'test' }) } })
+  doPost({ postData: { contents: JSON.stringify({ date: new Date().toISOString(), nom: 'Test Frescy', commerce: 'Épicerie test', ville: 'Sète', telephone: '0600000000', pertesSemaine: 150, source: 'test' }) } })
 }

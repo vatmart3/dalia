@@ -15,7 +15,7 @@ html = html
   .replace(/<\/?body>/gi, '')
   .replace(/<meta charset="UTF-8" \/>\s*/i, '')
   .replace(/<meta name="viewport"[^>]*>\s*/i, '')
-  .replace(/<title>[\s\S]*?<\/title>/i, '<title>Dalia</title>')
+  .replace(/<title>[\s\S]*?<\/title>/i, '<title>Frescy</title>')
   .replace(/\n\s*\n/g, '\n')
   .trim()
 writeFileSync(file, html + '\n')

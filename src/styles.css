@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Dalia — style pro, clair, efficace
+   Frescy — style pro, clair, efficace
    ========================================================================== */
 
 :root {
@@ -1150,6 +1150,59 @@ input {
   transform: translate(-50%, -50%);
   border-radius: 50%;
   background: radial-gradient(closest-side, rgba(11, 99, 206, 0.16), rgba(11, 99, 206, 0) 70%);
+}
+
+/* ==========================================================================
+   Mobile (iPhone, Safari) — le bureau n'est pas concerné
+   ========================================================================== */
+
+@media (max-width: 899px) {
+  /* Barre d'état : le header couvre l'encoche (padding env(safe-area-inset-top)) avec un fond opaque,
+     rien ne défile visible au-dessus. Même couleur que <meta name="theme-color">. */
+  .site-header,
+  .site-header.is-scrolled {
+    background: var(--paper);
+    -webkit-backdrop-filter: none;
+    backdrop-filter: none;
+  }
+  html {
+    scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 16px);
+  }
+  .hero {
+    padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 1.75rem);
+  }
+
+  /* Maquette dans le flux : téléphone, puis les onglets 16 px dessous (plus de position absolue). */
+  .hero__stage {
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 2rem;
+  }
+  .hero__phone {
+    position: relative;
+    inset: auto;
+    width: 100%;
+    /* Hauteur calculée en JS : au plus 75 % de la largeur et 70 % de la hauteur de l'écran */
+    height: var(--hero-phone-h, 480px);
+  }
+  .hero__phone .phone-css__body {
+    --phone-scale: var(--hero-phone-scale, 0.62);
+    --phone-y: 50%;
+  }
+  .hero__phone::before {
+    top: 50%;
+  }
+  .hero__steps {
+    position: static;
+    transform: none;
+    margin-top: 16px;
+  }
+  /* Pas d'intro épinglée sur mobile : rien à passer. */
+  .skip-intro {
+    display: none;
+  }
 }
 
 /* ==========================================================================
@@ -2722,7 +2775,7 @@ input {
 }
 
 /* ==========================================================================
-   Qui est derrière Dalia
+   Qui est derrière Frescy
    ========================================================================== */
 
 .founder {

@@ -5,7 +5,7 @@ import { IconBell, IconPhone, IconPrinter, IconTag } from './Icons'
 
 const FEATURES = [
   { Icon: IconBell, title: 'Ce qui expire, en premier', text: 'Les produits à traiter aujourd’hui, en haut de l’écran. Rien d’autre.' },
-  { Icon: IconTag, title: 'La remise déjà calculée', text: 'Dalia propose le bon pourcentage selon le produit et le délai restant.' },
+  { Icon: IconTag, title: 'La remise déjà calculée', text: 'Frescy propose le bon pourcentage selon le produit et le délai restant.' },
   { Icon: IconPrinter, title: 'L’étiquette prête à imprimer', text: 'Un geste et l’étiquette promo part à l’imprimante du magasin.' },
   { Icon: IconPhone, title: 'Aussi simple que vos SMS', text: 'Fonctionne sur n’importe quel smartphone, sans ordinateur.' },
 ]

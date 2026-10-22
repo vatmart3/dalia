@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState, type FormEvent } from 'react'
 import { Button } from './Button'
 import { useEstimate } from '../lib/estimate'
-import { DALIA_SAVINGS_RATE, eur } from '../lib/config'
+import { FRESCY_SAVINGS_RATE, eur } from '../lib/config'
 import { href } from '../lib/router'
 import { track } from '../lib/analytics'
 
@@ -160,7 +160,7 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
             {estimate.touched ? (
               <p className="form-card__intro">
                 Vous estimez perdre <strong>{eur(estimate.weekly * 52)} par an</strong>. On regarde ensemble comment en récupérer environ{' '}
-                {eur(Math.round(estimate.weekly * 52 * DALIA_SAVINGS_RATE))}.
+                {eur(Math.round(estimate.weekly * 52 * FRESCY_SAVINGS_RATE))}.
               </p>
             ) : (
               <p className="form-card__intro">4 champs, 20 secondes. On vous rappelle pour fixer l’installation.</p>
@@ -194,7 +194,7 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
               <input id="f-site" name="site" type="text" tabIndex={-1} autoComplete="off" />
             </div>
             <Button type="submit" block disabled={status === 'sending'} aria-busy={status === 'sending'}>
-              {status === 'sending' ? 'Envoi…' : 'Je veux tester Dalia'}
+              {status === 'sending' ? 'Envoi…' : 'Je veux tester Frescy'}
             </Button>
             {status === 'error' && (
               <p className="form-card__error" role="alert">
@@ -203,7 +203,7 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
             )}
             <p className="form-card__legal">
               {DEMO && <>Version de démonstration : aucune donnée n’est envoyée. </>}
-              Vos coordonnées servent uniquement à vous recontacter au sujet de Dalia.{' '}
+              Vos coordonnées servent uniquement à vous recontacter au sujet de Frescy.{' '}
               <a href={href('confidentialite')}>Politique de confidentialité</a>
             </p>
           </motion.form>

@@ -24,7 +24,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
             <a className="back-link" href={href('')}>
               ← Accueil
             </a>
-            <p className="badge">Dalia pour les {m.plural}</p>
+            <p className="badge">Frescy pour les {m.plural}</p>
             <h1 id="metier-title" className="h1">
               {before}
               <em>{keyword}</em>
@@ -44,7 +44,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
                 <span className="app__notif-icon">
                   <IconBell />
                 </span>
-                DALIA
+                FRESCY
                 <span className="app__notif-time">maintenant</span>
               </div>
               <div className="metier-alert__row">
@@ -69,10 +69,10 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
           <div className="section-head">
             <span className="eyebrow">Au quotidien</span>
             <h2 id="cases-title" className="h2">
-              Ce que Dalia change dans votre <em>{m.name.toLowerCase()}</em>.
+              Ce que Frescy change dans votre <em>{m.name.toLowerCase()}</em>.
             </h2>
           </div>
-          <PhotoSlot className="cases__photo" src={SHOP_PHOTOS[slug]} alt={`${m.name} équipée de Dalia`} what={m.photoHint} />
+          <PhotoSlot className="cases__photo" src={SHOP_PHOTOS[slug]} alt={`${m.name} équipée de Frescy`} what={m.photoHint} />
           <ul className="cases">
             {m.cases.map((c, i) => (
               <Reveal as="li" key={c.title} delay={i * 0.06} className="card case">
@@ -89,7 +89,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
 
       <section className="section section--tight" aria-label="Autres métiers">
         <div className="wrap other-metiers">
-          <span>Dalia existe aussi pour les</span>
+          <span>Frescy existe aussi pour les</span>
           {others.map((o) => (
             <a key={o.slug} className="text-link" href={href(o.slug)}>
               {o.plural}

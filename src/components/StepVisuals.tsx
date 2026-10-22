@@ -37,7 +37,7 @@ export function AlertVisual() {
       <rect x="58" y="58" width="24" height="24" rx="7" fill={BLUE} />
       <path d="M64.5 74v-4a5.5 5.5 0 0 1 11 0v4l1.3 1.6h-13.6zM68 78.5a2 2 0 0 0 4 0" stroke="#fff" strokeWidth="1.6" fill="none" strokeLinejoin="round" />
       <text x="92" y="74" fontFamily="Inter,sans-serif" fontSize="11" fontWeight="600" fill="#5A6478">
-        DALIA · maintenant
+        FRESCY · maintenant
       </text>
       <text x="58" y="104" fontFamily="Inter,sans-serif" fontSize="14" fontWeight="700" fill={INK}>
         12 yaourts expirent dans 2 jours

@@ -7,7 +7,7 @@ import { ProductThumb } from './ProductGlyph'
 export type AlertMode = 'promo' | 'rotation'
 
 /**
- * Écran de l'appli Dalia (DOM réel : net et lisible).
+ * Écran de l'appli Frescy (DOM réel : net et lisible).
  * stage 0 : photo d'un produit · 1 : alerte reçue · 2 : action faite
  * mode promo : remise conseillée · mode rotation : produit à mettre devant en rayon, sans promo
  */
@@ -145,7 +145,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
               <span className="app__notif-icon">
                 <IconBell />
               </span>
-              DALIA
+              FRESCY
               <span className="app__notif-time">maintenant</span>
             </div>
             <div className="app__notif-title">8 yaourts nature expirent dans 3 jours</div>
@@ -169,7 +169,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
               <span className="app__notif-icon">
                 <IconBell />
               </span>
-              DALIA
+              FRESCY
               <span className="app__notif-time">maintenant</span>
             </div>
             <div className="app__notif-title">12 yaourts expirent dans 2 jours</div>

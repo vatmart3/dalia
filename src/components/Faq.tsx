@@ -7,31 +7,31 @@ import { FOUNDER, PRICE } from '../lib/config'
 const FAQ = [
   {
     q: 'Je ne suis pas à l’aise avec la technologie. C’est compliqué ?',
-    a: 'Non. Si vous savez prendre une photo avec votre téléphone, vous savez utiliser Dalia. On vient l’installer chez vous et on vous montre, sur vos propres produits.',
+    a: 'Non. Si vous savez prendre une photo avec votre téléphone, vous savez utiliser Frescy. On vient l’installer chez vous et on vous montre, sur vos propres produits.',
   },
   {
     q: 'Faut-il prendre tous mes produits en photo un par un ?',
-    a: 'Une photo par lot suffit, en général à la réception de la livraison : Dalia lit la date limite et la quantité. Quelques secondes par produit, pas de saisie.',
+    a: 'Une photo par lot suffit, en général à la réception de la livraison : Frescy lit la date limite et la quantité. Quelques secondes par produit, pas de saisie.',
   },
   {
     q: 'Il me faut un ordinateur ou une caisse spéciale ?',
-    a: 'Non, un smartphone suffit (Android ou iPhone). Dalia fonctionne à côté de votre caisse actuelle, sans rien changer.',
+    a: 'Non, un smartphone suffit (Android ou iPhone). Frescy fonctionne à côté de votre caisse actuelle, sans rien changer.',
   },
   {
     q: 'Ça marche pour une boulangerie ou une boucherie ?',
-    a: 'Oui. Dalia gère aussi les produits du jour et à la coupe : vous indiquez la durée de vente, elle vous prévient au bon moment et suggère la remise de fin de journée.',
+    a: 'Oui. Frescy gère aussi les produits du jour et à la coupe : vous indiquez la durée de vente, elle vous prévient au bon moment et suggère la remise de fin de journée.',
   },
   {
     q: 'Combien ça coûte après le mois gratuit ?',
-    a: `${PRICE.monthly} ${PRICE.unit}, sans engagement, installation comprise. Si Dalia ne vous fait pas économiser plus qu’elle ne coûte, vous arrêtez, sans frais.`,
+    a: `${PRICE.monthly} ${PRICE.unit}, sans engagement, installation comprise. Si Frescy ne vous fait pas économiser plus qu’elle ne coûte, vous arrêtez, sans frais.`,
   },
   {
     q: 'Et si je ne veux pas faire de promos ?',
-    a: 'Pas de problème : Dalia peut simplement vous rappeler de mettre les produits en avant pour qu’ils partent en premier.',
+    a: 'Pas de problème : Frescy peut simplement vous rappeler de mettre les produits en avant pour qu’ils partent en premier.',
   },
   {
     q: 'Et si un produit ne se vend toujours pas ?',
-    a: 'Dalia vous le signale assez tôt pour le donner à une association locale plutôt que de le jeter. Les dons alimentaires des entreprises peuvent ouvrir droit à une réduction d’impôt : votre expert-comptable vous dira ce qui s’applique à votre commerce.',
+    a: 'Frescy vous le signale assez tôt pour le donner à une association locale plutôt que de le jeter. Les dons alimentaires des entreprises peuvent ouvrir droit à une réduction d’impôt : votre expert-comptable vous dira ce qui s’applique à votre commerce.',
   },
   {
     q: 'Je m’engage sur combien de temps ?',

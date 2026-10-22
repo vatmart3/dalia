@@ -1,16 +1,16 @@
-# Dalia — landing page
+# Frescy — landing page
 
-Landing page one-page de **Dalia**, l'appli anti-gaspillage pour les petits commerces alimentaires
+Landing page one-page de **Frescy**, l'appli anti-gaspillage pour les petits commerces alimentaires
 (épiceries, boulangeries, boucheries, supérettes).
 
-> Dalia veille, et votre marge ne part pas.
+> Frescy veille, et votre marge ne part pas.
 
 ## Stack
 
 - **Vite + React 19 + TypeScript**
 - **Design** : bleu profond #1D3FBF, marine #0E1A3A pour le texte, fonds blanc et crème #FBFAF7, un seul accent abricot #F2A541 réservé aux promos (étiquettes « −20 % », mois offert, flèche du bouton principal). Titres en Anton avec un mot clé penché en bleu, texte en Inter, signature manuscrite en Caveat. Bordures fines plutôt qu'ombres, mises en page asymétriques, léger grain de papier.
 - **Hero** : titre à gauche, maquette de téléphone en CSS (inspirée de l'iPhone 17 Pro Max) à droite, avec la démo Photo → Alerte → Promo. Aucune 3D.
-- **GSAP ScrollTrigger** : sur ordinateur, le hero est épinglé le temps de la démo (bouton « Passer l'intro ») ; sur mobile, la démo joue toute seule.
+- **GSAP ScrollTrigger** : sur ordinateur, le hero est épinglé le temps de la démo (bouton « Passer l'intro ») ; sur mobile (< 900 px), pas d'épinglage : la démo joue en boucle (3 s par étape) quand le téléphone est à l'écran, se met en pause hors écran, et un appui sur un onglet relance la boucle. Le header couvre la zone de l'encoche iPhone (fond opaque).
 - **Framer Motion** : apparitions douces au scroll, accordéons, confirmation du formulaire.
 - API de leads en Node pur, sans dépendance (`server/`).
 
@@ -40,7 +40,7 @@ Sur un hébergement sans disque persistant (Vercel, Netlify…), utilisez `LEADS
 
 Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) :
 
-1. Sur vercel.com : **Add New… → Project**, importez le dépôt GitHub `dalia` (Vercel détecte Vite tout seul).
+1. Sur vercel.com : **Add New… → Project**, importez le dépôt GitHub `frescy` (Vercel détecte Vite tout seul).
 2. Branchez les demandes d'essai, sinon elles ne sont pas conservées (le disque de Vercel est effacé régulièrement) :
    - **Google Forms (le plus simple)** : créez un formulaire avec 4 questions « Réponse courte » (Nom, Commerce, Ville, Téléphone), reliez-le à une feuille (onglet Réponses → Associer à Sheets), activez « Recevoir des notifications par e-mail ». Collez le lien public du formulaire (…/viewform : les questions sont reconnues par leur titre) ou un lien prérempli (`nom`, `commerce`, `ville`, `telephone`) dans `GOOGLE_FORM_URL` (variable Vercel) ou dans `DEFAULT_GOOGLE_FORM_URL` (`server/leads.mjs`) ;
    - ou `LEADS_WEBHOOK_URL` : un webhook JSON (script Apps Script de `docs/`, Zapier, Make…).
