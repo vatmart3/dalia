@@ -1165,6 +1165,12 @@ input {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
   }
+  /* Le grain de papier (calque fixe plein écran) ne doit pas passer au-dessus du header :
+     Safari se sert des éléments fixes en haut de page pour peindre la zone de la barre d'état. */
+  body::after {
+    top: calc(var(--header-h) + env(safe-area-inset-top));
+    z-index: 90;
+  }
   html {
     scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 16px);
   }
