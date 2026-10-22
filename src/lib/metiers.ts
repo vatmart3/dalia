@@ -44,7 +44,7 @@ export const METIERS: Metier[] = [
     photoHint: 'Le comptoir de la boucherie et ses barquettes',
     intro: 'Les dates limites sont courtes et la marge est serrée. Frescy surveille vos barquettes, votre charcuterie et votre traiteur.',
     cases: [
-      { title: 'Barquettes et sous-vide', text: 'Une photo à la mise en rayon : Frescy lit la date limite et vous alerte la veille, pas le jour même.' },
+      { title: 'Barquettes et sous-vide', text: 'Une photo à la mise en rayon : Frescy lit la date limite et vous alerte un jour avant, pas le jour même.' },
       { title: 'Charcuterie entamée', text: 'Notez la date d’ouverture d’une pièce, Frescy vous rappelle quand il faut la mettre en avant.' },
       { title: 'Plats traiteur', text: 'Les préparations du jour sont suivies comme le reste, avec une remise conseillée avant la fermeture.' },
     ],

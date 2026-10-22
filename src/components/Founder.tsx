@@ -25,7 +25,7 @@ export function Founder() {
             </figcaption>
           </figure>
 
-          <PhotoSlot className="founder__photo" src={FOUNDER.photo} alt={`Portrait de ${FOUNDER.name}`} what={`Portrait de ${FOUNDER.firstName}, idéalement dans un commerce de Sète`} />
+          <PhotoSlot className="founder__photo" width={800} height={1000} src={FOUNDER.photo} alt={`Portrait de ${FOUNDER.name}`} what={`Portrait de ${FOUNDER.firstName}, idéalement dans un commerce de Sète`} />
 
           <div className="founder__body">
             <span className="eyebrow">Qui est derrière Frescy</span>

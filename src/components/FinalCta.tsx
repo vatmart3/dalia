@@ -16,7 +16,7 @@ export function FinalCta({ reducedMotion, source }: { reducedMotion: boolean; so
           transition={{ type: 'spring', stiffness: 110, damping: 20 }}
         >
           <h2 id="final-title" className="final__title display">
-            Frescy veille. <span>Et vous, vous <em>vendez</em>.</span>
+            Avec Frescy, rien ne se perd. <span>Et vous, vous <em>vendez</em>.</span>
           </h2>
           <p className="final__sub">
             {PILOT_SEATS} places pilotes à {PILOT_AREA}. Réservez la vôtre, on s’occupe du reste.

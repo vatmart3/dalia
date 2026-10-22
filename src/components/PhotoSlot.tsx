@@ -5,11 +5,28 @@ import type { CSSProperties } from 'react'
  * Tant que `src` est vide, un cadre clairement marqué « Photo à remplacer » s'affiche.
  * Pas d'image générée par IA : uniquement des photos réelles, avec l'accord des personnes photographiées.
  */
-export function PhotoSlot({ src, alt, what, className = '', style }: { src: string | null; alt: string; what: string; className?: string; style?: CSSProperties }) {
+export function PhotoSlot({
+  src,
+  alt,
+  what,
+  width = 1200,
+  height = 750,
+  className = '',
+  style,
+}: {
+  src: string | null
+  alt: string
+  what: string
+  /** Dimensions réelles de la photo (évitent les sauts de mise en page) */
+  width?: number
+  height?: number
+  className?: string
+  style?: CSSProperties
+}) {
   return (
     <figure className={`photo-slot ${src ? 'photo-slot--filled' : ''} ${className}`} style={style}>
       {src ? (
-        <img src={src} alt={alt} loading="lazy" />
+        <img src={src} alt={alt} width={width} height={height} loading="lazy" decoding="async" />
       ) : (
         <figcaption className="photo-slot__ph">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

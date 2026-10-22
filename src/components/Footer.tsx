@@ -11,7 +11,9 @@ export function Footer() {
           <span className="footer__logo">
             <Logo />
           </span>
-          <p>L’anti-gaspi des commerces de proximité, depuis Sète.</p>
+          <p>
+            <strong>Avec Frescy, rien ne se perd.</strong> L’anti-gaspi des commerces de proximité, depuis Sète.
+          </p>
         </div>
         <nav className="footer__col" aria-label="Métiers">
           <span className="footer__title">Métiers</span>

@@ -3,7 +3,7 @@
 Landing page one-page de **Frescy**, l'appli anti-gaspillage pour les petits commerces alimentaires
 (épiceries, boulangeries, boucheries, supérettes).
 
-> Frescy veille, et votre marge ne part pas.
+> Avec Frescy, rien ne se perd.
 
 ## Stack
 

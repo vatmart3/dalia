@@ -10,11 +10,19 @@ import { href } from '../lib/router'
  */
 export function Header({ home = true, ctaHref = CTA_TARGET }: { home?: boolean; ctaHref?: string }) {
   const [scrolled, setScrolled] = useState(false)
+  // Repère invisible de 8 px en haut de page : dès qu'il sort de l'écran, le header prend sa bordure.
+  // (IntersectionObserver plutôt qu'un écouteur de scroll : rien ne tourne pendant le défilement.)
   useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 8)
-    onScroll()
-    window.addEventListener('scroll', onScroll, { passive: true })
-    return () => window.removeEventListener('scroll', onScroll)
+    const sentinel = document.createElement('div')
+    sentinel.setAttribute('aria-hidden', 'true')
+    sentinel.style.cssText = 'position:absolute;top:0;left:0;width:1px;height:8px;pointer-events:none'
+    document.body.prepend(sentinel)
+    const io = new IntersectionObserver(([entry]) => setScrolled(!entry.isIntersecting))
+    io.observe(sentinel)
+    return () => {
+      io.disconnect()
+      sentinel.remove()
+    }
   }, [])
   return (
     <header className={`site-header ${scrolled ? 'is-scrolled' : ''}`}>

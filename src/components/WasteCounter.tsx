@@ -14,23 +14,25 @@ const short = (n: number) => (n >= 1e6 ? `${(n / 1e6).toLocaleString('fr-FR', { 
 export function WasteCounter({ reducedMotion }: { reducedMotion: boolean }) {
   const valueRef = useRef<HTMLSpanElement>(null)
 
+  // Mis à jour 10 fois par seconde (pas à chaque image), et seulement quand le compteur est à l'écran.
   useEffect(() => {
+    const el = valueRef.current
+    if (!el) return
     const start = performance.now()
     const render = () => {
-      if (valueRef.current) valueRef.current.textContent = eur(((performance.now() - start) / 1000) * RETAIL_WASTE_EUR_PER_SECOND)
+      el.textContent = eur(((performance.now() - start) / 1000) * RETAIL_WASTE_EUR_PER_SECOND)
     }
-    if (reducedMotion) {
-      render()
-      const id = window.setInterval(render, 1000)
-      return () => window.clearInterval(id)
+    render()
+    let timer = 0
+    const io = new IntersectionObserver(([entry]) => {
+      window.clearInterval(timer)
+      if (entry.isIntersecting) timer = window.setInterval(render, reducedMotion ? 1000 : 100)
+    })
+    io.observe(el)
+    return () => {
+      io.disconnect()
+      window.clearInterval(timer)
     }
-    let raf = 0
-    const loop = () => {
-      render()
-      raf = requestAnimationFrame(loop)
-    }
-    raf = requestAnimationFrame(loop)
-    return () => cancelAnimationFrame(raf)
   }, [reducedMotion])
 
   const perSecond = Math.round(RETAIL_WASTE_EUR_PER_SECOND)

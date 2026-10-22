@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { AnimatePresence, motion, useReducedMotion } from 'framer-motion'
 import type { CSSProperties } from 'react'
 import { IconBell, IconChart, IconCheck, IconHome, IconList, IconTag, IconCamera } from './Icons'
 import { CameraView } from './CameraView'
@@ -14,6 +14,9 @@ export type AlertMode = 'promo' | 'rotation'
 export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mode?: AlertMode }) {
   const applied = stage === 2
   const rotation = mode === 'rotation'
+  // Mouvement réduit : l'étape change quand même, mais d'un coup, sans transition.
+  const reduced = useReducedMotion()
+  const tr = <T,>(t: T) => (reduced ? { duration: 0 } : t)
   return (
     <div className="app">
       <div className="app__island" />
@@ -124,10 +127,10 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="camera"
             className="app__camera"
-            initial={{ opacity: 0, scale: 1.04 }}
+            initial={reduced ? false : { opacity: 0, scale: 1.04 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 1.04 }}
-            transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+            transition={tr({ duration: 0.35, ease: [0.22, 1, 0.36, 1] })}
           >
             <CameraView />
           </motion.div>
@@ -139,7 +142,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
             initial={{ y: -140, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: -40, opacity: 0, scale: 0.96 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <div className="app__notif-top">
               <span className="app__notif-icon">
@@ -163,7 +166,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
             initial={{ y: -140, opacity: 0, scale: 0.96 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: -40, opacity: 0, scale: 0.96 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <div className="app__notif-top">
               <span className="app__notif-icon">
@@ -189,7 +192,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <span className="app__toast-check">
               <IconCheck />
@@ -207,7 +210,7 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
             initial={{ y: 40, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 20, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 380, damping: 30 }}
+            transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <span className="app__toast-check">
               <IconCheck />

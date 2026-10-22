@@ -23,15 +23,15 @@ import { useScrollToHashOnLoad } from './hooks/useScrollToHashOnLoad'
 import { EstimateProvider } from './lib/estimate'
 import { href, useDocumentMeta, useView } from './lib/router'
 
-const HOME_TITLE = 'Frescy — Fini les produits périmés en rayon | Appli anti-gaspi pour commerces'
+const HOME_TITLE = 'Avec Frescy, rien ne se perd. | Appli anti-gaspi pour commerces alimentaires'
 const HOME_DESCRIPTION =
-  'Frescy surveille les dates limites de vos produits, vous alerte avant péremption et vous dit quoi mettre en promo. Pour épiceries, boulangeries, boucheries et supérettes. 1 mois offert, installation sur place.'
+  'Avec Frescy, rien ne se perd : l’appli surveille les dates limites de vos produits, vous alerte avant péremption et vous dit quoi mettre en promo ou en avant. Pour épiceries, boulangeries, boucheries et supérettes. 1 mois offert, installation sur place.'
 
 function Home({ reducedMotion }: { reducedMotion: boolean }) {
   useDocumentMeta(import.meta.env.MODE === 'demo' ? 'Frescy' : HOME_TITLE, HOME_DESCRIPTION)
   return (
     <>
-      <Hero reducedMotion={reducedMotion} />
+      <Hero />
       <Ticker />
       <WasteCounter reducedMotion={reducedMotion} />
       <Problem />

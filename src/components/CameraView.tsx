@@ -35,18 +35,32 @@ function Product() {
           <stop offset="0.35" stopColor="#fbfaf7" />
           <stop offset="1" stopColor="#d9d5cc" />
         </linearGradient>
-        <filter id="cam-blur" x="-50%" y="-50%" width="200%" height="200%">
-          <feGaussianBlur stdDeviation="14" />
-        </filter>
+        {/* Taches floues du rayon en arrière-plan : dégradés radiaux (pas de filtre de flou, coûteux sur mobile) */}
+        {[
+          ['cam-r', '#c8432f'],
+          ['cam-y', '#e0a932'],
+          ['cam-b', '#3f7fd8'],
+          ['cam-g', '#5aa36a'],
+        ].map(([id, c]) => (
+          <radialGradient key={id} id={id}>
+            <stop offset="0.35" stopColor={c} />
+            <stop offset="1" stopColor={c} stopOpacity="0" />
+          </radialGradient>
+        ))}
+        <linearGradient id="cam-shelf" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#9aa6bb" stopOpacity="0" />
+          <stop offset="0.5" stopColor="#9aa6bb" />
+          <stop offset="1" stopColor="#9aa6bb" stopOpacity="0" />
+        </linearGradient>
       </defs>
       {/* rayon flou en arrière-plan */}
       <rect width="340" height="470" fill="url(#cam-bg)" />
-      <g filter="url(#cam-blur)" opacity="0.75">
-        <rect x="-20" y="392" width="380" height="26" fill="#9aa6bb" />
-        <circle cx="30" cy="250" r="46" fill="#c8432f" />
-        <circle cx="320" cy="210" r="52" fill="#e0a932" />
-        <circle cx="300" cy="380" r="40" fill="#3f7fd8" />
-        <circle cx="40" cy="390" r="36" fill="#5aa36a" />
+      <g opacity="0.75">
+        <rect x="-20" y="380" width="380" height="50" fill="url(#cam-shelf)" />
+        <circle cx="30" cy="250" r="74" fill="url(#cam-r)" />
+        <circle cx="320" cy="210" r="80" fill="url(#cam-y)" />
+        <circle cx="300" cy="380" r="66" fill="url(#cam-b)" />
+        <circle cx="40" cy="390" r="62" fill="url(#cam-g)" />
       </g>
       {/* pot de yaourt */}
       <ellipse cx="170" cy="404" rx="96" ry="10" fill="#000" opacity="0.35" />
@@ -101,7 +115,6 @@ export function CameraView() {
   }, [reduced])
 
   const locked = phase >= 1
-  const frame = locked ? FRAME_LOCK : FRAME_SEARCH
 
   return (
     <div className="cam">
@@ -143,14 +156,38 @@ export function CameraView() {
           <Product />
         </motion.div>
 
-        <motion.div className={`cam__frame ${locked ? 'is-locked' : ''}`} initial={false} animate={frame} transition={spring}>
+        {/* Deux cadres fixes qui se relaient (opacité + échelle) : rien n'anime top/left/width/height. */}
+        <motion.div
+          className="cam__frame"
+          style={FRAME_SEARCH}
+          initial={false}
+          animate={locked ? { opacity: 0, scale: 0.92 } : { opacity: 1, scale: 1 }}
+          transition={{ duration: 0.25 }}
+        >
           <i />
           <i />
           <i />
           <i />
           {phase === 0 && !reduced && (
-            <motion.span className="cam__scan" initial={{ top: '8%' }} animate={{ top: ['8%', '92%', '8%'] }} transition={{ duration: 1.4, ease: 'easeInOut' }} />
+            <motion.span
+              className="cam__scan"
+              initial={{ y: 0 }}
+              animate={{ y: [0, FRAME_SEARCH.height * 0.84, 0] }}
+              transition={{ duration: 1.4, ease: 'easeInOut' }}
+            />
           )}
+        </motion.div>
+        <motion.div
+          className="cam__frame is-locked"
+          style={FRAME_LOCK}
+          initial={false}
+          animate={locked ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.6 }}
+          transition={locked ? spring : { duration: 0.2 }}
+        >
+          <i />
+          <i />
+          <i />
+          <i />
         </motion.div>
 
         <div className="cam__chip-wrap">

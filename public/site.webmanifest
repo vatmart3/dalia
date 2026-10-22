@@ -1,0 +1,15 @@
+{
+  "name": "Frescy",
+  "short_name": "Frescy",
+  "description": "Avec Frescy, rien ne se perd. L’appli anti-gaspi des commerces de proximité.",
+  "lang": "fr",
+  "start_url": "/",
+  "display": "minimal-ui",
+  "background_color": "#FBFAF7",
+  "theme_color": "#FBFAF7",
+  "icons": [
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

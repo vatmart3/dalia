@@ -1,4 +1,4 @@
-import { AnimatePresence, motion } from 'framer-motion'
+import { motion } from 'framer-motion'
 import { useId, useState } from 'react'
 import { CtaRow } from './CtaRow'
 import { IconPhone } from './Icons'
@@ -53,22 +53,20 @@ function Item({ q, a, open, onToggle }: { q: string; a: string; open: boolean; o
           <span className="faq__icon" aria-hidden="true" />
         </button>
       </h3>
-      <AnimatePresence initial={false}>
-        {open && (
-          <motion.div
-            id={`${id}-a`}
-            role="region"
-            aria-labelledby={`${id}-q`}
-            className="faq__a"
-            initial={{ height: 0, opacity: 0 }}
-            animate={{ height: 'auto', opacity: 1 }}
-            exit={{ height: 0, opacity: 0 }}
-            transition={{ type: 'spring', stiffness: 260, damping: 32 }}
-          >
-            <p>{a}</p>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Ouverture en fondu (opacité + léger glissement) : pas d'animation de hauteur, coûteuse sur mobile. */}
+      {open && (
+        <motion.div
+          id={`${id}-a`}
+          role="region"
+          aria-labelledby={`${id}-q`}
+          className="faq__a"
+          initial={{ opacity: 0, y: -6 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.22, ease: 'easeOut' }}
+        >
+          <p>{a}</p>
+        </motion.div>
+      )}
     </div>
   )
 }

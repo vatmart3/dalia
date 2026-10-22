@@ -12,8 +12,9 @@ gsap.registerPlugin(ScrollTrigger)
 type Stage = 0 | 1 | 2
 const STEPS = ['Photo', 'Alerte', 'Promo']
 const stageOf = (p: number): Stage => (p < 0.3 ? 0 : p < 0.68 ? 1 : 2)
-// Lecture automatique (mobile, tactile) : durée de chaque étape.
+// Lecture automatique (mobile, tactile) : durée de chaque étape, et pause après un toucher sur un onglet.
 const AUTO_MS = 3000
+const RESUME_AFTER_TAP_MS = 6000
 // Taille réelle de la maquette (écran 340 × 736 + verre + cadre), avant mise à l'échelle.
 const PHONE_W = 364
 const PHONE_H = 760
@@ -28,16 +29,17 @@ const fadeUp = (delay: number) => ({
   transition: { type: 'spring' as const, stiffness: 120, damping: 20, delay },
 })
 
-export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
+export function Hero() {
   const sectionRef = useRef<HTMLElement>(null)
   const stageRef = useRef<HTMLDivElement>(null)
   const phoneRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<ScrollTrigger | null>(null)
-  const [stage, setStage] = useState<Stage>(reducedMotion ? 2 : 0)
-  const [introDone, setIntroDone] = useState(reducedMotion)
-  const [mode, setMode] = useState<Mode>(reducedMotion ? 'static' : 'auto')
+  const [stage, setStage] = useState<Stage>(0)
+  const [introDone, setIntroDone] = useState(false)
+  const [mode, setMode] = useState<Mode>('auto')
   const [inView, setInView] = useState(false)
-  // Change à chaque appui sur un onglet : relance le compte à rebours de la boucle.
+  // Après un toucher sur un onglet, la boucle attend 6 s avant de reprendre.
+  const [holdMs, setHoldMs] = useState(0)
   const [loopKey, setLoopKey] = useState(0)
 
   // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
@@ -47,12 +49,14 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
     const mm = gsap.matchMedia()
     mm.add({ desktop: SCROLL_INTRO_QUERY, reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
       const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean }
-      if (reduce) {
+      // Bureau + mouvement réduit : pas d'épinglage, écran final, onglets cliquables.
+      if (desktop && reduce) {
         setMode('static')
         setStage(2)
         setIntroDone(true)
         return
       }
+      // Mobile / tactile : boucle automatique, même en mouvement réduit (les étapes changent alors sans transition).
       if (!desktop) {
         setMode('auto')
         setStage(0)
@@ -85,7 +89,10 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   useEffect(() => {
     const el = stageRef.current
     if (!el) return
-    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), { threshold: 0.25 })
+    // Démarre quand la maquette est visible à 30 %, pause dès qu'elle sort de l'écran.
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting && entry.intersectionRatio >= 0.3), {
+      threshold: [0, 0.3],
+    })
     io.observe(el)
     return () => io.disconnect()
   }, [])
@@ -93,9 +100,12 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
   // Lecture automatique : Photo → Alerte → Promo, 3 s par étape, en boucle.
   useEffect(() => {
     if (mode !== 'auto' || !inView) return
-    const timer = window.setTimeout(() => setStage((s) => ((s + 1) % 3) as Stage), AUTO_MS)
+    const timer = window.setTimeout(() => {
+      setHoldMs(0)
+      setStage((s) => ((s + 1) % 3) as Stage)
+    }, holdMs || AUTO_MS)
     return () => window.clearTimeout(timer)
-  }, [mode, stage, inView, loopKey])
+  }, [mode, stage, inView, loopKey, holdMs])
 
   // Mobile : la maquette tient dans 75 % de la largeur et 70 % de la hauteur de l'écran.
   // (Ignoré sur grand écran : les règles CSS du bureau fixent la taille.)
@@ -126,6 +136,7 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
       return
     }
     setStage(i)
+    setHoldMs(RESUME_AFTER_TAP_MS)
     setLoopKey((k) => k + 1)
   }
 
@@ -150,7 +161,9 @@ export function Hero({ reducedMotion }: { reducedMotion: boolean }) {
             {PILOT_SEATS} places pilotes à {PILOT_AREA}
           </motion.p>
           <motion.h1 id="hero-title" className="h1" {...fadeUp(0.08)}>
-            Frescy veille, et votre <em>marge</em> ne part pas.
+            Avec Frescy, <span className="nowrap">
+              <em>rien ne se perd</em>.
+            </span>
           </motion.h1>
           <motion.p className="lead hero__sub" {...fadeUp(0.16)}>
             L’appli qui surveille vos dates limites et transforme vos invendus en ventes.
