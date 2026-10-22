@@ -1288,9 +1288,34 @@ input {
   border-color: var(--blue);
   color: #fff;
 }
+.ticker.is-paused .ticker__track {
+  animation-play-state: paused;
+}
 @keyframes ticker {
   to {
     transform: translateX(-50%);
+  }
+}
+
+/* ==========================================================================
+   Apparition au scroll (composant Reveal)
+   ========================================================================== */
+/* Seule l'opacité et le transform bougent ; sans keyframe « to », l'élément revient à ses propres styles. */
+.reveal:not(.is-revealed) {
+  opacity: 0;
+}
+.reveal.is-revealed {
+  animation: reveal-in 0.8s var(--ease) var(--reveal-delay, 0s) backwards;
+}
+@keyframes reveal-in {
+  from {
+    opacity: 0;
+    transform: translate3d(0, var(--reveal-y, 28px), 0);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reveal.is-revealed {
+    animation: none;
   }
 }
 
@@ -3211,5 +3236,17 @@ input {
   }
   .hero__phone::before {
     display: none;
+  }
+  /* Téléphones à plat sur mobile : pas de 3D ni de rotation animée (Safari redessinait toute la maquette). */
+  .phone-css {
+    perspective: none;
+  }
+  .phone-css__body,
+  .hero__phone--s1 .phone-css__body,
+  .hero__phone--s2 .phone-css__body {
+    --phone-ry: 0deg;
+    --phone-rx: 0deg;
+    transform: translate(-50%, -50%) scale(var(--phone-scale, 0.46));
+    transition: none;
   }
 }

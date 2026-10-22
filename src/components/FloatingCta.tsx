@@ -45,9 +45,9 @@ export function FloatingCta() {
       {show && (
         <motion.div
           className="float-cta"
-          initial={{ y: 100, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          exit={{ y: 100, opacity: 0 }}
+          initial={{ opacity: 0, transform: 'translateY(100px)' }}
+          animate={{ opacity: 1, transform: 'translateY(0px)' }}
+          exit={{ opacity: 0, transform: 'translateY(100px)' }}
           transition={{ type: 'spring', stiffness: 300, damping: 28 }}
         >
           <ButtonLink href={CTA_TARGET} block>

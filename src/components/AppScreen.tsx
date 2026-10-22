@@ -127,9 +127,9 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="camera"
             className="app__camera"
-            initial={reduced ? false : { opacity: 0, scale: 1.04 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 1.04 }}
+            initial={reduced ? false : { opacity: 0, transform: 'scale(1.04)' }}
+            animate={{ opacity: 1, transform: 'scale(1)' }}
+            exit={{ opacity: 0, transform: 'scale(1.04)' }}
             transition={tr({ duration: 0.35, ease: [0.22, 1, 0.36, 1] })}
           >
             <CameraView />
@@ -139,9 +139,9 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="notif-rotation"
             className="app__notif"
-            initial={{ y: -140, opacity: 0, scale: 0.96 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: -40, opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, transform: 'translateY(-140px) scale(0.96)' }}
+            animate={{ opacity: 1, transform: 'translateY(0px) scale(1)' }}
+            exit={{ opacity: 0, transform: 'translateY(-40px) scale(0.96)' }}
             transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <div className="app__notif-top">
@@ -163,9 +163,9 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="notif"
             className="app__notif"
-            initial={{ y: -140, opacity: 0, scale: 0.96 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: -40, opacity: 0, scale: 0.96 }}
+            initial={{ opacity: 0, transform: 'translateY(-140px) scale(0.96)' }}
+            animate={{ opacity: 1, transform: 'translateY(0px) scale(1)' }}
+            exit={{ opacity: 0, transform: 'translateY(-40px) scale(0.96)' }}
             transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <div className="app__notif-top">
@@ -189,9 +189,9 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="toast-rotation"
             className="app__toast"
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
+            initial={{ opacity: 0, transform: 'translateY(40px)' }}
+            animate={{ opacity: 1, transform: 'translateY(0px)' }}
+            exit={{ opacity: 0, transform: 'translateY(20px)' }}
             transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <span className="app__toast-check">
@@ -207,9 +207,9 @@ export function AppScreen({ stage = 2, mode = 'promo' }: { stage?: 0 | 1 | 2; mo
           <motion.div
             key="toast"
             className="app__toast"
-            initial={{ y: 40, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 20, opacity: 0 }}
+            initial={{ opacity: 0, transform: 'translateY(40px)' }}
+            animate={{ opacity: 1, transform: 'translateY(0px)' }}
+            exit={{ opacity: 0, transform: 'translateY(20px)' }}
             transition={tr({ type: 'spring', stiffness: 380, damping: 30 })}
           >
             <span className="app__toast-check">

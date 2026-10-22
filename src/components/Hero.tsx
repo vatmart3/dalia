@@ -1,13 +1,11 @@
 import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { gsap } from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
+import type { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ButtonLink } from './Button'
 import { CssPhone } from './AppScreen'
 import { IconCheck, IconSkip } from './Icons'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
-
-gsap.registerPlugin(ScrollTrigger)
+import { loadScrollTrigger, SCROLL_INTRO_QUERY } from '../lib/scrollIntro'
 
 type Stage = 0 | 1 | 2
 const STEPS = ['Photo', 'Alerte', 'Promo']
@@ -18,14 +16,12 @@ const RESUME_AFTER_TAP_MS = 6000
 // Taille réelle de la maquette (écran 340 × 736 + verre + cadre), avant mise à l'échelle.
 const PHONE_W = 364
 const PHONE_H = 760
-// Intro au scroll réservée aux écrans larges avec souris ; ailleurs elle joue toute seule.
-const SCROLL_INTRO_QUERY = '(min-width: 900px) and (hover: hover) and (pointer: fine)'
 
 type Mode = 'scroll' | 'auto' | 'static'
 
 const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 24 },
-  animate: { opacity: 1, y: 0 },
+  initial: { opacity: 0, transform: 'translateY(24px)' },
+  animate: { opacity: 1, transform: 'translateY(0px)' },
   transition: { type: 'spring' as const, stiffness: 120, damping: 20, delay },
 })
 
@@ -45,44 +41,61 @@ export function Hero() {
   // Ordinateur : la section est épinglée pendant le scroll, le temps que le téléphone se redresse et montre l'alerte.
   // Mobile / tactile : pas d'épinglage (saccadé avec la barre d'adresse), l'intro joue toute seule.
   useLayoutEffect(() => {
-    if (!sectionRef.current) return
-    const mm = gsap.matchMedia()
-    mm.add({ desktop: SCROLL_INTRO_QUERY, reduce: '(prefers-reduced-motion: reduce)' }, (ctx) => {
-      const { desktop, reduce } = ctx.conditions as { desktop: boolean; reduce: boolean }
+    const section = sectionRef.current
+    if (!section) return
+    const desktopMq = window.matchMedia(SCROLL_INTRO_QUERY)
+    const reduceMq = window.matchMedia('(prefers-reduced-motion: reduce)')
+    let run = 0
+    let teardown: (() => void) | undefined
+    const apply = () => {
+      const current = ++run
+      teardown?.()
+      teardown = undefined
       // Bureau + mouvement réduit : pas d'épinglage, écran final, onglets cliquables.
-      if (desktop && reduce) {
+      if (desktopMq.matches && reduceMq.matches) {
         setMode('static')
         setStage(2)
         setIntroDone(true)
         return
       }
       // Mobile / tactile : boucle automatique, même en mouvement réduit (les étapes changent alors sans transition).
-      if (!desktop) {
+      if (!desktopMq.matches) {
         setMode('auto')
         setStage(0)
         setIntroDone(false)
         return
       }
       setMode('scroll')
-      const st = ScrollTrigger.create({
-        trigger: sectionRef.current,
-        start: 'top top',
-        end: '+=120%',
-        pin: true,
-        scrub: 0.5,
-        anticipatePin: 1,
-        onUpdate: (self) => {
-          setStage(stageOf(self.progress))
-          setIntroDone(self.progress > 0.97)
-        },
+      loadScrollTrigger().then((ScrollTrigger) => {
+        if (current !== run) return
+        const st = ScrollTrigger.create({
+          trigger: section,
+          start: 'top top',
+          end: '+=120%',
+          pin: true,
+          scrub: 0.5,
+          anticipatePin: 1,
+          onUpdate: (self) => {
+            setStage(stageOf(self.progress))
+            setIntroDone(self.progress > 0.97)
+          },
+        })
+        triggerRef.current = st
+        teardown = () => {
+          triggerRef.current = null
+          st.kill(true)
+        }
       })
-      triggerRef.current = st
-      return () => {
-        triggerRef.current = null
-        st.kill()
-      }
-    })
-    return () => mm.revert()
+    }
+    apply()
+    desktopMq.addEventListener('change', apply)
+    reduceMq.addEventListener('change', apply)
+    return () => {
+      run++
+      teardown?.()
+      desktopMq.removeEventListener('change', apply)
+      reduceMq.removeEventListener('change', apply)
+    }
   }, [])
 
   // La boucle ne tourne que quand la maquette est à l'écran (pause hors écran).
@@ -182,8 +195,8 @@ export function Hero() {
         <motion.div
           ref={stageRef}
           className="hero__stage"
-          initial={{ opacity: 0, y: 40 }}
-          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, transform: 'translateY(40px)' }}
+          animate={{ opacity: 1, transform: 'translateY(0px)' }}
           transition={{ type: 'spring', stiffness: 80, damping: 20, delay: 0.2 }}
         >
           {/* De face pour la photo, puis légèrement de biais pour l'alerte et la promo. */}

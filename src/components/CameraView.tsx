@@ -22,6 +22,11 @@ const FRAME_LOCK = { left: 96, top: 288, width: 148, height: 76 }
 
 const spring = { type: 'spring' as const, stiffness: 260, damping: 26 }
 
+// Les animations passent par « transform » (et l'opacité) : le navigateur les joue sur le GPU,
+// sans calcul JavaScript à chaque image (fluide même quand iOS bride le JS à 30 images/s).
+const STILL = 'translate(0px, 0px) rotate(0deg)'
+const JITTER = [STILL, 'translate(3px, -2px) rotate(0.6deg)', 'translate(-2px, 3px) rotate(-0.4deg)', 'translate(2px, -1px) rotate(0.3deg)', STILL]
+
 function Product() {
   return (
     <svg className="cam__feed" viewBox="0 0 340 470" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
@@ -150,7 +155,7 @@ export function CameraView() {
       <div className="cam__viewfinder">
         <motion.div
           className="cam__feed-wrap"
-          animate={phase === 0 && !reduced ? { x: [0, 3, -2, 2, 0], y: [0, -2, 3, -1, 0], rotate: [0, 0.6, -0.4, 0.3, 0] } : { x: 0, y: 0, rotate: 0 }}
+          animate={{ transform: phase === 0 && !reduced ? JITTER : STILL }}
           transition={phase === 0 ? { duration: 1.4, ease: 'easeInOut' } : { duration: 0.3 }}
         >
           <Product />
@@ -161,7 +166,7 @@ export function CameraView() {
           className="cam__frame"
           style={FRAME_SEARCH}
           initial={false}
-          animate={locked ? { opacity: 0, scale: 0.92 } : { opacity: 1, scale: 1 }}
+          animate={locked ? { opacity: 0, transform: 'scale(0.92)' } : { opacity: 1, transform: 'scale(1)' }}
           transition={{ duration: 0.25 }}
         >
           <i />
@@ -171,8 +176,8 @@ export function CameraView() {
           {phase === 0 && !reduced && (
             <motion.span
               className="cam__scan"
-              initial={{ y: 0 }}
-              animate={{ y: [0, FRAME_SEARCH.height * 0.84, 0] }}
+              initial={{ transform: 'translateY(0px)' }}
+              animate={{ transform: ['translateY(0px)', `translateY(${FRAME_SEARCH.height * 0.84}px)`, 'translateY(0px)'] }}
               transition={{ duration: 1.4, ease: 'easeInOut' }}
             />
           )}
@@ -181,7 +186,7 @@ export function CameraView() {
           className="cam__frame is-locked"
           style={FRAME_LOCK}
           initial={false}
-          animate={locked ? { opacity: 1, scale: 1 } : { opacity: 0, scale: 1.6 }}
+          animate={locked ? { opacity: 1, transform: 'scale(1)' } : { opacity: 0, transform: 'scale(1.6)' }}
           transition={locked ? spring : { duration: 0.2 }}
         >
           <i />
@@ -195,9 +200,9 @@ export function CameraView() {
             <motion.span
               key={locked ? 'ok' : 'search'}
               className={`cam__chip ${locked ? 'is-ok' : ''}`}
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 6 }}
+              initial={{ opacity: 0, transform: 'translateY(-6px)' }}
+              animate={{ opacity: 1, transform: 'translateY(0px)' }}
+              exit={{ opacity: 0, transform: 'translateY(6px)' }}
               transition={{ duration: 0.18 }}
             >
               {locked ? (
@@ -222,13 +227,13 @@ export function CameraView() {
           <span className="cam__thumb">
             <AnimatePresence>
               {shots > 0 && (
-                <motion.span key={shots} initial={{ scale: 0.3, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={spring}>
+                <motion.span key={shots} initial={{ opacity: 0, transform: 'scale(0.3)' }} animate={{ opacity: 1, transform: 'scale(1)' }} transition={spring}>
                   <ProductThumb kind="yaourt" />
                 </motion.span>
               )}
             </AnimatePresence>
           </span>
-          <motion.span className="cam__shutter" animate={{ scale: phase === 2 ? 0.86 : 1 }} transition={{ type: 'spring', stiffness: 600, damping: 18 }}>
+          <motion.span className="cam__shutter" animate={{ transform: phase === 2 ? 'scale(0.86)' : 'scale(1)' }} transition={{ type: 'spring', stiffness: 600, damping: 18 }}>
             <i />
           </motion.span>
           <span className="cam__qty">× 12</span>
@@ -253,9 +258,9 @@ export function CameraView() {
           <motion.div
             key="sheet"
             className="cam__sheet"
-            initial={{ y: '105%' }}
-            animate={{ y: 0 }}
-            exit={{ y: '105%' }}
+            initial={{ transform: 'translateY(105%)' }}
+            animate={{ transform: 'translateY(0%)' }}
+            exit={{ transform: 'translateY(105%)' }}
             transition={{ type: 'spring', stiffness: 300, damping: 30 }}
           >
             <span className="cam__handle" />

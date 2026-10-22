@@ -1,3 +1,5 @@
+import { useEffect, useRef } from 'react'
+
 /** Bandeau d'étiquettes produits qui défile (décoratif, figé si le mouvement est réduit). */
 const ITEMS: { label: string; tag: string; kind?: 'promo' | 'sold' }[] = [
   { label: 'Yaourts nature × 12', tag: 'J-2' },
@@ -15,8 +17,17 @@ const ITEMS: { label: string; tag: string; kind?: 'promo' | 'sold' }[] = [
 export function Ticker() {
   // La liste est doublée pour boucler sans à-coup (translateX de −50 %).
   const items = [...ITEMS, ...ITEMS]
+  const ref = useRef<HTMLDivElement>(null)
+  // Le défilement s'arrête quand le bandeau est hors écran (rien à animer pour rien).
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(([entry]) => el.classList.toggle('is-paused', !entry.isIntersecting))
+    io.observe(el)
+    return () => io.disconnect()
+  }, [])
   return (
-    <div className="ticker" aria-hidden="true">
+    <div ref={ref} className="ticker is-paused" aria-hidden="true">
       <ul className="ticker__track">
         {items.map((it, i) => (
           <li key={i} className="ticker__item">

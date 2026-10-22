@@ -10,8 +10,8 @@ export function FinalCta({ reducedMotion, source }: { reducedMotion: boolean; so
     <section className="final" aria-labelledby="final-title">
       <div className="wrap final__grid">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, transform: 'translateY(30px)' }}
+          whileInView={{ opacity: 1, transform: 'translateY(0px)' }}
           viewport={{ once: true, amount: 0.3 }}
           transition={{ type: 'spring', stiffness: 110, damping: 20 }}
         >
