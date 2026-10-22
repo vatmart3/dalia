@@ -118,7 +118,7 @@ async function forwardToWebhook(entry) {
 
 // Lien prérempli Google Forms (même lien pour tout le monde : il n'a rien de secret).
 // Peut aussi être défini dans la variable d'environnement GOOGLE_FORM_URL.
-const DEFAULT_GOOGLE_FORM_URL = ''
+const DEFAULT_GOOGLE_FORM_URL = 'https://docs.google.com/forms/d/e/1FAIpQLSeJE5Fs8WEc6OjoIj6m9SxKx6Vmtwdv2iJewPW6E1mlYqH1RA/viewform'
 
 const plain = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().toLowerCase()
 
@@ -126,15 +126,47 @@ const plain = (s) => s.normalize('NFD').replace(/[\u0300-\u036f]/g, '').trim().t
 const spacedPhone = (p) => (p ? p.replace(/(\d{2})(?=\d)/g, '$1 ') : '')
 
 /**
- * Envoie la demande à un Google Forms. Dans le lien prérempli, chaque question contient le mot
- * du champ à y mettre : nom, commerce, ville, telephone (et, si vous les avez ajoutées : pertes, source).
+ * Retrouve les questions du formulaire (Nom, Commerce, Ville, Téléphone…) dans sa page publique :
+ * Google y décrit chaque question et son identifiant « entry.… ». Résultat gardé en mémoire.
+ */
+const formFieldsCache = new Map()
+const FIELD_ORDER = ['telephone', 'commerce', 'ville', 'pertes', 'source', 'nom']
+
+function fieldForTitle(title) {
+  const t = plain(String(title || ''))
+  if (/telephone|\btel\b|portable|numero/.test(t)) return 'telephone'
+  return FIELD_ORDER.find((f) => t.includes(f)) || null
+}
+
+async function readFormFields(viewUrl) {
+  if (formFieldsCache.has(viewUrl)) return formFieldsCache.get(viewUrl)
+  const r = await fetch(viewUrl, { redirect: 'follow', signal: AbortSignal.timeout(15000) })
+  const html = await r.text()
+  const m = html.match(/FB_PUBLIC_LOAD_DATA_\s*=\s*(\[[\s\S]*?\])\s*;\s*<\/script>/)
+  if (!m) throw new Error(`page du formulaire illisible (HTTP ${r.status}) : le formulaire est-il publié ?`)
+  const items = JSON.parse(m[1])?.[1]?.[1] || []
+  const fields = {}
+  for (const item of items) {
+    const field = fieldForTitle(item?.[1])
+    const entryId = item?.[4]?.[0]?.[0]
+    if (field && entryId && !fields[field]) fields[field] = `entry.${entryId}`
+  }
+  formFieldsCache.set(viewUrl, fields)
+  return fields
+}
+
+/**
+ * Envoie la demande à un Google Forms. Deux façons de donner le formulaire :
+ * - son lien public (…/viewform) : les questions sont reconnues par leur titre (Nom, Commerce, Ville, Téléphone) ;
+ * - un lien prérempli où chaque question contient le mot du champ : nom, commerce, ville, telephone (pertes, source).
  */
 async function forwardToGoogleForm(entry) {
   const raw = process.env.GOOGLE_FORM_URL || DEFAULT_GOOGLE_FORM_URL
   if (!raw) return false
   try {
     const link = new URL(raw)
-    const action = `${link.origin}${link.pathname.replace(/\/(viewform|formResponse)\/?$/, '')}/formResponse`
+    const base = `${link.origin}${link.pathname.replace(/\/(viewform|formResponse)\/?$/, '')}`
+    const action = `${base}/formResponse`
     const values = {
       nom: entry.nom,
       commerce: entry.commerce,
@@ -144,14 +176,21 @@ async function forwardToGoogleForm(entry) {
       source: entry.source,
     }
     const body = new URLSearchParams()
-    for (const [key, value] of link.searchParams) {
-      if (!key.startsWith('entry.')) continue
-      const field = plain(value)
-      if (field in values) body.append(key, String(values[field]))
-      else console.warn(`[leads] Google Forms : question préremplie avec « ${value} » non reconnue (attendu : nom, commerce, ville, telephone, pertes, source)`)
+    const prefilled = [...link.searchParams].filter(([key]) => key.startsWith('entry.'))
+    if (prefilled.length) {
+      for (const [key, value] of prefilled) {
+        const field = plain(value)
+        if (field in values) body.append(key, String(values[field]))
+        else console.warn(`[leads] Google Forms : question préremplie avec « ${value} » non reconnue (attendu : nom, commerce, ville, telephone, pertes, source)`)
+      }
+    } else {
+      const fields = await readFormFields(`${base}/viewform`)
+      for (const [field, key] of Object.entries(fields)) body.append(key, String(values[field]))
+      const missing = ['nom', 'commerce', 'ville', 'telephone'].filter((f) => !fields[f])
+      if (missing.length) console.warn(`[leads] Google Forms : question(s) introuvable(s) dans le formulaire : ${missing.join(', ')}`)
     }
     if (![...body.keys()].length) {
-      console.error('[leads] Google Forms : aucun champ reconnu dans GOOGLE_FORM_URL (préremplissez nom, commerce, ville, telephone).')
+      console.error('[leads] Google Forms : aucune question reconnue (titres attendus : Nom, Commerce, Ville, Téléphone).')
       return true
     }
     const r = await fetch(action, {

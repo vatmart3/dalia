@@ -42,7 +42,7 @@ Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) :
 
 1. Sur vercel.com : **Add New… → Project**, importez le dépôt GitHub `dalia` (Vercel détecte Vite tout seul).
 2. Branchez les demandes d'essai, sinon elles ne sont pas conservées (le disque de Vercel est effacé régulièrement) :
-   - **Google Forms (le plus simple)** : créez un formulaire avec 4 questions « Réponse courte » (Nom, Commerce, Ville, Téléphone), reliez-le à une feuille (onglet Réponses → Associer à Sheets), activez « Recevoir des notifications par e-mail ». Puis ⋮ → **Obtenir le lien prérempli** en tapant `nom`, `commerce`, `ville`, `telephone` dans les questions : collez ce lien dans `GOOGLE_FORM_URL` (variable Vercel) ou dans `DEFAULT_GOOGLE_FORM_URL` (`server/leads.mjs`) ;
+   - **Google Forms (le plus simple)** : créez un formulaire avec 4 questions « Réponse courte » (Nom, Commerce, Ville, Téléphone), reliez-le à une feuille (onglet Réponses → Associer à Sheets), activez « Recevoir des notifications par e-mail ». Collez le lien public du formulaire (…/viewform : les questions sont reconnues par leur titre) ou un lien prérempli (`nom`, `commerce`, `ville`, `telephone`) dans `GOOGLE_FORM_URL` (variable Vercel) ou dans `DEFAULT_GOOGLE_FORM_URL` (`server/leads.mjs`) ;
    - ou `LEADS_WEBHOOK_URL` : un webhook JSON (script Apps Script de `docs/`, Zapier, Make…).
 3. Les pages métier (`/boulangerie`, etc.) et les pages légales fonctionnent grâce à la réécriture vers `index.html`.
 
