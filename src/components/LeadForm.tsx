@@ -2,18 +2,26 @@ import { AnimatePresence, motion } from 'framer-motion'
 import { useRef, useState, type FormEvent } from 'react'
 import { Button } from './Button'
 import { useEstimate } from '../lib/estimate'
-import { FRESCY_SAVINGS_RATE, eur } from '../lib/config'
+import { CTA_LABEL, FOUNDER, FRESCY_SAVINGS_RATE, eur } from '../lib/config'
 import { href } from '../lib/router'
 import { track } from '../lib/analytics'
 
-type Fields = 'nom' | 'commerce' | 'ville' | 'telephone'
+type Fields = 'commerce' | 'prenom' | 'telephone' | 'type'
 type Errors = Partial<Record<Fields, string>>
 
+/** Types de commerce proposés (la valeur envoyée au serveur, puis le libellé affiché). */
+export const SHOP_TYPES = [
+  ['boulangerie', 'Boulangerie'],
+  ['boucherie', 'Boucherie'],
+  ['epicerie', 'Épicerie'],
+  ['autre', 'Autre'],
+] as const
+
 const FIELDS: { name: Fields; label: string; type: string; autoComplete: string; placeholder: string; inputMode?: 'tel' }[] = [
-  { name: 'nom', label: 'Votre nom', type: 'text', autoComplete: 'name', placeholder: 'Prénom Nom' },
-  { name: 'commerce', label: 'Votre commerce', type: 'text', autoComplete: 'organization', placeholder: 'Épicerie du port' },
-  { name: 'ville', label: 'Ville', type: 'text', autoComplete: 'address-level2', placeholder: 'Sète' },
+  { name: 'commerce', label: 'Nom du commerce', type: 'text', autoComplete: 'organization', placeholder: 'Épicerie du Port' },
+  { name: 'prenom', label: 'Prénom', type: 'text', autoComplete: 'given-name', placeholder: 'Marie' },
   { name: 'telephone', label: 'Téléphone', type: 'tel', autoComplete: 'tel', placeholder: '06 12 34 56 78', inputMode: 'tel' },
+  { name: 'type', label: 'Type de commerce', type: 'select', autoComplete: 'off', placeholder: 'Choisissez…' },
 ]
 
 // Build « démo » (aperçu en ligne sans serveur) : l'envoi est simulé, rien n'est transmis.
@@ -23,14 +31,14 @@ const PHONE_RE = /^(?:\+33|0033|0)[1-9]\d{8}$/
 
 function validate(data: Record<Fields, string>): Errors {
   const e: Errors = {}
-  if (data.nom.trim().length < 2) e.nom = 'Indiquez votre nom.'
-  if (data.commerce.trim().length < 2) e.commerce = 'Indiquez le nom ou le type de votre commerce.'
-  if (data.ville.trim().length < 2) e.ville = 'Indiquez votre ville.'
+  if (data.commerce.trim().length < 2) e.commerce = 'Indiquez le nom de votre commerce.'
+  if (data.prenom.trim().length < 2) e.prenom = 'Indiquez votre prénom.'
   if (!PHONE_RE.test(data.telephone.replace(/[\s.\-()]/g, ''))) e.telephone = 'Un numéro français, par exemple 06 12 34 56 78.'
+  if (!SHOP_TYPES.some(([value]) => value === data.type)) e.type = 'Choisissez le type de votre commerce.'
   return e
 }
 
-function Success({ name }: { name: string }) {
+function Success() {
   return (
     <motion.div
       className="success"
@@ -73,11 +81,11 @@ function Success({ name }: { name: string }) {
           transition={{ duration: 0.4, delay: 0.45, ease: 'easeOut' }}
         />
       </svg>
-      <h3>Merci{name ? ` ${name}` : ''}, c’est noté.</h3>
-      <p>Votre demande d’essai est bien enregistrée.</p>
+      <h3>Merci !</h3>
+      <p>{FOUNDER.firstName} vous rappelle sous 24 h.</p>
       <ol className="success__steps">
         <li>
-          <b>1</b>On vous appelle sous 48 h
+          <b>1</b>Un appel pour faire connaissance
         </li>
         <li>
           <b>2</b>On fixe ensemble le jour de l’installation
@@ -95,7 +103,6 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
   const [errors, setErrors] = useState<Errors>({})
   const [status, setStatus] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [serverError, setServerError] = useState('')
-  const [firstName, setFirstName] = useState('')
   const formRef = useRef<HTMLFormElement>(null)
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
@@ -106,14 +113,13 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
     setErrors(errs)
     const firstInvalid = FIELDS.find((f) => errs[f.name])
     if (firstInvalid) {
-      formRef.current?.querySelector<HTMLInputElement>(`[name="${firstInvalid.name}"]`)?.focus()
+      formRef.current?.querySelector<HTMLElement>(`[name="${firstInvalid.name}"]`)?.focus()
       return
     }
     setStatus('sending')
     setServerError('')
     if (DEMO) {
       await new Promise((r) => setTimeout(r, 600))
-      setFirstName(data.nom.trim().split(/\s+/)[0])
       setStatus('done')
       return
     }
@@ -129,7 +135,6 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
         if (body.fields) setErrors(body.fields)
         throw new Error(body.error || 'Envoi impossible')
       }
-      setFirstName(data.nom.trim().split(/\s+/)[0])
       setStatus('done')
       track('Demande d’essai envoyée', { source })
     } catch (err) {
@@ -146,7 +151,7 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
     <div className="form-card" id="essai">
       <AnimatePresence mode="wait" initial={false}>
         {status === 'done' ? (
-          <Success key="ok" name={firstName} />
+          <Success key="ok" />
         ) : (
           <motion.form
             key="form"
@@ -156,32 +161,55 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
             exit={{ opacity: 0, y: -10, transition: { duration: 0.2 } }}
             aria-labelledby="form-title"
           >
-            <h3 id="form-title">Demander mon essai gratuit</h3>
+            <h3 id="form-title">{CTA_LABEL}</h3>
             {estimate.touched ? (
               <p className="form-card__intro">
                 Vous estimez perdre <strong>{eur(estimate.weekly * 52)} par an</strong>. On regarde ensemble comment en récupérer environ{' '}
                 {eur(Math.round(estimate.weekly * 52 * FRESCY_SAVINGS_RATE))}.
               </p>
             ) : (
-              <p className="form-card__intro">4 champs, 20 secondes. On vous rappelle pour fixer l’installation.</p>
+              <p className="form-card__intro">4 champs, 20 secondes. {FOUNDER.firstName} vous rappelle sous 24 h.</p>
             )}
             {FIELDS.map((f) => (
               <div className="field" key={f.name}>
                 <label htmlFor={`f-${f.name}`}>{f.label}</label>
-                <motion.input
-                  id={`f-${f.name}`}
-                  name={f.name}
-                  type={f.type}
-                  inputMode={f.inputMode}
-                  autoComplete={f.autoComplete}
-                  placeholder={f.placeholder}
-                  required
-                  aria-invalid={errors[f.name] ? true : undefined}
-                  aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
-                  animate={errors[f.name] && !reducedMotion ? { x: [0, -6, 6, -3, 3, 0] } : { x: 0 }}
-                  transition={{ duration: 0.4 }}
-                  onChange={() => errors[f.name] && setErrors((prev) => ({ ...prev, [f.name]: undefined }))}
-                />
+                {f.type === 'select' ? (
+                  <motion.select
+                    id={`f-${f.name}`}
+                    name={f.name}
+                    required
+                    aria-invalid={errors[f.name] ? true : undefined}
+                    aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
+                    animate={errors[f.name] && !reducedMotion ? { x: [0, -6, 6, -3, 3, 0] } : { x: 0 }}
+                    transition={{ duration: 0.4 }}
+                    onChange={() => errors[f.name] && setErrors((prev) => ({ ...prev, [f.name]: undefined }))}
+                    defaultValue=""
+                  >
+                    <option value="" disabled>
+                      {f.placeholder}
+                    </option>
+                    {SHOP_TYPES.map(([value, label]) => (
+                      <option key={value} value={value}>
+                        {label}
+                      </option>
+                    ))}
+                  </motion.select>
+                ) : (
+                  <motion.input
+                    id={`f-${f.name}`}
+                    name={f.name}
+                    required
+                    aria-invalid={errors[f.name] ? true : undefined}
+                    aria-describedby={errors[f.name] ? `e-${f.name}` : undefined}
+                    animate={errors[f.name] && !reducedMotion ? { x: [0, -6, 6, -3, 3, 0] } : { x: 0 }}
+                    transition={{ duration: 0.4 }}
+                    onChange={() => errors[f.name] && setErrors((prev) => ({ ...prev, [f.name]: undefined }))}
+                    type={f.type}
+                    inputMode={f.inputMode}
+                    autoComplete={f.autoComplete}
+                    placeholder={f.placeholder}
+                  />
+                )}
                 {errors[f.name] && (
                   <span className="field__error" id={`e-${f.name}`}>
                     {errors[f.name]}
@@ -194,7 +222,7 @@ export function LeadForm({ reducedMotion, source = 'accueil' }: { reducedMotion:
               <input id="f-site" name="site" type="text" tabIndex={-1} autoComplete="off" />
             </div>
             <Button type="submit" block disabled={status === 'sending'} aria-busy={status === 'sending'}>
-              {status === 'sending' ? 'Envoi…' : 'Je veux tester Frescy'}
+              {status === 'sending' ? 'Envoi…' : CTA_LABEL}
             </Button>
             {status === 'error' && (
               <p className="form-card__error" role="alert">

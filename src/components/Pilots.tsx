@@ -1,5 +1,6 @@
 import { Reveal } from './Reveal'
 import { CtaRow } from './CtaRow'
+import { SeatsCounter } from './SeatsCounter'
 import { PILOT_AREA, PILOT_SEATS } from '../lib/config'
 
 const ADVANTAGES = [
@@ -20,7 +21,10 @@ export function Pilots() {
               Devenez l’un des {PILOT_SEATS} commerces pilotes du <em>bassin de Thau</em>.
             </h2>
           </div>
-          <p className="lead">Pas de faux avis ici : Frescy démarre avec des commerces du coin, qui l’essaient et la façonnent avec nous.</p>
+          <div>
+            <p className="lead">Pas de faux avis ici : Frescy démarre avec des commerces du coin, qui l’essaient et la façonnent avec nous.</p>
+            <SeatsCounter className="pilots__seats" />
+          </div>
         </div>
         <ol className="pilots__list">
           {ADVANTAGES.map(({ title, text }, i) => (
@@ -33,7 +37,7 @@ export function Pilots() {
             </Reveal>
           ))}
         </ol>
-        <CtaRow label="Je réserve ma place pilote" />
+        <CtaRow />
       </div>
     </section>
   )

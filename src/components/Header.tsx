@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react'
 import { Logo } from './Logo'
 import { ButtonLink } from './Button'
-import { CTA_TARGET } from '../lib/config'
+import { APP_URL, CTA_LABEL, CTA_TARGET } from '../lib/config'
 import { href } from '../lib/router'
 
 /**
  * En-tête fixe. Sur l'accueil : navigation par ancres.
- * Sur les autres pages : logo vers l'accueil, et bouton d'essai vers `ctaHref`.
+ * Sur les autres pages : logo vers l'accueil, et bouton principal vers `ctaHref`.
+ * À droite : « Connexion » (discret, vers l'appli) puis le bouton principal.
  */
 export function Header({ home = true, ctaHref = CTA_TARGET }: { home?: boolean; ctaHref?: string }) {
   const [scrolled, setScrolled] = useState(false)
@@ -40,9 +41,18 @@ export function Header({ home = true, ctaHref = CTA_TARGET }: { home?: boolean; 
             <a href="#faq">FAQ</a>
           </nav>
         )}
-        <ButtonLink href={ctaHref} size="sm" arrow={false}>
-          Essai gratuit
-        </ButtonLink>
+        <div className="site-header__actions">
+          <a className="header-login" href={APP_URL} aria-label="Connexion à l’appli Frescy">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" aria-hidden="true">
+              <circle cx="12" cy="8.5" r="3.5" />
+              <path d="M5 19.5c1.2-3.3 3.8-5 7-5s5.8 1.7 7 5" />
+            </svg>
+            <span>Connexion</span>
+          </a>
+          <ButtonLink href={ctaHref} size="sm" arrow={false} className="header-cta">
+            {CTA_LABEL}
+          </ButtonLink>
+        </div>
       </div>
     </header>
   )

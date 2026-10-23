@@ -10,6 +10,7 @@ import { Modes } from './components/Modes'
 import { Metiers } from './components/Metiers'
 import { Features } from './components/Features'
 import { Pilots } from './components/Pilots'
+import { Temoignages } from './components/Temoignages'
 import { Founder } from './components/Founder'
 import { Offer } from './components/Offer'
 import { Faq } from './components/Faq'
@@ -41,6 +42,7 @@ function Home({ reducedMotion }: { reducedMotion: boolean }) {
       <Metiers />
       <Features />
       <Pilots />
+      <Temoignages />
       <Founder />
       <Offer />
       <Faq />
@@ -62,7 +64,7 @@ export default function App() {
       <MotionConfig reducedMotion="user">
         {hasForm && (
           <a className="skip-link" href="#essai">
-            Aller au formulaire d’essai
+            Aller au formulaire « Devenir commerce pilote »
           </a>
         )}
         <Header home={view.kind === 'home'} ctaHref={ctaHref} />

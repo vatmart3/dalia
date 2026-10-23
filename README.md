@@ -23,29 +23,51 @@ npm run build      # typecheck + build dans dist/
 npm start          # sert dist/ + l'API sur http://localhost:3000 (PORT configurable)
 ```
 
-## Leads
+## Réglages rapides (`src/lib/config.ts`)
 
-Le formulaire final envoie `POST /api/leads` (nom, commerce, ville, téléphone).
+- **Places pilotes restantes** : `PILOT_SEATS_LEFT = 7` → tous les compteurs « 7 places restantes sur 10 » suivent.
+- **Bouton principal** : `CTA_LABEL` (« Devenir commerce pilote »), il mène au formulaire `#essai`.
+- **Connexion** : `APP_URL` (https://app.frescy.fr).
+- **Témoignages** : `showTemoignages = false` → passez à `true` et remplissez `TEMOIGNAGES` après les premiers pilotes.
+- **Photos** : déposez `portrait.webp`, `commerce-1.webp` … `commerce-4.webp`, `temoignage-1.webp` dans `src/assets/photos/`
+  (voir `LISEZMOI.txt`). Tant qu'une photo manque, un visuel aux couleurs de Frescy s'affiche.
+
+## Formulaire « Devenir commerce pilote »
+
+Le formulaire envoie `POST /api/leads` (nom du commerce, prénom, téléphone, type de commerce).
 Validation côté client **et** serveur (numéro français), champ pot de miel anti-spam et limite de 5 envois / 10 min par IP.
 
-| Variable            | Rôle                                                                      |
-| ------------------- | ------------------------------------------------------------------------- |
-| `LEADS_DIR`         | Dossier de stockage (par défaut `data/`, fichier `leads.jsonl`)           |
-| `LEADS_WEBHOOK_URL` | Transfère aussi chaque lead en JSON (Zapier, Make, Google Sheets, Slack…) |
-| `ADMIN_TOKEN`       | Active l'export CSV : `GET /api/leads.csv?token=…`                        |
+Chaque demande est transmise :
+1. **par e-mail à contact@frescy.fr, via [Resend](https://resend.com)** (gratuit jusqu'à 3 000 e-mails/mois) ;
+2. en copie dans le **Google Forms** déjà relié à votre feuille (`DEFAULT_GOOGLE_FORM_URL`, `server/leads.mjs`).
 
-Sur un hébergement sans disque persistant (Vercel, Netlify…), utilisez `LEADS_WEBHOOK_URL`.
+Si aucune transmission n'aboutit, le visiteur voit une erreur avec le numéro de Jérémy (pas de faux « Merci »),
+et la demande complète reste lisible dans les logs Vercel.
+
+**Activer l'e-mail (5 minutes) :**
+1. Créez un compte sur resend.com **avec l'adresse contact@frescy.fr** (l'expéditeur de test de Resend n'écrit qu'à l'adresse du compte).
+2. Resend → **API Keys → Create API Key** (permission « Sending access »), copiez la clé (`re_…`).
+3. Vercel → projet → **Settings → Environment Variables** : ajoutez `RESEND_API_KEY` = la clé, pour Production.
+4. Vercel → **Deployments** → ⋯ sur le dernier déploiement → **Redeploy**.
+5. Envoyez une demande test depuis le site : l'e-mail « Nouveau commerce pilote : … » arrive sur contact@frescy.fr.
+
+Optionnel, pour un expéditeur à votre nom : Resend → **Domains** → ajoutez frescy.fr, copiez les enregistrements DNS
+chez votre registrar, puis ajoutez la variable `LEADS_EMAIL_FROM` = `Frescy <site@frescy.fr>`.
+
+| Variable            | Rôle                                                                           |
+| ------------------- | ------------------------------------------------------------------------------ |
+| `RESEND_API_KEY`    | Active l'envoi des e-mails                                                     |
+| `LEADS_EMAIL_TO`    | Destinataire (par défaut `contact@frescy.fr`)                                  |
+| `LEADS_EMAIL_FROM`  | Expéditeur (par défaut `Frescy <onboarding@resend.dev>`)                       |
+| `GOOGLE_FORM_URL`   | Autre Google Forms (vide = désactivé)                                          |
+| `LEADS_WEBHOOK_URL` | Transfère aussi chaque demande en JSON (Zapier, Make, Slack…)                  |
+| `LEADS_DIR`         | Dossier de stockage local (par défaut `data/`, fichier `leads.jsonl`)          |
+| `ADMIN_TOKEN`       | Active l'export CSV : `GET /api/leads.csv?token=…` (serveur Node uniquement)   |
 
 ## Mise en ligne sur Vercel
 
-Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) :
-
-1. Sur vercel.com : **Add New… → Project**, importez le dépôt GitHub `frescy` (Vercel détecte Vite tout seul).
-2. Branchez les demandes d'essai, sinon elles ne sont pas conservées (le disque de Vercel est effacé régulièrement) :
-   - **Google Forms (le plus simple)** : créez un formulaire avec 4 questions « Réponse courte » (Nom, Commerce, Ville, Téléphone), reliez-le à une feuille (onglet Réponses → Associer à Sheets), activez « Recevoir des notifications par e-mail ». Collez le lien public du formulaire (…/viewform : les questions sont reconnues par leur titre) ou un lien prérempli (`nom`, `commerce`, `ville`, `telephone`) dans `GOOGLE_FORM_URL` (variable Vercel) ou dans `DEFAULT_GOOGLE_FORM_URL` (`server/leads.mjs`) ;
-   - ou `LEADS_WEBHOOK_URL` : un webhook JSON (script Apps Script de `docs/`, Zapier, Make…).
-3. Les pages métier (`/boulangerie`, etc.) et les pages légales fonctionnent grâce à la réécriture vers `index.html`.
-
+Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) : chaque push sur la branche déployée met le site à jour.
+Les pages métier (`/boulangerie`, etc.) et les pages légales fonctionnent grâce à la réécriture vers `index.html`.
 
 ## Pages
 
@@ -58,13 +80,6 @@ Le dépôt est prêt (`vercel.json` + fonction `api/leads.mjs`) :
 
 Les textes des pages métier sont dans `src/lib/metiers.ts`.
 
-## Être prévenu de chaque demande
-
-`docs/google-sheets-leads.gs` : script Google Apps Script prêt à coller. Chaque demande
-s'ajoute à une feuille Google Sheets et vous recevez un e-mail. Collez l'URL du script
-dans `LEADS_WEBHOOK_URL`. Les demandes incluent l'estimation de pertes du calculateur
-(`pertesSemaine`) quand le visiteur l'a utilisé.
-
 ## Mesure d'audience (sans cookies)
 
 Plausible, désactivé par défaut. Pour l'activer : `VITE_PLAUSIBLE_DOMAIN=votre-domaine.fr npm run build`.
@@ -76,7 +91,7 @@ Plausible, désactivé par défaut. Pour l'activer : `VITE_PLAUSIBLE_DOMAIN=votr
 - Mobile-first, bouton CTA flottant sur mobile, cibles tactiles ≥ 44 px, champs à 16 px (pas de zoom iOS).
 - `prefers-reduced-motion` respecté : pas d'épinglage, démo affichée directement sur l'écran final, animations coupées.
 - Aucune 3D : téléphone en HTML/CSS, démo en pause hors écran.
-- SEO : title, meta description, Open Graph / Twitter (`public/og-image.png`), JSON-LD, robots.txt. Le sitemap et les balises canonical / og:url seront à ajouter quand le nom de domaine existera.
+- SEO : title, meta description, Open Graph / Twitter (`public/og-image.png`), JSON-LD, robots.txt, sitemap.xml, canonical sur https://frescy.fr.
 
 ## À personnaliser avant la mise en ligne
 

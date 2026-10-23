@@ -4,9 +4,9 @@ import { FinalCta } from './FinalCta'
 import { Founder } from './Founder'
 import { Reveal } from './Reveal'
 import { ProductThumb } from './ProductGlyph'
-import { PhotoSlot } from './PhotoSlot'
+import { PhotoSlot, ShopArt } from './PhotoSlot'
 import { IconBell } from './Icons'
-import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS, SHOP_PHOTOS } from '../lib/config'
+import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS, SHOP_PHOTOS, SHOP_PHOTO_SIZE } from '../lib/config'
 import { METIERS, metierBySlug, splitKeyword } from '../lib/metiers'
 import { href, useDocumentMeta, type MetierSlug } from '../lib/router'
 
@@ -72,7 +72,7 @@ export function MetierPage({ slug, reducedMotion }: { slug: MetierSlug; reducedM
               Ce que Frescy change dans votre <em>{m.name.toLowerCase()}</em>.
             </h2>
           </div>
-          <PhotoSlot className="cases__photo" src={SHOP_PHOTOS[slug]} alt={`${m.name} équipée de Frescy`} what={m.photoHint} />
+          <PhotoSlot className="cases__photo" src={SHOP_PHOTOS[slug]} {...SHOP_PHOTO_SIZE} alt={`${m.name} équipée de Frescy`} fallback={<ShopArt kind={slug} />} />
           <ul className="cases">
             {m.cases.map((c, i) => (
               <Reveal as="li" key={c.title} delay={i * 0.06} className="card case">

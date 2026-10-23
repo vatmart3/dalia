@@ -1,8 +1,8 @@
 import type { ReactNode } from 'react'
-import { CTA_TARGET } from '../lib/config'
+import { CTA_LABEL, CTA_TARGET } from '../lib/config'
 
 /** Rappel d'appel à l'action en fin de section : un lien sobre, pas un gros bouton. */
-export function CtaRow({ note, label = 'Essayer Frescy gratuitement', center }: { note?: ReactNode; label?: string; center?: boolean }) {
+export function CtaRow({ note, label = CTA_LABEL, center }: { note?: ReactNode; label?: string; center?: boolean }) {
   return (
     <div className={`cta-link-row ${center ? 'cta-link-row--center' : ''}`}>
       <a className="text-link" href={CTA_TARGET}>

@@ -101,7 +101,7 @@ export function Calculator({ reducedMotion }: { reducedMotion: boolean }) {
           </div>
         </div>
 
-        <CtaRow label="Mesurer mon vrai chiffre avec 1 mois gratuit" />
+        <CtaRow />
       </div>
     </section>
   )

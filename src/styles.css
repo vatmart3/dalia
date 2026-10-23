@@ -353,6 +353,45 @@ input {
   font-weight: 600;
 }
 
+/* Compteur de places pilotes : une barre de 10 cases, les places prises en gris */
+.seats {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem 0.8rem;
+  margin: 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.seats strong {
+  color: var(--ink);
+  font-weight: 650;
+}
+.seats__bar {
+  display: inline-flex;
+  gap: 3px;
+}
+.seats__bar i {
+  width: 9px;
+  height: 14px;
+  border-radius: 3px;
+  background: var(--blue);
+}
+.seats__bar i.is-taken {
+  background: #cdd2de;
+}
+.hero__seats {
+  margin-top: 1.1rem;
+}
+.pilots__seats {
+  margin-top: 0.9rem;
+}
+@media (min-width: 900px) {
+  .pilots__seats {
+    margin: 0 0 0.6rem;
+  }
+}
+
 .badge {
   display: inline-flex;
   align-items: center;
@@ -392,15 +431,13 @@ input {
   color: var(--blue);
 }
 
-/* Emplacement photo (à remplacer par une vraie photo, pas d'image générée) */
+/* Emplacement photo : la vraie photo, ou un visuel aux couleurs de Frescy en attendant */
 .photo-slot {
   margin: 0;
   position: relative;
   overflow: hidden;
   border-radius: var(--r);
-  background: #f1eee6;
-  border: 1px dashed #c9c3b4;
-  color: #6b6455;
+  background: var(--blue-50);
 }
 .photo-slot img {
   position: absolute;
@@ -409,35 +446,52 @@ input {
   height: 100%;
   object-fit: cover;
 }
-.photo-slot--filled {
-  border: 0;
-}
-.photo-slot__ph {
+.photo-art {
   position: absolute;
   inset: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-end;
-  gap: 0.3rem;
-  padding: 1rem 1.1rem;
-  background-image: repeating-linear-gradient(135deg, transparent 0 14px, rgba(107, 100, 85, 0.07) 14px 15px);
+  display: grid;
+  place-items: center;
 }
-.photo-slot__ph svg {
-  width: 22px;
-  height: 22px;
-  margin-bottom: auto;
+.photo-art--shop {
+  background:
+    var(--grain-img),
+    radial-gradient(circle at 50% 50%, #fff 0 18%, transparent 18.2%),
+    repeating-radial-gradient(circle at 50% 50%, transparent 0 28px, rgba(29, 63, 191, 0.07) 28px 29px),
+    var(--blue-50);
 }
-.photo-slot__tag {
-  font-size: 0.72rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
+.photo-art__disc {
+  display: grid;
+  place-items: center;
+  width: clamp(64px, 22%, 96px);
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #fff;
+  border: 1px solid var(--blue-100);
+  color: var(--blue);
 }
-.photo-slot__what {
-  font-size: 0.88rem;
-  line-height: 1.35;
-  max-width: 28ch;
+.photo-art__disc svg {
+  width: 48%;
+  height: 48%;
+}
+.photo-art--person {
+  background: var(--grain-img), var(--blue);
+  color: #fff;
+}
+.photo-art__initial {
+  font-family: var(--font-display);
+  font-size: clamp(6rem, 22vw, 9rem);
+  line-height: 1;
+}
+.photo-art__note {
+  position: absolute;
+  left: 50%;
+  bottom: 9%;
+  transform: translateX(-50%) rotate(-4deg);
+  font-family: var(--font-hand);
+  font-size: 1.7rem;
+  font-weight: 600;
+  white-space: nowrap;
+  color: var(--apricot);
 }
 
 /* Lien d'appel à l'action en fin de section */
@@ -514,6 +568,36 @@ input {
   height: 30px;
   width: auto;
 }
+.site-header__actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: none;
+}
+/* Bouton secondaire discret : texte gris, contour léger */
+.header-login {
+  display: inline-flex;
+  align-items: center;
+  min-height: 40px;
+  padding: 0 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: var(--r-pill);
+  font-size: 0.88rem;
+  font-weight: 500;
+  color: var(--muted);
+  text-decoration: none;
+  white-space: nowrap;
+  transition: color 0.2s, border-color 0.2s;
+}
+.header-login svg {
+  display: none;
+  width: 18px;
+  height: 18px;
+}
+.header-login:hover {
+  color: var(--ink);
+  border-color: var(--blue-200);
+}
 .nav {
   display: none;
   gap: 2rem;
@@ -528,9 +612,64 @@ input {
 .nav a:hover {
   color: var(--ink);
 }
-@media (min-width: 900px) {
+@media (min-width: 1180px) {
   .nav {
     display: flex;
+  }
+}
+@media (min-width: 1180px) and (max-width: 1299px) {
+  .nav {
+    gap: 1.4rem;
+  }
+}
+/* Téléphone : le bouton principal garde son texte complet, sur deux lignes, pour tenir à côté du logo */
+@media (max-width: 599px) {
+  .site-header .wrap {
+    gap: 0.75rem;
+  }
+  .site-header__actions {
+    gap: 0.4rem;
+  }
+  .logo {
+    gap: 7px;
+  }
+  .logo > img {
+    width: 30px;
+    height: 30px;
+  }
+  .logo > svg {
+    height: 26px;
+  }
+  .header-login {
+    min-height: 38px;
+    padding: 0 0.6rem;
+    font-size: 0.78rem;
+  }
+  .header-cta.btn--sm {
+    min-height: 40px;
+    max-width: 7.7rem;
+    padding: 0.3em 0.8em;
+    font-size: 0.78rem;
+    line-height: 1.15;
+    white-space: normal;
+    text-align: center;
+  }
+}
+@media (max-width: 359px) {
+  .header-login {
+    width: 38px;
+    padding: 0;
+    justify-content: center;
+  }
+  .header-login svg {
+    display: block;
+  }
+  .header-login span {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
   }
 }
 
@@ -2342,7 +2481,8 @@ input {
   font-size: 0.9rem;
   color: var(--ink);
 }
-.field input {
+.field input,
+.field select {
   width: 100%;
   min-height: 52px;
   border: 1px solid #cfd6e1;
@@ -2355,17 +2495,32 @@ input {
 .field input::placeholder {
   color: #9aa3b2;
 }
-.field input:hover {
+.field input:hover,
+.field select:hover {
   border-color: #aeb8c7;
 }
-.field input:focus {
+.field input:focus,
+.field select:focus {
   outline: none;
   border-color: var(--blue);
   box-shadow: 0 0 0 4px rgba(11, 99, 206, 0.15);
 }
-.field input[aria-invalid='true'] {
+.field input[aria-invalid='true'],
+.field select[aria-invalid='true'] {
   border-color: var(--red);
   box-shadow: 0 0 0 4px rgba(200, 50, 31, 0.1);
+}
+.field select {
+  appearance: none;
+  padding-right: 2.6rem;
+  color: var(--ink);
+  background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%235d6478' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E") no-repeat right 0.9rem center / 18px;
+}
+.field select:invalid {
+  color: #9aa3b2;
+}
+.field select option {
+  color: var(--ink);
 }
 .field__error {
   color: var(--red);
@@ -2837,6 +2992,62 @@ input {
 }
 
 /* ==========================================================================
+   Témoignages (section masquée tant que showTemoignages = false)
+   ========================================================================== */
+.temoignages {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 1.25rem;
+}
+@media (min-width: 800px) {
+  .temoignages {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  }
+}
+.temoignage {
+  display: grid;
+  grid-template-columns: 64px minmax(0, 1fr);
+  align-content: start;
+  gap: 0.4rem 1rem;
+  padding: 1.5rem;
+}
+.temoignage__photo {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+}
+.temoignage__photo .photo-art__initial {
+  font-size: 2rem;
+}
+.temoignage__amount {
+  align-self: center;
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.9rem, 6vw, 2.5rem);
+  line-height: 1.05;
+  color: var(--blue);
+}
+.temoignage__quote {
+  grid-column: 1 / -1;
+  margin: 0.8rem 0 0;
+  font-size: 1.08rem;
+  line-height: 1.5;
+  color: var(--ink);
+}
+.temoignage__shop {
+  grid-column: 1 / -1;
+  margin: 0.2rem 0 0;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+.temoignage__shop strong {
+  color: var(--ink);
+  font-weight: 600;
+}
+
+/* ==========================================================================
    Qui est derrière Frescy
    ========================================================================== */
 
@@ -2881,9 +3092,10 @@ input {
   font-weight: 600;
 }
 .founder__photo {
-  aspect-ratio: 4 / 5;
+  aspect-ratio: 1;
   width: 100%;
-  max-width: 320px;
+  max-width: 260px;
+  border-radius: var(--r-lg);
 }
 .founder__body {
   min-width: 0;
@@ -3172,6 +3384,17 @@ input {
   display: grid;
   gap: 0.5rem;
   align-content: start;
+  min-width: 0;
+  overflow-wrap: anywhere;
+}
+/* Mobile : métiers / contact / informations sur deux colonnes sous le logo */
+@media (max-width: 899px) {
+  .footer__grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .footer__brand {
+    grid-column: 1 / -1;
+  }
 }
 .footer__title {
   font-weight: 600;
@@ -3192,7 +3415,7 @@ input {
 }
 @media (min-width: 900px) {
   .footer__grid {
-    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-columns: 1.6fr 1fr 1.2fr 1fr;
   }
 }
 .form-card__legal a {

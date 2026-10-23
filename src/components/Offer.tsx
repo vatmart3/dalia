@@ -1,7 +1,7 @@
 import { Reveal } from './Reveal'
 import { ButtonLink } from './Button'
 import { IconCheck } from './Icons'
-import { CTA_TARGET, PILOT_AREA, PILOT_SEATS, PRICE } from '../lib/config'
+import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS, PILOT_SEATS_LEFT, PRICE } from '../lib/config'
 import { useEstimate } from '../lib/estimate'
 
 const POINTS = ['Installation sur place, faite par nous', '1 mois complet gratuit', 'Sans engagement, sans carte bancaire', 'Accompagnement par téléphone inclus']
@@ -41,11 +41,11 @@ export function Offer() {
               ))}
             </ul>
             <ButtonLink href={CTA_TARGET} variant="white" block>
-              Je réserve ma place pilote
+              {CTA_LABEL}
             </ButtonLink>
             <p className="offer__seats">
               <span className="badge__dot" aria-hidden="true" />
-              {PILOT_SEATS} places pilotes à {PILOT_AREA}
+              {PILOT_SEATS_LEFT} places restantes sur {PILOT_SEATS}, à {PILOT_AREA}
             </p>
           </div>
         </Reveal>

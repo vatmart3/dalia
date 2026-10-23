@@ -1,0 +1,11 @@
+Déposez ici les photos au format WebP, avec ces noms exacts :
+
+- portrait.webp       → section « Qui est derrière Frescy » (carré, 800 × 800)
+- commerce-1.webp     → boulangerie (1200 × 750)
+- commerce-2.webp     → boucherie (1200 × 750)
+- commerce-3.webp     → épicerie (1200 × 750)
+- commerce-4.webp     → supérette (1200 × 750)
+- temoignage-1.webp   → section « Ils ont déjà économisé » (carré, 400 × 400)
+
+Elles s'affichent automatiquement (voir src/lib/config.ts).
+Tant qu'un fichier manque, un visuel aux couleurs de Frescy le remplace.

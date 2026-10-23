@@ -58,5 +58,11 @@ export function useDocumentMeta(title: string, description: string) {
   useEffect(() => {
     document.title = title
     document.querySelector('meta[name="description"]')?.setAttribute('content', description)
+    // Adresse canonique de la page (frescy.fr/boulangerie, frescy.fr/mentions-legales…)
+    if (!DEMO) {
+      const url = `https://frescy.fr${location.pathname.replace(/\/$/, '') || '/'}`
+      document.querySelector('link[rel="canonical"]')?.setAttribute('href', url)
+      document.querySelector('meta[property="og:url"]')?.setAttribute('content', url)
+    }
   }, [title, description])
 }

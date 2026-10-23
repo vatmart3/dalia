@@ -2,6 +2,7 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
 import type { ScrollTrigger } from 'gsap/ScrollTrigger'
 import { ButtonLink } from './Button'
+import { SeatsCounter } from './SeatsCounter'
 import { CssPhone } from './AppScreen'
 import { IconCheck, IconSkip } from './Icons'
 import { CTA_LABEL, CTA_TARGET, PILOT_AREA, PILOT_SEATS } from '../lib/config'
@@ -187,7 +188,10 @@ export function Hero() {
               Calculer mes pertes
             </ButtonLink>
           </motion.div>
-          <motion.p className="cta-note" style={{ marginTop: '1rem' }} {...fadeUp(0.3)}>
+          <motion.div {...fadeUp(0.28)}>
+            <SeatsCounter className="hero__seats" />
+          </motion.div>
+          <motion.p className="cta-note" style={{ marginTop: '0.6rem' }} {...fadeUp(0.3)}>
             <strong>1 mois offert</strong>, installation faite par nous. Sans engagement.
           </motion.p>
         </div>

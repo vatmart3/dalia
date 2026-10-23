@@ -1,7 +1,7 @@
 import { Reveal } from './Reveal'
-import { PhotoSlot } from './PhotoSlot'
+import { PhotoSlot, ShopArt } from './PhotoSlot'
 import { METIERS } from '../lib/metiers'
-import { SHOP_PHOTOS } from '../lib/config'
+import { SHOP_PHOTOS, SHOP_PHOTO_SIZE } from '../lib/config'
 import { href } from '../lib/router'
 
 /** Accueil : « Pour votre métier », avec un lien vers chaque page dédiée. */
@@ -20,7 +20,15 @@ export function Metiers() {
           {METIERS.map((m, i) => (
             <Reveal as="li" key={m.slug} delay={i * 0.06} className={`metiers__item metiers__item--${i}`}>
               <a className="card metier-card" href={href(m.slug)}>
-                {i < 2 && <PhotoSlot className="metier-card__photo" src={SHOP_PHOTOS[m.slug]} alt={`${m.name} pilote`} what={m.photoHint} />}
+                {i < 2 && (
+                  <PhotoSlot
+                    className="metier-card__photo"
+                    src={SHOP_PHOTOS[m.slug]}
+                    {...SHOP_PHOTO_SIZE}
+                    alt={`${m.name} équipée de Frescy`}
+                    fallback={<ShopArt kind={m.slug} />}
+                  />
+                )}
                 <span className="metier-card__name">{m.name}</span>
                 <span className="metier-card__title">{m.title}</span>
                 <span className="metier-card__more" aria-hidden="true">

@@ -1,7 +1,7 @@
 import { Reveal } from './Reveal'
-import { PhotoSlot } from './PhotoSlot'
+import { PersonArt, PhotoSlot } from './PhotoSlot'
 import { IconPhone } from './Icons'
-import { FOUNDER } from '../lib/config'
+import { FOUNDER, PORTRAIT } from '../lib/config'
 
 /** « Qui est derrière Frescy » : une vraie personne, sa raison d'être, un numéro direct. */
 export function Founder() {
@@ -25,7 +25,14 @@ export function Founder() {
             </figcaption>
           </figure>
 
-          <PhotoSlot className="founder__photo" width={800} height={1000} src={FOUNDER.photo} alt={`Portrait de ${FOUNDER.name}`} what={`Portrait de ${FOUNDER.firstName}, idéalement dans un commerce de Sète`} />
+          <PhotoSlot
+            className="founder__photo"
+            src={PORTRAIT.src}
+            width={PORTRAIT.width}
+            height={PORTRAIT.height}
+            alt={`Portrait de ${FOUNDER.name}, fondateur de Frescy`}
+            fallback={<PersonArt name={FOUNDER.firstName} note={`${FOUNDER.firstName}, à Sète`} />}
+          />
 
           <div className="founder__body">
             <span className="eyebrow">Qui est derrière Frescy</span>

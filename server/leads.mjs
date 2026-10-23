@@ -4,11 +4,11 @@
 // POST /api/leads            → enregistre une demande d'essai (JSON)
 // GET  /api/leads.csv?token= → export CSV (nécessite ADMIN_TOKEN)
 //
-// Les leads sont ajoutés ligne par ligne dans data/leads.jsonl.
-// Transmission (au moins l'une des deux, sinon les demandes ne sont pas conservées sur Vercel) :
-// - GOOGLE_FORM_URL : lien prérempli d'un Google Forms relié à une feuille Google Sheets
-//   (Google ajoute la ligne et envoie lui-même l'e-mail de notification) ;
-// - LEADS_WEBHOOK_URL : n'importe quel webhook JSON (Zapier, Make, Google Apps Script, Slack…).
+// Les leads sont ajoutés ligne par ligne dans data/leads.jsonl, puis transmis :
+// - par e-mail via Resend (RESEND_API_KEY) à LEADS_EMAIL_TO (contact@frescy.fr par défaut) ;
+// - en copie dans le Google Forms (GOOGLE_FORM_URL ou DEFAULT_GOOGLE_FORM_URL), relié à une feuille Google Sheets ;
+// - optionnellement à LEADS_WEBHOOK_URL (n'importe quel webhook JSON : Zapier, Make, Slack…).
+// Si aucune transmission n'aboutit, le visiteur voit une erreur (et le numéro de Jérémy) au lieu d'un faux « Merci ».
 
 import { appendFile, mkdir, readFile } from 'node:fs/promises'
 import { randomUUID } from 'node:crypto'
@@ -72,24 +72,74 @@ export function normalizePhone(raw) {
   return m ? `0${m[1]}` : null
 }
 
+export const SHOP_TYPES = { boulangerie: 'Boulangerie', boucherie: 'Boucherie', epicerie: 'Épicerie', autre: 'Autre' }
+
 export function validateLead(input) {
+  const type = clean(input?.type, 20)
   const lead = {
-    nom: clean(input?.nom),
     commerce: clean(input?.commerce),
-    ville: clean(input?.ville, 80),
+    prenom: clean(input?.prenom, 60),
     telephone: normalizePhone(input?.telephone),
+    type: Object.hasOwn(SHOP_TYPES, type) ? type : '',
   }
   const errors = {}
-  if (lead.nom.length < 2) errors.nom = 'Indiquez votre nom.'
-  if (lead.commerce.length < 2) errors.commerce = 'Indiquez le nom ou le type de votre commerce.'
-  if (lead.ville.length < 2) errors.ville = 'Indiquez votre ville.'
+  if (lead.commerce.length < 2) errors.commerce = 'Indiquez le nom de votre commerce.'
+  if (lead.prenom.length < 2) errors.prenom = 'Indiquez votre prénom.'
   if (!lead.telephone) errors.telephone = 'Numéro de téléphone français invalide.'
+  if (!lead.type) errors.type = 'Choisissez le type de votre commerce.'
   return { lead, errors }
+}
+
+/**
+ * E-mail de notification via Resend (gratuit jusqu'à 3 000 e-mails par mois).
+ * - RESEND_API_KEY : clé API Resend (obligatoire pour envoyer) ;
+ * - LEADS_EMAIL_TO : destinataire, contact@frescy.fr par défaut ;
+ * - LEADS_EMAIL_FROM : expéditeur. Par défaut l'adresse de test de Resend, qui n'envoie qu'à l'adresse du compte Resend :
+ *   créez donc le compte avec contact@frescy.fr, ou vérifiez le domaine frescy.fr dans Resend et mettez par ex. « Frescy <site@frescy.fr> ».
+ * Renvoie 'ok', 'failed' ou 'off' (non configuré).
+ */
+async function sendEmail(entry) {
+  const key = process.env.RESEND_API_KEY
+  if (!key) return 'off'
+  const to = process.env.LEADS_EMAIL_TO || 'contact@frescy.fr'
+  const from = process.env.LEADS_EMAIL_FROM || 'Frescy <onboarding@resend.dev>'
+  const type = SHOP_TYPES[entry.type] || entry.type
+  const lines = [
+    `Commerce : ${entry.commerce}`,
+    `Prénom : ${entry.prenom}`,
+    `Téléphone : ${spacedPhone(entry.telephone)}`,
+    `Type de commerce : ${type}`,
+    entry.pertesSemaine ? `Pertes estimées (calculateur) : ${entry.pertesSemaine} € par semaine` : null,
+    `Page : ${entry.source}`,
+    `Date : ${new Date(entry.date).toLocaleString('fr-FR', { timeZone: 'Europe/Paris' })}`,
+  ].filter(Boolean)
+  try {
+    const r = await fetch(`${process.env.RESEND_API_URL || 'https://api.resend.com'}/emails`, {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${key}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        from,
+        to: [to],
+        subject: `Nouveau commerce pilote : ${entry.commerce} (${type})`,
+        text: `${lines.join('\n')}\n\nÀ rappeler sous 24 h : tel:${entry.telephone}`,
+      }),
+      signal: AbortSignal.timeout(10000),
+    })
+    if (!r.ok) {
+      console.error(`[leads] e-mail Resend en échec : HTTP ${r.status} — ${(await r.text()).slice(0, 300)}`)
+      return 'failed'
+    }
+    console.log(`[leads] e-mail envoyé à ${to}`)
+    return 'ok'
+  } catch (err) {
+    console.error('[leads] Resend injoignable :', err.message)
+    return 'failed'
+  }
 }
 
 async function forwardToWebhook(entry) {
   const url = process.env.LEADS_WEBHOOK_URL
-  if (!url) return false
+  if (!url) return 'off'
   try {
     // Google Apps Script répond par une redirection ; un démarrage à froid peut prendre plusieurs secondes.
     const r = await fetch(url, {
@@ -103,17 +153,18 @@ async function forwardToWebhook(entry) {
     const host = new URL(r.url).hostname
     if (host === 'accounts.google.com' || /ServiceLogin|signin/i.test(r.url)) {
       console.error('[leads] webhook : Google demande une connexion. Redéployez le script avec « Qui a accès : Tout le monde ».')
-    } else if (!r.ok) {
-      console.error(`[leads] webhook en échec : HTTP ${r.status} — ${text.slice(0, 200)}`)
-    } else if (!text.includes('"ok":true')) {
-      console.error(`[leads] webhook : réponse inattendue du script (erreur dans le script ?) — ${text.replace(/\s+/g, ' ').slice(0, 300)}`)
-    } else {
-      console.log('[leads] webhook OK : demande transmise au script Google')
+      return 'failed'
     }
+    if (!r.ok) {
+      console.error(`[leads] webhook en échec : HTTP ${r.status} — ${text.slice(0, 200)}`)
+      return 'failed'
+    }
+    console.log('[leads] webhook OK')
+    return 'ok'
   } catch (err) {
     console.error('[leads] webhook injoignable :', err.message)
+    return 'failed'
   }
-  return true
 }
 
 // Lien prérempli Google Forms (même lien pour tout le monde : il n'a rien de secret).
@@ -130,7 +181,9 @@ const spacedPhone = (p) => (p ? p.replace(/(\d{2})(?=\d)/g, '$1 ') : '')
  * Google y décrit chaque question et son identifiant « entry.… ». Résultat gardé en mémoire.
  */
 const formFieldsCache = new Map()
-const FIELD_ORDER = ['telephone', 'commerce', 'ville', 'pertes', 'source', 'nom']
+// Titres de questions reconnus. Le formulaire d'origine a les questions Nom, Commerce, Ville, Téléphone :
+// « Nom » reçoit le prénom, « Ville » le type de commerce (renommez la question « Type de commerce » si vous voulez).
+const FIELD_ORDER = ['telephone', 'commerce', 'type', 'ville', 'pertes', 'source', 'prenom', 'nom']
 
 function fieldForTitle(title) {
   const t = plain(String(title || ''))
@@ -161,16 +214,19 @@ async function readFormFields(viewUrl) {
  * - un lien prérempli où chaque question contient le mot du champ : nom, commerce, ville, telephone (pertes, source).
  */
 async function forwardToGoogleForm(entry) {
-  const raw = process.env.GOOGLE_FORM_URL || DEFAULT_GOOGLE_FORM_URL
-  if (!raw) return false
+  const raw = process.env.GOOGLE_FORM_URL ?? DEFAULT_GOOGLE_FORM_URL
+  if (!raw) return 'off'
   try {
     const link = new URL(raw)
     const base = `${link.origin}${link.pathname.replace(/\/(viewform|formResponse)\/?$/, '')}`
     const action = `${base}/formResponse`
+    const type = SHOP_TYPES[entry.type] || entry.type
     const values = {
-      nom: entry.nom,
+      nom: entry.prenom,
+      prenom: entry.prenom,
       commerce: entry.commerce,
-      ville: entry.ville,
+      type,
+      ville: type,
       telephone: spacedPhone(entry.telephone),
       pertes: entry.pertesSemaine ?? '',
       source: entry.source,
@@ -181,17 +237,17 @@ async function forwardToGoogleForm(entry) {
       for (const [key, value] of prefilled) {
         const field = plain(value)
         if (field in values) body.append(key, String(values[field]))
-        else console.warn(`[leads] Google Forms : question préremplie avec « ${value} » non reconnue (attendu : nom, commerce, ville, telephone, pertes, source)`)
+        else console.warn(`[leads] Google Forms : question préremplie avec « ${value} » non reconnue (attendu : prenom, commerce, type, telephone, pertes, source)`)
       }
     } else {
       const fields = await readFormFields(`${base}/viewform`)
       for (const [field, key] of Object.entries(fields)) body.append(key, String(values[field]))
-      const missing = ['nom', 'commerce', 'ville', 'telephone'].filter((f) => !fields[f])
+      const missing = ['commerce', 'telephone'].filter((f) => !fields[f])
       if (missing.length) console.warn(`[leads] Google Forms : question(s) introuvable(s) dans le formulaire : ${missing.join(', ')}`)
     }
     if (![...body.keys()].length) {
-      console.error('[leads] Google Forms : aucune question reconnue (titres attendus : Nom, Commerce, Ville, Téléphone).')
-      return true
+      console.error('[leads] Google Forms : aucune question reconnue (titres attendus : Prénom, Commerce, Type, Téléphone).')
+      return 'failed'
     }
     const r = await fetch(action, {
       method: 'POST',
@@ -202,15 +258,18 @@ async function forwardToGoogleForm(entry) {
     })
     if (/accounts\.google\.com|ServiceLogin/.test(r.url)) {
       console.error('[leads] Google Forms demande une connexion : dans les paramètres du formulaire, désactivez « Limiter à 1 réponse » et la collecte des adresses e-mail.')
-    } else if (!r.ok) {
-      console.error(`[leads] Google Forms en échec : HTTP ${r.status}`)
-    } else {
-      console.log('[leads] Google Forms OK : demande ajoutée à la feuille')
+      return 'failed'
     }
+    if (!r.ok) {
+      console.error(`[leads] Google Forms en échec : HTTP ${r.status}`)
+      return 'failed'
+    }
+    console.log('[leads] Google Forms OK : demande ajoutée à la feuille')
+    return 'ok'
   } catch (err) {
     console.error('[leads] Google Forms injoignable :', err.message)
+    return 'failed'
   }
-  return true
 }
 
 
@@ -226,7 +285,7 @@ async function exportCsv(req, res, url) {
     /* aucun lead pour l'instant */
   }
   const rows = raw.split('\n').filter(Boolean).map((l) => JSON.parse(l))
-  const cols = ['date', 'nom', 'commerce', 'ville', 'telephone', 'pertesSemaine', 'source']
+  const cols = ['date', 'commerce', 'prenom', 'telephone', 'type', 'pertesSemaine', 'source']
   const csv = [cols.join(';'), ...rows.map((r) => cols.map((c) => csvCell(r[c])).join(';'))].join('\n')
   send(res, 200, '﻿' + csv, {
     'Content-Type': 'text/csv; charset=utf-8',
@@ -263,11 +322,16 @@ export async function handleLeadsApi(req, res) {
     const entry = { id: randomUUID(), date: new Date().toISOString(), ...lead, pertesSemaine, source: clean(input?.source, 40) || 'landing' }
     await mkdir(DATA_DIR, { recursive: true })
     await appendFile(LEADS_FILE, JSON.stringify(entry) + '\n', 'utf8')
-    const [sentToForm, sentToWebhook] = await Promise.all([forwardToGoogleForm(entry), forwardToWebhook(entry)])
-    if (!sentToForm && !sentToWebhook) {
-      console.warn('[leads] Ni GOOGLE_FORM_URL ni LEADS_WEBHOOK_URL : la demande n’est transmise nulle part (ni feuille, ni e-mail).')
+    console.log(`[leads] nouveau lead : ${entry.commerce} (${entry.type})`)
+    const [email, form, webhook] = await Promise.all([sendEmail(entry), forwardToGoogleForm(entry), forwardToWebhook(entry)])
+    if (email === 'off') console.warn('[leads] RESEND_API_KEY absente : aucun e-mail envoyé (voir README).')
+    // Sur Vercel, le fichier local est effacé régulièrement : il faut qu'au moins une transmission ait abouti.
+    // En local, le fichier data/leads.jsonl suffit.
+    const delivered = [email, form, webhook].includes('ok') || !process.env.VERCEL
+    if (!delivered) {
+      console.error('[leads] demande NON transmise (ni e-mail, ni Google Forms, ni webhook) :', JSON.stringify(entry))
+      return send(res, 502, { error: 'Envoi impossible pour le moment. Appelez Jérémy au 06 11 71 83 68' })
     }
-    console.log(`[leads] nouveau lead : ${entry.commerce} (${entry.ville})`)
     return send(res, 201, { ok: true, id: entry.id })
   } catch (err) {
     console.error('[leads] erreur :', err)
