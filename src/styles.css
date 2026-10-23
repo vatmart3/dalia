@@ -45,11 +45,11 @@
   --ink: #0e1a3a;
   --text: #283150;
   --muted: #5d6478;
-  --line: #e4e1d8;
+  --line: #e8eaee;
   --line-cool: #e3e6ef;
   --bg: #ffffff;
-  --paper: #fbfaf7;
-  --bg-soft: #fbfaf7;
+  --paper: #f6f7f9;
+  --bg-soft: #f6f7f9;
 
   /* Couleurs d'état réservées aux écrans de l'appli (maquette). */
   --green: #13804c;
@@ -76,9 +76,6 @@
   --shadow: 0 1px 0 rgba(14, 26, 58, 0.04);
   --shadow-lg: 0 30px 60px -24px rgba(14, 26, 58, 0.28), 0 8px 20px -10px rgba(14, 26, 58, 0.12);
   --ease: cubic-bezier(0.22, 1, 0.36, 1);
-
-  /* Grain de papier, image de 128 px répétée */
-  --grain-img: url('./assets/grain.png');
 }
 
 *,
@@ -96,8 +93,7 @@ html {
 
 body {
   margin: 0;
-  /* Grain de papier : petite image PNG répétée (pas de calque fixe, pas de filtre) */
-  background: var(--grain-img) var(--paper);
+  background: #fff;
   color: var(--text);
   font-family: var(--font);
   font-size: 1.0625rem;
@@ -181,10 +177,11 @@ input {
 .section {
   position: relative;
   padding-block: clamp(4.2rem, 8.5vw, 6.8rem);
-  background: var(--grain-img) #fff;
+  background: #fff;
 }
+/* Une section sur deux en gris très clair, pour rythmer la page */
 .section--soft {
-  background: var(--grain-img) var(--paper);
+  background: var(--paper);
   border-block: 1px solid var(--line);
 }
 
@@ -454,7 +451,6 @@ input {
 }
 .photo-art--shop {
   background:
-    var(--grain-img),
     radial-gradient(circle at 50% 50%, #fff 0 18%, transparent 18.2%),
     repeating-radial-gradient(circle at 50% 50%, transparent 0 28px, rgba(29, 63, 191, 0.07) 28px 29px),
     var(--blue-50);
@@ -474,7 +470,7 @@ input {
   height: 48%;
 }
 .photo-art--person {
-  background: var(--grain-img), var(--blue);
+  background: var(--blue);
   color: #fff;
 }
 .photo-art__initial {
@@ -536,15 +532,9 @@ input {
   z-index: 100;
   height: calc(var(--header-h) + env(safe-area-inset-top));
   padding-top: env(safe-area-inset-top);
-  background: rgba(251, 250, 247, 0.78);
-  backdrop-filter: saturate(180%) blur(18px);
-  -webkit-backdrop-filter: saturate(180%) blur(18px);
-  border-bottom: 1px solid transparent;
-  transition: border-color 0.3s, background-color 0.3s;
-}
-.site-header.is-scrolled {
-  border-bottom-color: var(--line);
-  background: rgba(251, 250, 247, 0.9);
+  /* Fond blanc opaque, fine ligne de séparation */
+  background: #fff;
+  border-bottom: 1px solid var(--line);
 }
 .site-header .wrap {
   height: 100%;
@@ -683,11 +673,7 @@ input {
   padding-top: calc(var(--header-h) + 1.75rem);
   padding-bottom: 1rem;
   display: flex;
-  /* Fond : papier crème, un halo bleu doux derrière le téléphone */
-  background:
-    var(--grain-img),
-    radial-gradient(640px 520px at 78% 40%, rgba(29, 63, 191, 0.11), transparent 70%),
-    var(--paper);
+  background: #fff;
   overflow: hidden;
 }
 /* Trait dessiné à la main sous le mot clé du hero */
@@ -1305,18 +1291,6 @@ input {
     --phone-scale: 0.66;
   }
 }
-/* Halo doux derrière le téléphone */
-.hero__phone::before {
-  content: '';
-  position: absolute;
-  left: 50%;
-  top: 46%;
-  width: min(520px, 110%);
-  aspect-ratio: 1;
-  transform: translate(-50%, -50%);
-  border-radius: 50%;
-  background: radial-gradient(closest-side, rgba(11, 99, 206, 0.16), rgba(11, 99, 206, 0) 70%);
-}
 
 /* ==========================================================================
    Mobile (iPhone, Safari) — le bureau n'est pas concerné
@@ -1325,12 +1299,6 @@ input {
 @media (max-width: 899px) {
   /* Barre d'état : le header couvre l'encoche (padding env(safe-area-inset-top)) avec un fond opaque,
      rien ne défile visible au-dessus. Même couleur que <meta name="theme-color">. */
-  .site-header,
-  .site-header.is-scrolled {
-    background: var(--paper);
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
   html {
     scroll-padding-top: calc(var(--header-h) + env(safe-area-inset-top) + 16px);
   }
@@ -1749,7 +1717,7 @@ input {
 .calc__result {
   position: relative;
   padding: clamp(1.6rem, 4vw, 2.6rem);
-  background: #f6f4ee;
+  background: var(--paper);
   border-top: 1px solid var(--line);
   overflow: hidden;
 }
@@ -1791,7 +1759,7 @@ input {
   margin-top: 0.6rem;
   height: 10px;
   border-radius: 99px;
-  background: #ebe8e0;
+  background: var(--line);
   overflow: hidden;
 }
 .calc__bar span {
@@ -3232,7 +3200,7 @@ input {
 
 .metier-hero {
   padding-top: calc(var(--header-h) + clamp(2rem, 6vw, 4rem));
-  background: radial-gradient(640px 520px at 78% 40%, rgba(29, 63, 191, 0.1), transparent 70%), var(--paper);
+  background: #fff;
 }
 .metier-hero__grid {
   display: grid;
@@ -3429,8 +3397,6 @@ input {
    ========================================================================== */
 
 @media (max-width: 767px) {
-  .site-header,
-  .site-header.is-scrolled,
   .hero__steps {
     -webkit-backdrop-filter: none;
     backdrop-filter: none;
@@ -3456,9 +3422,6 @@ input {
   }
   .cam__scan {
     box-shadow: none;
-  }
-  .hero__phone::before {
-    display: none;
   }
   /* Téléphones à plat sur mobile : pas de 3D ni de rotation animée (Safari redessinait toute la maquette). */
   .phone-css {
